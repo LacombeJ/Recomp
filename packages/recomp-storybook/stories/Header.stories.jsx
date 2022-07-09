@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Header } from './Header';
+import { Header } from '@recomp/ui';
 
 export default {
   title: 'Example/Header',

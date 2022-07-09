@@ -1,13 +1,14 @@
 {
-  "name": "recomp",
+  "name": "recomp-js",
   "private": true,
   "version": "0.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build": "yarn workspace build",
+    "storybook": "yarn workspace @recomp/storybook storybook",
+    "build-storybook": "yarn workspace @recomp/storybook build-storybook"
   },
   "dependencies": {
     "react": "^18.0.0",

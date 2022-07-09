@@ -1453,6 +1453,12 @@
     schema-utils "^3.0.0"
     source-map "^0.7.3"
 
+"@recomp/ui@link:packages/recomp-ui":
+  version "0.0.0"
+  dependencies:
+    react "^18.0.0"
+    react-dom "^18.0.0"
+
 "@rollup/pluginutils@^4.2.1":
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-4.2.1.tgz#e6c6c3aba0744edce3fb2074922d3776c0af2a6d"
