@@ -6,11 +6,11 @@ import { useResizeDetector } from "react-resize-detector";
 
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 
-import 'monaco-editor/esm/vs/language/typescript/monaco.contribution';
-import 'monaco-editor/esm/vs/language/css/monaco.contribution';
-import 'monaco-editor/esm/vs/language/json/monaco.contribution';
-import 'monaco-editor/esm/vs/language/html/monaco.contribution';
-import 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
+import "monaco-editor/esm/vs/language/typescript/monaco.contribution";
+import "monaco-editor/esm/vs/language/css/monaco.contribution";
+import "monaco-editor/esm/vs/language/json/monaco.contribution";
+import "monaco-editor/esm/vs/language/html/monaco.contribution";
+import "monaco-editor/esm/vs/basic-languages/monaco.contribution";
 
 import { updatePasteHandler as updateProcessPasteHandler } from "./monaco-paste";
 
@@ -86,7 +86,7 @@ class MonacoEditorComponent extends React.Component {
 
     this.handlers.processPaste = props.onProcessPaste;
 
-    props.onInitialize(this.editor, monaco);
+    props.onInitialize(this.editor, monaco, this.containerRef.current);
   }
 
   componentDidUpdate(prevProps) {
@@ -282,8 +282,11 @@ class MonacoEditorComponent extends React.Component {
   }
 
   render() {
-    const className = this.props.className;
     const style = this.props.style;
+
+    const className =
+      "react-monaco-editor-container" +
+      (!!this.props.className ? " " + this.props.className : "");
 
     return (
       <div
@@ -365,7 +368,7 @@ MonacoEditorComponent.propTypes = {
  * @typedef {MonacoEditor.defaultProps} MonacoEditorProps
  */
 MonacoEditorComponent.defaultProps = {
-  className: "react-monaco-editor-container",
+  className: "",
   style: {},
   width: "100%",
   height: "100%",
@@ -394,28 +397,34 @@ MonacoEditorComponent.defaultProps = {
 const MonacoEditor = (props) => {
   /** @type {React.MutableRefObject<monaco.editor.IStandaloneCodeEditor>} */
   const editorRef = React.useRef(null);
+  const targetRef = React.useRef(null);
 
   const { onInitialize, ...restProps } = props;
 
   const onResize = React.useCallback(() => {
-    console.log("resized");
     if (editorRef.current) {
       editorRef.current.layout();
     }
   }, []);
 
-  const handleEditorInitialized = (editor, monaco) => {
+  const handleEditorInitialized = (editor, monaco, container) => {
     editorRef.current = editor;
     editor.focus();
     onInitialize(editor, monaco);
+    targetRef.current = container;
   };
 
-  useResizeDetector({ onResize });
+  useResizeDetector({ targetRef, onResize });
 
-  return <MonacoEditor {...restProps} onInitialize={handleEditorInitialized} />;
+  return (
+    <MonacoEditorComponent
+      {...restProps}
+      onInitialize={handleEditorInitialized}
+    />
+  );
 };
 
 MonacoEditor.propTypes = MonacoEditorComponent.propTypes;
 MonacoEditor.defaultProps = MonacoEditorComponent.defaultProps;
 
-export default MonacoEditorComponent;
+export default MonacoEditor;
