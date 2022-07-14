@@ -6,8 +6,12 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "@recomp/ui": "link:../recomp-ui"
+  },
+  "devDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "stylus": "^0.58.1"
   }
 }

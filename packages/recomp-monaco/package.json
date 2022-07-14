@@ -1,14 +1,14 @@
 {
-  "name": "@recomp/ui",
+  "name": "@recomp/monaco",
   "private": true,
   "version": "0.0.0",
   "scripts": {
     "build": "vite build"
   },
   "dependencies": {
-    "@recomp/hooks": "link:../recomp-hooks",
-    "@recomp/utils": "link:../recomp-utils",
+    "monaco-editor": "^0.33.0",
     "prop-types": "^15.8.1",
+    "react-resize-detector": "^7.1.2",
     "react-style-proptype": "^3.2.2"
   },
   "devDependencies": {

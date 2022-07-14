@@ -10,10 +10,7 @@
     "storybook": "yarn workspace @recomp/storybook storybook",
     "build-storybook": "yarn workspace @recomp/storybook build-storybook"
   },
-  "dependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.18.6",
     "@storybook/addon-actions": "^6.5.9",

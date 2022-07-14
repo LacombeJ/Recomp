@@ -1,0 +1,307 @@
+// Titlebar
+// ------------------------------------
+
+@import '../util.styl'
+
+// Titlebar
+VOGUE_TITLEBAR_DEFAULT_ARGUMENTS = {
+  _backgroundColor: #202020,
+  _fontColor: #f8f8f8,
+}
+vogue-titlebar(args=null) {
+  args = vogue-merge-default(args, VOGUE_TITLEBAR_DEFAULT_ARGUMENTS);
+  // --------------------------------------------------------------------------
+  background-color: args._backgroundColor;
+  color: args._fontColor;
+  -webkit-app-region: drag;
+  margin: 0;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  user-select: none;
+  z-index: 2000;
+}
+
+// Titleicon
+VOGUE_TITLEICON_DEFAULT_ARGUMENTS = {
+  _backgroundColor: transparent,
+}
+vogue-titleicon(args=null) {
+  args = vogue-merge-default(args, VOGUE_TITLEICON_DEFAULT_ARGUMENTS);
+  // --------------------------------------------------------------------------
+  background-color: args._backgroundColor;
+  background-size: 20px 20px
+  // padding: 6px 6px 6px 6px;
+  width: 20px;
+  height: 20%;
+}
+
+// Menubar
+VOGUE_MENUBAR_DEFAULT_ARGUMENTS = {
+  _backgroundColor: transparent,
+}
+vogue-menubar(args=null) {
+  args = vogue-merge-default(args, VOGUE_MENUBAR_DEFAULT_ARGUMENTS);
+  // --------------------------------------------------------------------------
+  background-color: args._backgroundColor;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+// Menubutton
+VOGUE_MENUBUTTON_DEFAULT_ARGUMENTS = {
+  _backgroundColor: transparent,
+  _backgroundColorHover: #363636,
+}
+vogue-menubutton(args=null) {
+  args = vogue-merge-default(args, VOGUE_MENUBUTTON_DEFAULT_ARGUMENTS);
+  // --------------------------------------------------------------------------
+  background-color: args._backgroundColor;
+  height: 100%;
+  -webkit-app-region: no-drag;
+  padding-left: 7px;
+  padding-right: 7px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  &:hover {
+    background-color: args._backgroundColorHover;
+  }
+  &.active {
+    background-color: args._backgroundColorHover;
+  }
+}
+
+// Titleheader
+VOGUE_TITLEHEADER_DEFAULT_ARGUMENTS = {
+  _backgroundColor: transparent,
+  _backgroundColorHover: #363636,
+}
+vogue-titleheader(args=null) {
+  args = vogue-merge-default(args, VOGUE_TITLEHEADER_DEFAULT_ARGUMENTS);
+  // --------------------------------------------------------------------------
+  display: block;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  flex-wrap: wrap;
+  overflow: hidden;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+// Controlbar
+VOGUE_CONTROLBAR_DEFAULT_ARGUMENTS = {
+  _backgroundColor: transparent,
+}
+vogue-controlbar(args=null) {
+  args = vogue-merge-default(args, VOGUE_CONTROLBAR_DEFAULT_ARGUMENTS);
+  // --------------------------------------------------------------------------
+  background-color: args._backgroundColor;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-grow: 1;
+}
+
+// Controlbutton
+VOGUE_CONTROLBUTTON_DEFAULT_ARGUMENTS = {
+  _backgroundColor: transparent,
+  _backgroundColorHover: #363636,
+  _closeButtonSelector: '.vogue-close',
+  _closeButtonColorHover: alpha(red, 0.75),
+  _buttonWidth: 30px,
+}
+vogue-controlbutton(args=null) {
+  args = vogue-merge-default(args, VOGUE_CONTROLBUTTON_DEFAULT_ARGUMENTS);
+  _closeButtonSelector = args._closeButtonSelector;
+  // --------------------------------------------------------------------------
+  background-color: args._backgroundColor;
+  -webkit-app-region: no-drag;
+  padding-left: 8px;
+  padding-right: 8px;
+  width: args._buttonWidth;
+  height: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    background-color: args._backgroundColorHover;
+  }
+  &{_closeButtonSelector}:hover {
+    background-color: args._closeButtonColorHover;
+  }
+}
+
+// Dropbar
+VOGUE_DROPBAR_DEFAULT_ARGUMENTS = {
+  _separatorSelector: '.vogue-dropbar-separator',
+  _backgroundColor: #202020,
+  _borderColor: #555b5e,
+  _separatorColor: #555b5e,
+  _separatorWidth: 4px,
+}
+vogue-dropbar(args=null) {
+  args = vogue-merge-default(args, VOGUE_DROPBAR_DEFAULT_ARGUMENTS);
+  _separatorSelector = args._separatorSelector;
+  // --------------------------------------------------------------------------
+  background-color: args._backgroundColor;
+  position: fixed;
+  box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.4);
+  min-width: 200px;
+  z-index: 1000;
+  padding: 8px 0 8px 0;
+  border: 1px solid args._borderColor;
+  {_separatorSelector} {
+    min-height: args._separatorWidth;
+    border-bottom: 1px solid args._separatorColor;
+    margin-bottom: args._separatorWidth;
+    margin-left: 30px;
+    margin-right: 6px;
+  }
+}
+
+// Dropbutton
+VOGUE_DROPBUTTON_DEFAULT_ARGUMENTS = {
+  _labelSelector: '.vogue-dropbutton-label',
+  _acceleratorSelector: '.vogue-dropbutton-accelerator',
+  _backgroundColor: transparent,
+  _backgroundColorHover: #363636,
+}
+vogue-dropbutton(args=null) {
+  args = vogue-merge-default(args, VOGUE_DROPBUTTON_DEFAULT_ARGUMENTS);
+  _labelSelector = args._labelSelector;
+  _acceleratorSelector = args._acceleratorSelector;
+  // --------------------------------------------------------------------------
+  background-color: args._backgroundColor;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1;
+  flex-wrap: wrap;
+  overflow: hidden;
+  height: 22px;
+  &:hover {
+    background-color: args._backgroundColorHover;
+  }
+  {_labelSelector} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 30px 2px 30px;
+  }
+  {_acceleratorSelector} {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow: 1;
+    padding: 2px 30px 2px 30px;
+  }
+}
+
+// Titlebar Master
+VOGUE_TITLEBAR_MASTER_DEFAULT_ARGUMENTS = {
+  _titlebar_selector: '.vogue-titlebar',
+  _titleicon_selector: '.vogue-titleicon',
+  _menubar_selector: '.vogue-menubar',
+  _menubutton_selector: '.vogue-menubutton',
+  _dropbar_selector: 'vogue-dropbar',
+  _dropbar_separator_selector: '.vogue-dropbar-separator',
+  _dropbutton_selector: '.vogue-dropbutton',
+  _dropbutton_label_selector: '.vogue-dropbutton-label',
+  _dropbutton_accelerator_selector: '.vogue-dropbutton-accelerator',
+  _titleheader_selector: '.vogue-titleheader',
+  _controlbar_selector: '.vogue-controlbar',
+  _controlbutton_selector: '.vogue-controlbutton',
+  _close_selector: '.vogue-close',
+  _fontColor: #aea194,
+  _backgroundColor: #202020,
+  _hoverColor: #363636,
+  _dropdownColor: #202020,
+  _borderColor: #555b5e,
+  _controlButtonWidth: 30px,
+}
+vogue-titlebar-master(args=null) {
+  args = vogue-merge-default(args, VOGUE_TITLEBAR_MASTER_DEFAULT_ARGUMENTS);
+  _titlebar_selector = args._titlebar_selector;
+  _titleicon_selector = args._titleicon_selector;
+  _menubar_selector = args._menubar_selector;
+  _menubutton_selector = args._menubutton_selector;
+  _dropbar_selector = args._dropbar_selector;
+  _dropbar_separator_selector = args._dropbar_separator_selector;
+  _dropbutton_selector = args._dropbutton_selector;
+  _dropbutton_label_selector = args._dropbutton_label_selector,
+  _dropbutton_accelerator_selector = args._dropbutton_accelerator_selector,
+  _titleheader_selector = args._titleheader_selector;
+  _controlbar_selector = args._controlbar_selector;
+  _controlbutton_selector = args._controlbutton_selector;
+  _close_selector = args._close_selector;
+  // --------------------------------------------------------------------------
+
+  {_titlebar_selector} {
+    vogue-titlebar({
+      _backgroundColor: args._backgroundColor,
+      _color: args._fontColor,
+    });
+  }
+
+  {_titleicon_selector} {
+    vogue-titleicon();
+  }
+
+  {_menubar_selector} {
+    vogue-menubar();
+  }
+
+  {_menubutton_selector} {
+    vogue-menubutton({
+      _backgroundColorHover: args._hoverColor,
+    });
+  }
+
+  {_dropbar_selector} {
+    vogue-dropbar({
+      _separatorSelector: _dropbar_separator_selector,
+      _backgroundColor: args._dropdownColor,
+      _borderColor: args._borderColor,
+      _separatorColor: args._borderColor,
+    });
+  }
+
+  {_dropbutton_selector} {
+    vogue-dropbutton({
+      _labelSelector: _dropbutton_label_selector,
+      _acceleratorSelector: _dropbutton_accelerator_selector,
+      _backgroundColorHover: args._hoverColor,
+    });
+  }
+
+  {_titleheader_selector} {
+    vogue-titleheader();
+  }
+
+  {_controlbar_selector} {
+    vogue-controlbar();
+  }
+
+  {_controlbutton_selector} {
+    vogue-controlbutton({
+      _backgroundColorHover: args._hoverColor,
+      _closeButtonSelector: _close_selector,
+      _buttonWidth: args._controlButtonWidth,
+    });
+  }
+}

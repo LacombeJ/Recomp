@@ -1,0 +1,103 @@
+// Common
+// ------------------------------------
+
+vogue-font-family() {
+  font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
+
+vogue-global() {
+  vogue-font-family();
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+}
+
+vogue-root() {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  white-space: wrap;
+}
+
+vogue-root-sub() {
+  overflow: hidden;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
+vogue-fill() {
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  position: absolute;
+}
+
+vogue-fill-relative() {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+vogue-center() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+vogue-centerfull() {
+  vogue-center();
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+vogue-clip() {
+  overflow: hidden;
+}
+
+vogue-no-clip() {
+  overflow: visible;
+}
+
+vogue-no-select() {
+  user-select: none;
+}
+
+vogue-select() {
+  user-select: text;
+}
+
+vogue-transition(_all=0.3s, _transform=0.1s) {
+  transition: all _all, transform _transform;
+}
+
+vogue-disable-word-wrap() {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+vogue-text-ellipsis() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+vogue-rect(x, y, w, h) {
+  left: x;
+  top: y;
+  width: w;
+  height: h;
+  position: relative;
+}
+
+vogue-size(dim) {
+  width: dim;
+  height: dim;
+}

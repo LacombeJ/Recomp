@@ -1,0 +1,11 @@
+{
+  "name": "@recomp/vogue",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "stylus": "^0.58.1"
+  }
+}

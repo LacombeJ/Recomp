@@ -1,15 +1,9 @@
 {
-  "name": "@recomp/ui",
+  "name": "@recomp/hooks",
   "private": true,
   "version": "0.0.0",
   "scripts": {
     "build": "vite build"
-  },
-  "dependencies": {
-    "@recomp/hooks": "link:../recomp-hooks",
-    "@recomp/utils": "link:../recomp-utils",
-    "prop-types": "^15.8.1",
-    "react-style-proptype": "^3.2.2"
   },
   "devDependencies": {
     "react": "^18.0.0",

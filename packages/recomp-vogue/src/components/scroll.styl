@@ -1,0 +1,35 @@
+// Scroll
+// ------------------------------------
+
+@import '../util.styl'
+
+// Scrollbar
+VOGUE_SCROLLBAR_DEFAULT_ARGUMENTS = {
+  _width: 12px,
+  _margin: 100,
+  _trackColor: transparent,
+  _thumbColor: alpha(white, 0.1),
+  _thumbRadius: 2px,
+  _thumbColorHover: alpha(white, 0.2),
+  _cornerColor: transparent,
+}
+vogue-scrollbar(args=null) {
+  args = vogue-merge-default(args, VOGUE_SCROLLBAR_DEFAULT_ARGUMENTS);
+  ::-webkit-scrollbar {
+    width: args._width;
+    margin: args._margin;
+  }
+  ::-webkit-scrollbar-track {
+    background: args._trackColor; 
+  }
+  ::-webkit-scrollbar-thumb {
+    background: args._thumbColor;
+    border-radius: args._thumbRadius;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: args._thumbColorHover;
+  }
+  ::-webkit-scrollbar-corner {
+    background: args._cornerColor;
+  }
+}
