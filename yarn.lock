@@ -1456,10 +1456,17 @@
 "@recomp/hooks@link:packages/recomp-hooks":
   version "0.0.0"
 
+"@recomp/icons@link:packages/recomp-icons":
+  version "0.0.0"
+  dependencies:
+    prop-types "^15.8.1"
+    react-style-proptype "^3.2.2"
+
 "@recomp/ui@link:packages/recomp-ui":
   version "0.0.0"
   dependencies:
     "@recomp/hooks" "link:packages/recomp-hooks"
+    "@recomp/icons" "link:packages/recomp-icons"
     "@recomp/utils" "link:packages/recomp-utils"
     prop-types "^15.8.1"
     react-style-proptype "^3.2.2"
