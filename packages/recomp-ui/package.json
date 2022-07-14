@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@recomp/hooks": "link:../recomp-hooks",
+    "@recomp/icons": "link:../recomp-icons",
     "@recomp/utils": "link:../recomp-utils",
     "prop-types": "^15.8.1",
     "react-style-proptype": "^3.2.2"

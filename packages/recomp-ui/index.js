@@ -36,6 +36,10 @@ Recomp.Stack = Stack;
 
 // Widgets
 
+import DropCard from "./src/widgets/DropCard";
+export { DropCard };
+Recomp.DropCard = DropCard;
+
 import ScrollPane from "./src/widgets/ScrollPane";
 export { ScrollPane };
 Recomp.ScrollPane = ScrollPane;
