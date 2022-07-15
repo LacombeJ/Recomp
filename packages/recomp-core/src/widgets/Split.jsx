@@ -24,11 +24,13 @@ const Split = (props) => {
   const view = getViewIndex(props.view);
 
   const [size, setSize] = React.useState(null);
+  const [resizing, setResizing] = React.useState(false);
 
   const handleMouseUp = (event) => {
     unsubscribeMouseUp();
     unsubscribeMouseMove();
     props.onResizeEnd();
+    setResizing(false);
   };
 
   const handleMouseMove = (event) => {
@@ -61,6 +63,7 @@ const Split = (props) => {
     subscribeMouseMove();
 
     props.onResizeStart();
+    setResizing(true);
   };
 
   const performOnResize = (clientX, clientY) => {
@@ -186,6 +189,7 @@ const Split = (props) => {
           classNames={props.classNames.resizer}
           split={props.split}
           onMouseDown={handleResizerDown}
+          resizing={resizing}
         ></Resizer>
       ) : null}
       {renderItem(contents.items[1], 1, actualSize, view)}
@@ -338,6 +342,7 @@ const defaultClassNames = {
   vertical: "vertical",
   horizontal: "horizontal",
   center: "center",
+  resizing: "resizing",
 };
 
 const Resizer = (props) => {
@@ -350,6 +355,7 @@ const Resizer = (props) => {
     [classNames.vertical]: props.split === "vertical",
     [classNames.horizontal]: props.split === "horizontal",
     [classNames.center]: props.split === "center",
+    [classNames.resizing]: props.resizing,
   });
   const style = {
     ...props.style,
@@ -371,8 +377,10 @@ Resizer.propTypes = {
     vertical: PropTypes.string,
     horizontal: PropTypes.string,
     center: PropTypes.string,
+    resizing: PropTypes.string,
   }),
   style: stylePropType,
+  resizing: PropTypes.bool,
   onMouseDown: PropTypes.func,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
@@ -381,6 +389,7 @@ Resizer.propTypes = {
 Resizer.defaultProps = {
   classNames: defaultClassNames,
   style: {},
+  resizing: false,
   onMouseDown: () => {},
   onClick: () => {},
   onDoubleClick: () => {},

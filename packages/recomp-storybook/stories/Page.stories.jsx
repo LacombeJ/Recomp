@@ -1,7 +1,7 @@
 import React from 'react';
 import { within, userEvent } from '@storybook/testing-library';
 
-import { Page } from '@recomp/ui';
+import { Page } from '@recomp/core';
 
 export default {
   title: 'Example/Page',

@@ -7,7 +7,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@recomp/ui": "link:../recomp-ui"
+    "@recomp/core": "link:../recomp-core"
   },
   "devDependencies": {
     "react": "^18.2.0",
