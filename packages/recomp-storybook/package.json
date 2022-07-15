@@ -10,8 +10,8 @@
     "@recomp/ui": "link:../recomp-ui"
   },
   "devDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "stylus": "^0.58.1"
   }
 }
