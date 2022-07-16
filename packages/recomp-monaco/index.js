@@ -1,4 +1,5 @@
-import MonacoArea from "./src/MonacoArea";
-import MonacoEditor from "./src/MonacoEditor";
+import MonacoArea from './src/MonacoArea';
+import MonacoEditor from './src/MonacoEditor';
+import { setupMonacoEnvironmentWorkers } from './src/monaco-worker';
 
-export { MonacoEditor, MonacoArea };
+export { MonacoEditor, MonacoArea, setupMonacoEnvironmentWorkers };
