@@ -25,5 +25,11 @@
     "@vitejs/plugin-react": "^2.0.0",
     "babel-loader": "^8.2.5",
     "vite": "^3.0.0"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "arrowParens": "always",
+    "endOfLine": "auto"
   }
 }

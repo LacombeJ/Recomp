@@ -1,18 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
-import stylePropType from "react-style-proptype";
+import React from 'react';
+import PropTypes from 'prop-types';
+import stylePropType from 'react-style-proptype';
 
-import { useResizeDetector } from "react-resize-detector";
+import { useResizeDetector } from 'react-resize-detector';
 
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
-import "monaco-editor/esm/vs/language/typescript/monaco.contribution";
-import "monaco-editor/esm/vs/language/css/monaco.contribution";
-import "monaco-editor/esm/vs/language/json/monaco.contribution";
-import "monaco-editor/esm/vs/language/html/monaco.contribution";
-import "monaco-editor/esm/vs/basic-languages/monaco.contribution";
+import 'monaco-editor/esm/vs/language/typescript/monaco.contribution';
+import 'monaco-editor/esm/vs/language/css/monaco.contribution';
+import 'monaco-editor/esm/vs/language/json/monaco.contribution';
+import 'monaco-editor/esm/vs/language/html/monaco.contribution';
+import 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
 
-import { updatePasteHandler as updateProcessPasteHandler } from "./monaco-paste";
+import { updatePasteHandler as updateProcessPasteHandler } from './monaco-paste';
 
 /** @extends {React.Component<MonacoEditorProps>} */
 class MonacoEditorComponent extends React.Component {
@@ -93,6 +93,10 @@ class MonacoEditorComponent extends React.Component {
     const props = this.props;
 
     const model = this.editor.getModel();
+
+    // Calling layout on all updates.
+    // This is to fix issue with monaco editor resizing lag/stutter
+    this.editor.layout();
 
     // Edit text
     if (
@@ -197,9 +201,7 @@ class MonacoEditorComponent extends React.Component {
     if (prevProps.theme !== props.theme) {
       monaco.editor.setTheme(props.theme);
     }
-    if (prevProps.width !== props.width || prevProps.height !== props.height) {
-      this.editor.layout();
-    }
+
     if (prevProps.options !== props.options) {
       const { model: _model, ...optionsWithoutModel } = props.options;
       this.editor.updateOptions(optionsWithoutModel);
@@ -282,11 +284,11 @@ class MonacoEditorComponent extends React.Component {
   }
 
   render() {
-    const style = this.props.style;
+    let style = this.props.style;
 
     const className =
-      "react-monaco-editor-container" +
-      (!!this.props.className ? " " + this.props.className : "");
+      'react-monaco-editor-container' +
+      (!!this.props.className ? ' ' + this.props.className : '');
 
     return (
       <div
@@ -345,8 +347,6 @@ const editorActionsPropType = PropTypes.arrayOf(
 MonacoEditorComponent.propTypes = {
   className: PropTypes.string,
   style: stylePropType,
-  width: PropTypes.any,
-  height: PropTypes.any,
   value: PropTypes.string,
   defaultValue: PropTypes.string,
   editOperations: editOperationsPropType,
@@ -368,16 +368,14 @@ MonacoEditorComponent.propTypes = {
  * @typedef {MonacoEditor.defaultProps} MonacoEditorProps
  */
 MonacoEditorComponent.defaultProps = {
-  className: "",
+  className: '',
   style: {},
-  width: "100%",
-  height: "100%",
   value: null,
-  defaultValue: "",
+  defaultValue: '',
   editOperations: [],
   stateDecorations: [],
   editorActions: [],
-  language: "javascript",
+  language: 'javascript',
   theme: null,
   /** @type {monaco.editor.IStandaloneEditorConstructionOptions} */
   options: {},
@@ -403,6 +401,7 @@ const MonacoEditor = (props) => {
 
   const onResize = React.useCallback(() => {
     if (editorRef.current) {
+      // Necessary for browser/window resizes
       editorRef.current.layout();
     }
   }, []);
