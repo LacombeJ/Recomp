@@ -4,6 +4,7 @@ import React from 'react';
  * Returns the previously used value by storing in ref and only updating
  * past value when changed
  *
+ * @template T
  * @param {T} value
  * @returns {T}
  */
