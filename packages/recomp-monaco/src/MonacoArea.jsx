@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import MonacoEditor from "./MonacoEditor";
+import MonacoEditor from './MonacoEditor';
 
 /**
  * @param {MonacoArea.defaultProps} props
@@ -17,20 +17,15 @@ const MonacoArea = (props) => {
     onInitialize(editor, monaco);
   };
 
-  const className =
-    "react-monaco-editor-area" +
-    (!!props.className ? " " + props.className : "");
-
   return (
     <MonacoEditor
-      className={className}
-      theme="vs-dark"
+      className={props.className}
       value={props.children}
       options={{
         selectOnLineNumbers: true,
         roundedSelection: false,
         readOnly: false,
-        cursorStyle: "line",
+        cursorStyle: 'line',
         automaticLayout: false,
         minimap: { enabled: false },
         insertSpaces: true,
@@ -42,7 +37,6 @@ const MonacoArea = (props) => {
         links: false,
         ...(options ? options : {}),
       }}
-      editorActions={props.editorActions}
       onInitialize={handleEditorInitialized}
       {...restProps}
     ></MonacoEditor>
@@ -50,6 +44,10 @@ const MonacoArea = (props) => {
 };
 
 MonacoArea.propTypes = MonacoEditor.propTypes;
-MonacoArea.defaultProps = MonacoEditor.defaultProps;
+MonacoArea.defaultProps = {
+  ...MonacoEditor.defaultProps,
+  className: 'react-monaco-editor-area',
+  theme: 'vs-dark',
+};
 
 export default MonacoArea;

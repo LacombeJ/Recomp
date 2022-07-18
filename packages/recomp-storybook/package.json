@@ -7,7 +7,8 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@recomp/core": "link:../recomp-core"
+    "@recomp/core": "link:../recomp-core",
+    "@recomp/monaco": "link:../recomp-monaco"
   },
   "devDependencies": {
     "react": "^18.2.0",
