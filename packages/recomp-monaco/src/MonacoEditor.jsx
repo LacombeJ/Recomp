@@ -5,8 +5,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import stylePropType from 'react-style-proptype';
 
-import loader from '@monaco-editor/loader';
-
 import { useResizeDetector } from 'react-resize-detector';
 
 import { updatePasteHandler } from './monaco-paste';
@@ -20,6 +18,8 @@ import {
   usePrevious,
   useEffectOnReady,
 } from '@recomp/hooks';
+
+import useMonaco from './useMonaco';
 
 /** @typedef {import('monaco-editor')} Monaco */
 /** @typedef {import('monaco-editor').IDisposable} Disposable */
@@ -69,11 +69,6 @@ const MonacoEditor = (props) => {
 
   // Fields
 
-  // Holding of a cancellable promise. This is so we do not call the loader
-  // multiple times
-  /** @type {React.MutableRefObject<Promise<Monaco>>} */
-  const cancellableRef = React.useRef(null);
-
   /** @type {React.MutableRefObject<Monaco>} */
   const monacoRef = React.useRef(null);
   /** @type {React.MutableRefObject<Editor>} */
@@ -114,34 +109,9 @@ const MonacoEditor = (props) => {
 
   // Effects
 
-  // Initialize/load monaco on mount if monaco has not been loaded
-  useMount(() => {
-    if (!monacoRef.current && !cancellableRef.current) {
-      cancellableRef.current = loader.init();
-
-      cancellableRef.current
-        .then((monaco) => {
-          monacoRef.current = monaco; // assign monaco
-          cancellableRef.current = null; // finished, nullify cancellation
-          setIsMonacoMounted(true); // trigger react component update
-        })
-        .catch((err) => {
-          if (err?.type !== 'cancelation') {
-            console.error('Monaco initialization error:', err);
-          }
-          // Loader finished an failed, nullify cancel
-          cancellableRef.current = null;
-        });
-
-      // Unmount
-      return () => {
-        if (cancellableRef.current) {
-          // On unmount, cancel loader if it hasn't finished
-          cancellableRef.current.cancel();
-          cancellableRef.current = null;
-        }
-      };
-    }
+  // Initialize/load monaco on mount
+  useMonaco(monacoRef, () => {
+    setIsMonacoMounted(true); // trigger react component update
   });
 
   // Editor Creation

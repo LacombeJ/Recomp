@@ -1,4 +1,5 @@
 import MonacoArea from './src/MonacoArea';
 import MonacoEditor from './src/MonacoEditor';
+import useMonaco from './src/useMonaco';
 
-export { MonacoEditor, MonacoArea };
+export { MonacoEditor, MonacoArea, useMonaco };
