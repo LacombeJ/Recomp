@@ -1,0 +1,26 @@
+recomp-heading() {
+
+  RECOMP_HEADING_SIZES = 38px 31px 26px 22px 19px 16px;
+  RECOMP_TOP_MARGINS = 0.5em 0.5em 0.5em 0.5em 10px 10px;
+  RECOMP_BOT_MARGINS = 0.4em 0.4em 0.4em 0.4em 10px 10px;
+
+  .recomp-heading {
+    font-weight: 200;
+    line-height: 1.25;
+    margin: 0;
+    margin-bottom: 0.4em;
+  }
+
+  for i in range(0, length(RECOMP_HEADING_SIZES) - 1) {
+    h{i+1}.recomp-heading {
+      font-size: RECOMP_HEADING_SIZES[i];
+      margin-top: RECOMP_TOP_MARGINS[i];
+      margin-bottom: RECOMP_BOT_MARGINS[i];
+    }
+  }
+
+  h1.recomp-heading {
+    font-weight: 400;
+  }
+
+}

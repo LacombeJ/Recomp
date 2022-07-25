@@ -209,7 +209,7 @@ Split.propTypes = {
     }),
   }),
   style: stylePropType,
-  split: PropTypes.oneOf(["vertical", "horizontal"]).isRequired,
+  split: PropTypes.oneOf(["vertical", "horizontal"]),
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   view: PropTypes.oneOf(["both", "left", "right", "top", "bottom", 0, 1]),
   resizeEnabled: PropTypes.bool,
@@ -223,7 +223,7 @@ Split.defaultProps = {
     split: "recomp-split",
   },
   style: {},
-  // split: 'vertical', // isRequired
+  split: 'vertical',
   size: null,
   resizeEnabled: true,
   view: "both",

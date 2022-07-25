@@ -24,6 +24,10 @@ Recomp.ZeroWidth = ZeroWidth;
 
 // Elements
 
+import Heading from "./src/elements/Heading";
+export { Heading };
+Recomp.Heading = Heading;
+
 import Root from "./src/elements/Root";
 export { Root };
 Recomp.Root = Root;
