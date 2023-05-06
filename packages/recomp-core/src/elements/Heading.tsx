@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import * as util from '@recomp/utils';
+
 interface HeadingProps {
   className?: string;
   style?: React.CSSProperties;
@@ -8,7 +10,7 @@ interface HeadingProps {
 }
 
 const Heading = (props: HeadingProps) => {
-  props = { ...defaultProps, ...props };
+  props = util.structureUnion(defaultProps, props);
 
   if (!props.level) {
     props.level = 1;

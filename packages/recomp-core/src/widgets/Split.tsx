@@ -28,7 +28,7 @@ interface SplitProps {
 }
 
 const Split = (props: SplitProps) => {
-  props = { ...defaultProps, ...props };
+  props = util.structureUnion(defaultProps, props);
 
   const nodeRef: React.Ref<HTMLDivElement> = React.useRef();
 
@@ -173,18 +173,22 @@ const Split = (props: SplitProps) => {
     view: number
   ) => {
     if (index === 0) {
-      const itemProps = {
+      const itemProps: any = {
         direction: props.split,
         size: actualSize,
-        minSize: view === 1 ? 0 : undefined,
       };
+      if (view === 1) {
+        itemProps.minSize = 0;
+      }
       return React.cloneElement(item, itemProps);
     } else {
-      const itemProps = {
+      const itemProps: any = {
         direction: props.split,
         fill: true,
-        minSize: view === 0 ? 0 : undefined,
       };
+      if (view === 0) {
+        itemProps.minSize = 0;
+      }
       return React.cloneElement(item, itemProps);
     }
   };
@@ -228,6 +232,7 @@ const defaultProps: SplitProps = {
     split: 'recomp-split',
   },
   split: 'vertical',
+  size: null,
   resizeEnabled: true,
   view: 'both',
   onResizeStart: () => {},
@@ -298,7 +303,7 @@ interface SplitItemProps {
 }
 
 const Item = (props: SplitItemProps) => {
-  props = { ...itemDefaultProps, ...props };
+  props = util.structureUnion(itemDefaultProps, props);
 
   const className = props.className;
 
@@ -368,7 +373,8 @@ interface ResizerProps {
 }
 
 const Resizer = (props: ResizerProps) => {
-  props = { ...resizerDefaultProps, ...props };
+  props = util.structureUnion(resizerDefaultProps, props);
+
   if (props.classNames) {
     props.classNames = {
       ...resizerDefaultProps.classNames,

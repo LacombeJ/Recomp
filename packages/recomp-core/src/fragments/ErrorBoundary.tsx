@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import * as util from '@recomp/utils';
+
 interface ErrorBoundaryProps {
   children: React.ReactNode;
   fallback?: (props: { error: any }) => any;
@@ -21,7 +23,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   }
 
   constructor(props: ErrorBoundaryProps) {
-    props = { ...defaultProps, ...props };
+    props = util.structureUnion(defaultProps, props);
 
     super(props);
 

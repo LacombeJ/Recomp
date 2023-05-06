@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import * as util from '@recomp/utils';
+
 import { useEventListener } from '@recomp/hooks';
 
 interface RootProps {
@@ -14,7 +16,7 @@ interface RootProps {
 }
 
 const Root = (props: RootProps) => {
-  props = { ...defaultProps, ...props };
+  props = util.structureUnion(defaultProps, props);
 
   useEventListener(document, 'resize', props.onResize);
 

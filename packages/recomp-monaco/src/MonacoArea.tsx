@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import * as util from '@recomp/utils';
+
 import MonacoEditor, { MonacoEditorProps } from './MonacoEditor';
 
 import * as monaco from 'monaco-editor';
@@ -11,7 +13,7 @@ type Editor = monaco.editor.IStandaloneCodeEditor;
  * @param {MonacoArea.defaultProps} props
  */
 const MonacoArea = (props: MonacoEditorProps) => {
-  props = { ...defaultProps, ...props };
+  props = util.structureUnion(defaultProps, props);
 
   const editorRef: React.MutableRefObject<Editor> = React.useRef(null);
 

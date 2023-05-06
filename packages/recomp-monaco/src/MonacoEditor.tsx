@@ -3,6 +3,9 @@
 
 import * as React from 'react';
 
+import * as util from '@recomp/utils';
+
+
 import { useResizeDetector } from 'react-resize-detector';
 
 import { updatePasteHandler } from './monaco-paste';
@@ -66,8 +69,8 @@ export interface MonacoEditorProps {
 }
 
 const MonacoEditor = (props: MonacoEditorProps) => {
-  props = { ...defaultProps, ...props };
-
+  props = util.structureUnion(defaultProps, props);
+  
   // State
   // Assuming that this component can unmount and remount at any time, and
   // that we have no idea when this is because the component is truly unmounting or

@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import * as util from '@recomp/utils';
+
 interface PageProps {
   page: any;
   pages: { [key: string]: any };
@@ -12,7 +14,7 @@ interface PageProps {
  * @param {Page.defaultProps} props
  */
 const Page = (props: PageProps) => {
-  props = { ...defaultProps, ...props };
+  props = util.structureUnion(defaultProps, props);
 
   const ActivePage = props.pages[props.page];
 
@@ -35,8 +37,10 @@ const Page = (props: PageProps) => {
   return null;
 };
 
-const defaultProps = {
+const defaultProps: any = {
   require: false,
+  pageProps: null,
+  placeHolder: null,
 };
 
 export default Page;

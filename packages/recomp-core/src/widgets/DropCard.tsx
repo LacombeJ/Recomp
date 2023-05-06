@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import * as util from '@recomp/utils';
+
 import { classnames } from '@recomp/utils';
 import { Collapse, Expand } from '@recomp/icons';
 import { useStateOrProps, useHover } from '@recomp/hooks';
@@ -28,14 +30,7 @@ interface DropCardProps {
 }
 
 const DropCard = (props: DropCardProps) => {
-  props = {
-    ...defaultProps,
-    ...props,
-    classNames: {
-      ...defaultProps.classNames,
-      ...props.classNames,
-    },
-  };
+  props = util.structureUnion(defaultProps, props);
 
   const { style } = props;
 

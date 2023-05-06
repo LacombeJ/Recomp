@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import * as util from '@recomp/utils';
+
 import { useTimeout } from '@recomp/hooks';
 
 interface DelayProps {
@@ -9,7 +11,7 @@ interface DelayProps {
 }
 
 const Delay = (props: DelayProps) => {
-  props = { ...defaultProps, ...props };
+  props = util.structureUnion(defaultProps, props);
 
   const [show, setShow] = React.useState(false);
 

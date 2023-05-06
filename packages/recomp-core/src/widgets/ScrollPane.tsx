@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import * as util from '@recomp/utils';
+
 import Stack from '../elements/Stack';
 
 interface ScrollPaneProps {
@@ -16,7 +18,7 @@ type Scroll = 'x' | 'y' | 'xy';
 type ScrollPolicy = 'scroll' | 'auto' | 'overlay' | 'none';
 
 const ScrollPane = (props: ScrollPaneProps) => {
-  props = { ...defaultProps, ...props };
+  props = util.structureUnion(defaultProps, props);
 
   const { className, style } = props;
 
