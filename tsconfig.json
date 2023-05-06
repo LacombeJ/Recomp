@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "ESNext",
+    "target": "ES6",
+    "lib": [
+      "ES6",
+      "ES2016.Array.Include",
+      "ES2021.String",
+      "DOM"
+    ],
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "allowJs": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "isolatedModules": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "jsx": "react"
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+  ]
+}

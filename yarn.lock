@@ -1466,25 +1466,21 @@
     "@recomp/hooks" "link:packages/recomp-hooks"
     "@recomp/icons" "link:packages/recomp-icons"
     "@recomp/utils" "link:packages/recomp-utils"
-    prop-types "^15.8.1"
-    react-style-proptype "^3.2.2"
 
 "@recomp/hooks@link:packages/recomp-hooks":
   version "0.0.0"
 
 "@recomp/icons@link:packages/recomp-icons":
   version "0.0.0"
-  dependencies:
-    prop-types "^15.8.1"
-    react-style-proptype "^3.2.2"
 
 "@recomp/monaco@link:packages/recomp-monaco":
   version "0.0.0"
   dependencies:
-    monaco-editor "^0.33.0"
-    prop-types "^15.8.1"
+    "@monaco-editor/loader" "^1.3.2"
+    "@recomp/hooks" "link:packages/recomp-hooks"
+    "@recomp/utils" "link:packages/recomp-utils"
+    monaco-editor "^0.34.0"
     react-resize-detector "^7.1.2"
-    react-style-proptype "^3.2.2"
 
 "@recomp/utils@link:packages/recomp-utils":
   version "0.0.0"
@@ -7404,10 +7400,10 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-monaco-editor@^0.33.0:
-  version "0.33.0"
-  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.33.0.tgz#842e244f3750a2482f8a29c676b5684e75ff34af"
-  integrity sha512-VcRWPSLIUEgQJQIE0pVT8FcGBIgFoxz7jtqctE+IiCxWugD0DwgyQBcZBhdSrdMC84eumoqMZsGl2GTreOzwqw==
+monaco-editor@^0.34.0:
+  version "0.34.0"
+  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.34.0.tgz#b1749870a1f795dbfc4dc03d8e9b646ddcbeefa7"
+  integrity sha512-VF+S5zG8wxfinLKLrWcl4WUizMx+LeJrG4PM/M78OhcwocpV0jiyhX/pG6Q9jIOhrb/ckYi6nHnaR5OojlOZCQ==
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -8316,7 +8312,7 @@ prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.0.0, prop-types@^15.5.4, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@^15.0.0, prop-types@^15.7.2:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -8573,13 +8569,6 @@ react-resize-detector@^7.1.2:
   integrity sha512-zXnPJ2m8+6oq9Nn8zsep/orts9vQv3elrpA+R8XTcW7DVVUJ9vwDwMXaBtykAYjMnkCIaOoK9vObyR7ZgFNlOw==
   dependencies:
     lodash "^4.17.21"
-
-react-style-proptype@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/react-style-proptype/-/react-style-proptype-3.2.2.tgz#d8e998e62ce79ec35b087252b90f19f1c33968a0"
-  integrity sha512-ywYLSjNkxKHiZOqNlso9PZByNEY+FTyh3C+7uuziK0xFXu9xzdyfHwg4S9iyiRRoPCR4k2LqaBBsWVmSBwCWYQ==
-  dependencies:
-    prop-types "^15.5.4"
 
 react-syntax-highlighter@^15.4.5:
   version "15.5.0"
