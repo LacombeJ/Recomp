@@ -1,0 +1,19 @@
+@import '../common/colors';
+
+recomp-input() {
+
+  .recomp-input {
+    background-color: rgb(40, 40, 40);
+    color: alpha(white, 0.75);
+    border-width: 0px;
+    padding: 4px 8px;
+    min-width: 200px;
+    &:focus {
+      outline: RECOMP_PRIMARY solid 1px;
+    }
+    &.disabled {
+      color: rgb(128,128,128);
+    }
+  }
+
+}

@@ -8,6 +8,5 @@ export { default as usePrevious } from './usePrevious';
 export { default as useReady } from './useReady';
 export { default as useRefInstance } from './useRefInstance';
 export { default as useStateOrProps } from './useStateOrProps';
-export { default as useTimeout } from './useTimeout';
 
 declare module '@recomp/hooks';

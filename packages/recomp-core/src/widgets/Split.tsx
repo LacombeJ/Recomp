@@ -291,7 +291,7 @@ interface SplitItemProps {
   className?: string;
   style?: React.CSSProperties;
   direction?: 'vertical' | 'horizontal';
-  fill: boolean;
+  fill?: boolean;
   size?: string | number;
   minSize?: string | number;
   maxSize?: string | number;
@@ -341,20 +341,12 @@ const itemDefaultStyle: React.CSSProperties = {
   outline: 'none',
 };
 
-const itemDefaultProps = {
+const itemDefaultProps: SplitItemProps = {
   className: '',
   onSetRef: () => {},
 };
 
 // ----------------------------------------------------------------------------
-
-const defaultClassNames = {
-  resizer: 'recomp-resizer',
-  vertical: 'vertical',
-  horizontal: 'horizontal',
-  center: 'center',
-  resizing: 'resizing',
-};
 
 interface ResizerProps {
   classNames?: {
@@ -365,8 +357,8 @@ interface ResizerProps {
     resizing?: string;
   };
   style?: React.CSSProperties;
-  split: 'center' | 'vertical' | 'horizontal';
-  resizing: boolean;
+  split?: 'center' | 'vertical' | 'horizontal';
+  resizing?: boolean;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -403,8 +395,14 @@ const Resizer = (props: ResizerProps) => {
   );
 };
 
-const resizerDefaultProps = {
-  classNames: defaultClassNames,
+const resizerDefaultProps: ResizerProps = {
+  classNames: {
+    resizer: 'recomp-resizer',
+    vertical: 'vertical',
+    horizontal: 'horizontal',
+    center: 'center',
+    resizing: 'resizing',
+  },
   resizing: false,
 };
 

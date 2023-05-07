@@ -1,11 +1,20 @@
 import * as React from 'react';
 
-const useTimeout = (
+/** Returns a boolean state that is set to true only after some delay has passed */
+const useDelay = (
   ms: number,
-  handleDelayComplete: () => any,
+  onComplete?: () => any,
   cancelOnUnmount: boolean = true
-) => {
+): [boolean] => {
+  const [delayed, setDelayed] = React.useState(false);
+
+  const handleDelayComplete = () => {
+    setDelayed(true);
+    onComplete();
+  };
+
   const delayHandledRef: React.MutableRefObject<boolean> = React.createRef();
+
   React.useEffect(() => {
     setTimeout(() => {
       if (cancelOnUnmount && !delayHandledRef.current) {
@@ -14,6 +23,8 @@ const useTimeout = (
       }
     }, ms);
   });
+
+  return [delayed];
 };
 
-export default useTimeout;
+export default useDelay;

@@ -1,0 +1,29 @@
+recomp-text() {
+
+  code {
+    font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+  }
+
+  .recomp-text code {
+    color: rgb(200, 200, 200);
+    padding: .2em .4em;
+    font-size: 0.9em;
+    background: rgba(50,50,50,0.3);
+    border: 1px solid rgba(100,100,100,0.5);
+    border-radius: 3px;
+  }
+
+  .recomp-text.keyCode {
+    COLOR_VALUE = 200;
+    BG_VALUE = 40;
+    S1_COLOR = rgb(20, 20, 20);
+    S2_COLOR = rgb(60, 60, 60);
+    color: rgb(COLOR_VALUE, COLOR_VALUE, COLOR_VALUE);
+    padding: .1em .6em;
+    font-size: 0.75em;
+    background: rgb(BG_VALUE, BG_VALUE, BG_VALUE);
+    border-radius: 3px;
+    box-shadow: 0px 2px 0px 1px S1_COLOR, 0px 3px 0px 1px S2_COLOR;
+  }
+
+}

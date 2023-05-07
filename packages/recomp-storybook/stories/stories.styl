@@ -1,4 +1,36 @@
-// @import '@recomp-ui-styles/index.styl'
 @import '../../recomp-core/index.styl'
 @import '../../recomp-monaco/index.styl'
+@import '../../recomp-vogue/index.styl'
 
+#root {
+  vogue-global();
+  color: alpha(white, 0.9);
+}
+
+.docs-story {
+  vogue-global();
+  color: alpha(white, 0.9);
+}
+
+recomp-init()
+
+.bar-start {
+  color: white;
+  min-width: 100px;
+  padding: 4px 4px;
+  background-color: #946051;
+}
+
+.bar-center {
+  color: white;
+  width: 100%;
+  padding: 4px 4px;
+  background-color: #517094;
+}
+
+.bar-end {
+  color: white;
+  min-width: 100px;
+  padding: 4px 4px;
+  background-color: #6f9451;
+}

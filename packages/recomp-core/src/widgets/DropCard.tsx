@@ -25,8 +25,8 @@ interface DropCardProps {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   icon?: React.ReactNode;
-  controlIcon: (expanded: boolean) => any;
-  onCollapse: () => any;
+  controlIcon?: (expanded: boolean) => any;
+  onCollapse?: () => any;
 }
 
 const DropCard = (props: DropCardProps) => {
@@ -86,7 +86,7 @@ const controlIconCallback = (expanded: boolean) => {
   }
 };
 
-const defaultProps = {
+const defaultProps: DropCardProps = {
   className: 'recomp-dropcard',
   classNames: {
     head: 'head',

@@ -1,0 +1,22 @@
+@import '../common/colors';
+
+recomp-link() {
+
+  LINK_COLOR = lighten(RECOMP_PRIMARY, 40%);
+
+  a.recomp-link {
+    color: LINK_COLOR;
+    text-decoration: none;
+    &:hover {
+      color: desaturate(lighten(LINK_COLOR, 20%), 20%);
+      cursor: pointer;
+    }
+    &:focus {
+      color: desaturate(lighten(LINK_COLOR, 20%), 20%);
+    }
+    &:active {
+      color: desaturate(lighten(LINK_COLOR, 40%), 40%);
+    }
+  }
+
+}

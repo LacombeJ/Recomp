@@ -78,6 +78,13 @@ export const selectorMatch = (classItems: string[], selectors: string[]) => {
   return true;
 };
 
+export const selectClassName = (classNames: any, key: any) => {
+  if (classNames[key]) {
+    return { [classNames[key]]: true };
+  }
+  return {};
+};
+
 // ----------------------------------------------------------------------------
 
 /**
@@ -119,6 +126,44 @@ export const structureUnion = (left: any, right: any) => {
   }
 
   return result;
+};
+
+export const isNullOrWhitespace = (value: any) => {
+  if (!value) return true;
+  if (typeof value === 'string') {
+    if (!value.trim()) {
+      return true;
+    }
+  }
+};
+
+const selectFn = {
+  keySet: (obj: any) => Object.keys(obj),
+  keyCheck: (obj: any, key: any) => obj[key],
+  valueSet: (obj: any) => Object.values(obj),
+  valueCheck: (_obj: any, key: any) => key,
+};
+
+const objectMap = (obj: any, map: any, objSetFn: any, objCheckFn: any) => {
+  const res: { [key: string]: any } = {};
+  const objKeys = objSetFn(obj);
+  const mapKeys = Object.keys(map);
+  objKeys.forEach((key: string) => {
+    if (objCheckFn(obj, key)) {
+      if (mapKeys.includes(key)) {
+        res[key] = map[key];
+      }
+    }
+  });
+  return res;
+};
+
+export const selectAllFromKeys = (obj: any, map: any) => {
+  return objectMap(obj, map, selectFn.keySet, selectFn.keyCheck);
+};
+
+export const selectAllFromValues = (obj: any, map: any) => {
+  return objectMap(obj, map, selectFn.valueSet, selectFn.valueCheck);
 };
 
 // ----------------------------------------------------------------------------

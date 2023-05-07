@@ -1,0 +1,23 @@
+import * as React from 'react';
+
+import * as util from '@recomp/utils';
+
+interface ParagraphProps
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLParagraphElement>,
+    HTMLParagraphElement
+  > {}
+
+const Paragraph = (props: ParagraphProps) => {
+  props = util.structureUnion(defaultProps, props);
+
+  const { dangerouslySetInnerHTML: _0, ...paragraphProps } = props;
+
+  return <p {...paragraphProps} />;
+};
+
+const defaultProps: ParagraphProps = {
+  className: 'recomp-paragraph',
+};
+
+export default Paragraph;

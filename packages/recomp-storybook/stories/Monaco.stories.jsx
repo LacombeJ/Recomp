@@ -20,11 +20,13 @@ export const Dark = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Dark.args = {
   theme: 'vs-dark',
+  value: 'const component = "Monaco";',
 };
 
 export const Light = Template.bind({});
 Light.args = {
   theme: 'light',
+  value: 'const component = "Monaco";',
 };
 
 // export const Large = Template.bind({});

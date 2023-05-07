@@ -36,11 +36,9 @@ const Root = (props: RootProps) => {
   );
 };
 
-const defaultProps = {
+const defaultProps: RootProps = {
   className: 'recomp-root',
-  style: {},
   innerClassName: 'sub',
-  innerStyle: {},
   onMount: () => {},
   onUnmount: () => {},
   onResize: () => {},

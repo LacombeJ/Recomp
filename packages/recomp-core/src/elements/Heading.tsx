@@ -26,9 +26,8 @@ const Heading = (props: HeadingProps) => {
   );
 };
 
-const defaultProps = {
+const defaultProps: HeadingProps = {
   className: 'recomp-heading',
-  style: {},
 };
 
 interface HeadingElementProps {
