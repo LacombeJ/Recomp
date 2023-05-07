@@ -16,6 +16,9 @@ export { ZeroWidth };
 
 // Elements
 
+import Audio from './src/elements/Audio';
+export { Audio };
+
 import Bar from './src/elements/Bar';
 export { Bar };
 
@@ -36,6 +39,9 @@ export { Form };
 
 import Heading from './src/elements/Heading';
 export { Heading };
+
+import Image from './src/elements/Image';
+export { Image };
 
 import Input from './src/elements/Input';
 export { Input };
@@ -76,6 +82,9 @@ export { Text };
 import TextArea from './src/elements/TextArea';
 export { TextArea };
 
+import Video from './src/elements/Video';
+export { Video };
+
 // ----------------------------------------------------------------------------
 
 // Widgets
@@ -98,6 +107,7 @@ export default {
   ZeroWidth,
 
   // Elements
+  Audio,
   Bar,
   Block,
   Button,
@@ -105,6 +115,7 @@ export default {
   Checkbox,
   Form,
   Heading,
+  Image,
   Input,
   Label,
   Link,
@@ -118,6 +129,7 @@ export default {
   Switch,
   Text,
   TextArea,
+  Video,
 
   // Widgets
   DropCard,

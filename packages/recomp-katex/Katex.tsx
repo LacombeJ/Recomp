@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import katex from 'katex';
+import './index.styl';
 
 import * as util from '@recomp/utility/common';
 
@@ -19,8 +20,6 @@ interface KatexProps {
 
 const Katex = (props: KatexProps) => {
   props = util.structureUnion(defaultProps, props);
-
-  const { style } = props;
 
   let text = props.children;
 
@@ -41,6 +40,10 @@ const Katex = (props: KatexProps) => {
     'katex-inline': props.display === 'inline',
     [props.size]: true,
   });
+
+  const style = {
+    ...props.style,
+  };
 
   const Component =
     props.display === 'inline'
@@ -65,6 +68,7 @@ const defaultProps: KatexProps = {
   display: 'block',
   size: 'normal',
   margin: '16px',
+  nlbreak: true,
 };
 
 export default Katex;
