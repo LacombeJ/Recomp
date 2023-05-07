@@ -4,7 +4,7 @@ import { Label } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Label',
+  title: 'Elements/Label',
   component: Label,
   argTypes: {},
 };

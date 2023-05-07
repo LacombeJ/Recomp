@@ -4,7 +4,7 @@ import { Bar } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Bar',
+  title: 'Elements/Bar',
   component: Bar,
   argTypes: {},
 };

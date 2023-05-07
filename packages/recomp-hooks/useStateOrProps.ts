@@ -21,15 +21,9 @@ const useStateOrProps = <T>(
   initialState: T,
   propValue: T = undefined,
   propCallback: (...x: any) => any = undefined,
-  useProps: boolean = undefined
+  useProps: boolean = propValue !== undefined
 ): [T, (...x: any) => any] => {
   const [state, setState] = React.useState(initialState);
-
-  if (useProps === undefined) {
-    if (propValue !== undefined || propCallback !== undefined) {
-      useProps = true;
-    }
-  }
 
   let actualValue = state;
   let actualCallback = setState;

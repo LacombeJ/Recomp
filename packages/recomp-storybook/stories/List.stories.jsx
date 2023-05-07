@@ -4,7 +4,7 @@ import { List } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/List',
+  title: 'Elements/List',
   component: List,
   argTypes: {},
 };

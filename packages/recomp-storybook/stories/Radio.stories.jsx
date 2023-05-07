@@ -4,7 +4,7 @@ import { Radio } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Radio',
+  title: 'Elements/Radio',
   component: Radio.Group,
   argTypes: {},
 };

@@ -4,7 +4,7 @@ import { Checkbox } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Checkbox',
+  title: 'Elements/Checkbox',
   component: Checkbox,
   argTypes: {},
 };

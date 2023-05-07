@@ -4,7 +4,7 @@ import { Quote } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Quote',
+  title: 'Elements/Quote',
   component: Quote,
   argTypes: {},
 };

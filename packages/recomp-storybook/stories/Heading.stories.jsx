@@ -4,7 +4,7 @@ import { Heading } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Heading',
+  title: 'Elements/Heading',
   component: Heading,
   argTypes: {},
 };

@@ -4,7 +4,7 @@ import { Button } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Button',
+  title: 'Elements/Button',
   component: Button,
   argTypes: {},
 };

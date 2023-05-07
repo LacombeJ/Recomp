@@ -4,7 +4,7 @@ import { Switch } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Switch',
+  title: 'Elements/Switch',
   component: Switch,
   argTypes: {},
 };

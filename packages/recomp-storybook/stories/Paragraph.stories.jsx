@@ -4,7 +4,7 @@ import { Paragraph } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Paragraph',
+  title: 'Elements/Paragraph',
   component: Paragraph,
   argTypes: {},
 };

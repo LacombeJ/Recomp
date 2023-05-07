@@ -4,7 +4,7 @@ import { Form } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Form',
+  title: 'Elements/Form',
   component: Form,
   argTypes: {},
 };

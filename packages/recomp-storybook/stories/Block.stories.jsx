@@ -4,7 +4,7 @@ import { Block } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Block',
+  title: 'Elements/Block',
   component: Block,
   argTypes: {},
 };

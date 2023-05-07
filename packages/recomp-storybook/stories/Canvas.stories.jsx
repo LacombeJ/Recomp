@@ -4,7 +4,7 @@ import { Canvas } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Canvas',
+  title: 'Elements/Canvas',
   component: Canvas,
   argTypes: {},
 };

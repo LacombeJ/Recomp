@@ -4,7 +4,7 @@ import { Link } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Link',
+  title: 'Elements/Link',
   component: Link,
   argTypes: {},
 };

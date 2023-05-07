@@ -4,7 +4,7 @@ import { TextArea } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/TextArea',
+  title: 'Elements/TextArea',
   component: TextArea,
   argTypes: {},
 };

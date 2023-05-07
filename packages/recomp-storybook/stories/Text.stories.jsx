@@ -4,7 +4,7 @@ import { Text } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Text',
+  title: 'Elements/Text',
   component: Text,
   argTypes: {},
 };

@@ -4,7 +4,7 @@ import { Input } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Example/Input',
+  title: 'Elements/Input',
   component: Input,
   argTypes: {},
 };
