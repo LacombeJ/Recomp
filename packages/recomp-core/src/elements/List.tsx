@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utils';
+import * as util from '@recomp/utility/common';
 import ZeroWidth from '../fragments/ZeroWidth';
 import useNestedProps from '@recomp/hooks/useNestedProps';
 import NestBreak from '../fragments/NestBreak';

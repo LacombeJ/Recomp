@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utils';
+import * as util from '@recomp/utility/common';
 
 import Stack from '../elements/Stack';
 
@@ -40,8 +40,8 @@ const ScrollPane = (props: ScrollPaneProps) => {
 };
 
 const defaultProps: ScrollPaneProps = {
-  className: '',
-  innerClassName: '',
+  className: 'recomp-scroll-pane',
+  innerClassName: 'recomp-scroll',
   scroll: 'xy',
   scrollPolicy: 'auto',
 };

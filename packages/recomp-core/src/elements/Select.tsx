@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utils';
+import * as util from '@recomp/utility/common';
 
 interface SelectProps {
   className?: string;

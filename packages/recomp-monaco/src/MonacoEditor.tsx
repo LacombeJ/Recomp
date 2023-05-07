@@ -3,14 +3,14 @@
 
 import * as React from 'react';
 
-import * as util from '@recomp/utils';
+import * as util from '@recomp/utility/common';
 
 
 import { useResizeDetector } from 'react-resize-detector';
 
 import { updatePasteHandler } from './monaco-paste';
 
-import { classnames } from '@recomp/utils';
+import { classnames } from '@recomp/utility';
 
 import {
   useMount,

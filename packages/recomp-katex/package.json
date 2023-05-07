@@ -1,5 +1,5 @@
 {
-  "name": "@recomp/core",
+  "name": "@recomp/katex",
   "private": true,
   "version": "0.0.0",
   "main": "index.ts",
@@ -7,11 +7,10 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@recomp/hooks": "link:../recomp-hooks",
-    "@recomp/icons": "link:../recomp-icons",
-    "@recomp/utility": "link:../recomp-utils"
+    "katex": "^0.16.7"
   },
   "devDependencies": {
+    "@types/katex": "^0.16.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

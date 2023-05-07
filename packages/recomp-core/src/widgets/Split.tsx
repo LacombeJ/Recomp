@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { useInteract } from '@recomp/hooks';
-import * as util from '@recomp/utils';
+import * as util from '@recomp/utility/common';
 import { isElement } from '../utility/util';
 const { classnames } = util;
 

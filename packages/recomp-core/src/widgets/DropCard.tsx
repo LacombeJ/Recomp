@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utils';
+import * as util from '@recomp/utility/common';
 
-import { classnames } from '@recomp/utils';
+import { classnames } from '@recomp/utility';
 import { Collapse, Expand } from '@recomp/icons';
 import { useStateOrProps, useHover } from '@recomp/hooks';
 

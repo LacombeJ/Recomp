@@ -1,5 +1,5 @@
 import * as c from './color';
-import { percentage } from './utils';
+import { percentage } from './math';
 
 export const lighten = (color: any, amount: number) => {
   const { type } = c.detail(color);

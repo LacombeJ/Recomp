@@ -1,7 +1,7 @@
 // https://github.com/mrdoob/three.js/blob/master/src/math/Color.js
 // https://www.rapidtables.com/convert/color/rgb-to-hsl.html
 
-import { modulo, clamp, hue2rgb } from './utils';
+import { modulo, clamp, hue2rgb } from './math';
 
 import { nameToHexMap, hexToNameMap } from './named';
 

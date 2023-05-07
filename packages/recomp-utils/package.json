@@ -1,9 +1,0 @@
-{
-  "name": "@recomp/utils",
-  "private": true,
-  "version": "0.0.0",
-  "main": "index.ts",
-  "scripts": {
-    "build": "vite build"
-  }
-}
