@@ -18,11 +18,11 @@ const Template = (args) => (
 export const Basic = Template.bind({});
 Basic.args = {
   children: [
-    <Split.Item minSize={100}>
-      <div className='split-left'>Left</div>
+    <Split.Item key="1" minSize={100}>
+      <div className="split-left">Left</div>
     </Split.Item>,
-    <Split.Item minSize={100}>
-      <div className='split-right'>Right</div>
+    <Split.Item key="2" minSize={100}>
+      <div className="split-right">Right</div>
     </Split.Item>,
   ],
 };

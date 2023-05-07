@@ -14,7 +14,7 @@ const Template = (args) => <Form {...args} />;
 export const Basic = Template.bind({});
 Basic.args = {
   children: [
-    <React.Fragment>
+    <React.Fragment key={"form"}>
       <div>
         Form entry one: <input></input>
       </div>

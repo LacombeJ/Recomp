@@ -42,7 +42,7 @@ const Button = (props: ButtonProps) => {
   });
 
   const handleClick = (e: any) => {
-    props.onClick(e);
+    props.onClick??(e);
   };
 
   const clickHandler = !props.loading ? handleClick : undefined;

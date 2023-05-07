@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 import { isElement } from '../utility/util';
-const classnames = util.classnames;
 
 interface StackProps {
   direction: Direction;
@@ -42,7 +41,7 @@ const Stack = (props: StackProps) => {
 Stack.Item = (props: StackItemProps) => {
   const isVertical = props.settings.direction === 'vertical';
 
-  const classes = classnames({
+  const classes = util.classnames({
     row: isVertical,
     col: !isVertical,
     [props.scrollPolicy]: props.scrollPolicy !== 'none',

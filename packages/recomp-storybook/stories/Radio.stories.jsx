@@ -20,8 +20,8 @@ Basic.args = {
 export const Group = TemplateGroup.bind({});
 Group.args = {
   children: [
-    <Radio id="1">Choice 1</Radio>,
-    <Radio id="2">Choice 2</Radio>,
-    <Radio id="3">Choice 3</Radio>,
+    <Radio key="1" id="1">Choice 1</Radio>,
+    <Radio key="2" id="2">Choice 2</Radio>,
+    <Radio key="3" id="3">Choice 3</Radio>,
   ],
 };

@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
-import { classnames } from '@recomp/utility';
 import { Collapse, Expand } from '@recomp/icons';
 import { useStateOrProps, useHover } from '@recomp/hooks';
 
@@ -44,7 +43,7 @@ const DropCard = (props: DropCardProps) => {
 
   const classNames = props.classNames;
 
-  const className = classnames({
+  const className = util.classnames({
     [props.className]: true,
     expanded,
     hover,

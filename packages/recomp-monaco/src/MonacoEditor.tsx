@@ -5,12 +5,9 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
-
 import { useResizeDetector } from 'react-resize-detector';
 
 import { updatePasteHandler } from './monaco-paste';
-
-import { classnames } from '@recomp/utility';
 
 import {
   useMount,
@@ -70,7 +67,7 @@ export interface MonacoEditorProps {
 
 const MonacoEditor = (props: MonacoEditorProps) => {
   props = util.structureUnion(defaultProps, props);
-  
+
   // State
   // Assuming that this component can unmount and remount at any time, and
   // that we have no idea when this is because the component is truly unmounting or
@@ -557,7 +554,7 @@ const MonacoEditor = (props: MonacoEditorProps) => {
     onResize: handleResize,
   });
 
-  const className = classnames({
+  const className = util.classnames({
     [props.className]: true, // always append props.className
     [props.classNames.transparent]: props.transparent, // append if transparency enabled
   });

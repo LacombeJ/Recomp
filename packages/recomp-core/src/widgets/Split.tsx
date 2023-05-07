@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useInteract } from '@recomp/hooks';
 import * as util from '@recomp/utility/common';
 import { isElement } from '../utility/util';
-const { classnames } = util;
 
 interface SplitProps {
   classNames?: {
@@ -374,7 +373,7 @@ const Resizer = (props: ResizerProps) => {
     };
   }
   const classNames = { ...props.classNames };
-  const className = classnames({
+  const className = util.classnames({
     [classNames.resizer]: true,
     [classNames.vertical]: props.split === 'vertical',
     [classNames.horizontal]: props.split === 'horizontal',
