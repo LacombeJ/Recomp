@@ -4,7 +4,7 @@ import * as util from '@recomp/utility/common';
 import { Collapse, Expand } from '@recomp/icons';
 import { Nest } from '@recomp/core';
 
-import './index.styl';
+import './folder.styl';
 
 interface FolderProps {
   className?: string;

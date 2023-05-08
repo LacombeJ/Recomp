@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import katex from 'katex';
-import './index.styl';
+import './katex.styl';
 import 'katex/src/katex.less';
 
 import * as util from '@recomp/utility/common';
