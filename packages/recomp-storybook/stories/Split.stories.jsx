@@ -4,7 +4,7 @@ import { Split } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Widgets/Split',
+  title: 'Containers/Split',
   component: Split,
   argTypes: {},
 };

@@ -1,17 +1,17 @@
 import React from 'react';
 
-import { ScrollPane } from '@recomp/core';
+import { Scroll } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Widgets/ScrollPane',
-  component: ScrollPane,
+  title: 'Containers/Scroll',
+  component: Scroll,
   argTypes: {},
 };
 
 const Template = (args) => (
   <div className="scroll-container">
-    <ScrollPane className="scrollpane" {...args} />
+    <Scroll className="Scroll" {...args} />
   </div>
 );
 
@@ -21,7 +21,7 @@ Basic.args = {
   scrollPolicy: 'scroll',
   children: (
     <div>
-      <h1>ScrollPane</h1>
+      <h1>Scroll</h1>
       Scroll widget
       <ol>
         <li>Item...</li>

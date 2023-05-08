@@ -1,24 +1,24 @@
 import React from 'react';
 
-import { DropCard } from '@recomp/core';
+import { Cabinet } from '@recomp/core';
 import './stories.styl';
 
 export default {
-  title: 'Widgets/DropCard',
-  component: DropCard,
+  title: 'Elements/Cabinet',
+  component: Cabinet,
   argTypes: {},
 };
 
-const Template = (args) => <DropCard {...args} />;
+const Template = (args) => <Cabinet {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
-  title: 'DropCard',
+  title: 'Cabinet',
   subtitle: 'A widget container with ability to expand/collapse visibility',
   children: (
     <div>
-      <h3>Inside the dropcard</h3>
-      Dropcards are useful in scenarios such as:
+      <h3>Inside the cabinet</h3>
+      Cabinets are useful in scenarios such as:
       <ul>
         <li>Shortening length of document</li>
         <li>Hiding spoilers</li>

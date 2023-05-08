@@ -5,7 +5,7 @@ import './stories.styl';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'Elements/Monaco',
+  title: 'Components/Monaco',
   component: MonacoEditor,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {

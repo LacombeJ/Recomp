@@ -5,7 +5,7 @@ import * as util from '@recomp/utility/common';
 import { Collapse, Expand } from '@recomp/icons';
 import { useStateOrProps, useHover } from '@recomp/hooks';
 
-interface DropCardProps {
+interface CabinetProps {
   children?: React.ReactNode;
   className?: string;
   classNames?: {
@@ -28,7 +28,7 @@ interface DropCardProps {
   onCollapse?: () => any;
 }
 
-const DropCard = (props: DropCardProps) => {
+const Cabinet = (props: CabinetProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { style } = props;
@@ -85,8 +85,8 @@ const controlIconCallback = (expanded: boolean) => {
   }
 };
 
-const defaultProps: DropCardProps = {
-  className: 'recomp-dropcard',
+const defaultProps: CabinetProps = {
+  className: 'recomp-cabinet',
   classNames: {
     head: 'head',
     control: 'control',
@@ -100,4 +100,4 @@ const defaultProps: DropCardProps = {
   onCollapse: () => {},
 };
 
-export default DropCard;
+export default Cabinet;

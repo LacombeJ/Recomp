@@ -2,22 +2,22 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
-import Stack from '../elements/Stack';
+import Stack from './Stack';
 
-interface ScrollPaneProps {
+interface ScrollProps {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
   innerClassName?: string;
   innerStyle?: React.CSSProperties;
-  scroll?: Scroll;
+  scroll?: ScrollDirection;
   scrollPolicy?: ScrollPolicy;
 }
 
-type Scroll = 'x' | 'y' | 'xy';
+type ScrollDirection = 'x' | 'y' | 'xy';
 type ScrollPolicy = 'scroll' | 'auto' | 'overlay' | 'none';
 
-const ScrollPane = (props: ScrollPaneProps) => {
+const Scroll = (props: ScrollProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { className, style } = props;
@@ -39,11 +39,11 @@ const ScrollPane = (props: ScrollPaneProps) => {
   );
 };
 
-const defaultProps: ScrollPaneProps = {
-  className: 'recomp-scroll-pane',
-  innerClassName: 'recomp-scroll',
+const defaultProps: ScrollProps = {
+  className: 'recomp-scroll',
+  innerClassName: 'inner',
   scroll: 'xy',
   scrollPolicy: 'auto',
 };
 
-export default ScrollPane;
+export default Scroll;

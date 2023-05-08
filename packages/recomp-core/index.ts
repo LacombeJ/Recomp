@@ -14,19 +14,41 @@ export { ZeroWidth };
 
 // ----------------------------------------------------------------------------
 
+// Widgets
+
+import Bar from './src/containers/Bar';
+export { Bar };
+
+import Nest from './src/containers/Nest';
+export { Nest };
+
+import Root from './src/containers/Root';
+export { Root };
+
+import Scroll from './src/containers/Scroll';
+export { Scroll };
+
+import Split from './src/containers/Split';
+export { Split };
+
+import Stack from './src/containers/Stack';
+export { Stack };
+
+// ----------------------------------------------------------------------------
+
 // Elements
 
 import Audio from './src/elements/Audio';
 export { Audio };
-
-import Bar from './src/elements/Bar';
-export { Bar };
 
 import Block from './src/elements/Block';
 export { Block };
 
 import Button from './src/elements/Button';
 export { Button };
+
+import Cabinet from './src/elements/Cabinet';
+export { Cabinet };
 
 import Canvas from './src/elements/Canvas';
 export { Canvas };
@@ -64,14 +86,8 @@ export { Quote };
 import Radio from './src/elements/Radio';
 export { Radio };
 
-import Root from './src/elements/Root';
-export { Root };
-
 import Select from './src/elements/Select';
 export { Select };
-
-import Stack from './src/elements/Stack';
-export { Stack };
 
 import Switch from './src/elements/Switch';
 export { Switch };
@@ -87,30 +103,25 @@ export { Video };
 
 // ----------------------------------------------------------------------------
 
-// Widgets
-
-import DropCard from './src/widgets/DropCard';
-export { DropCard };
-
-import ScrollPane from './src/widgets/ScrollPane';
-export { ScrollPane };
-
-import Split from './src/widgets/Split';
-export { Split };
-
-// ----------------------------------------------------------------------------
-
 export default {
   // Fragments
   ErrorBoundary,
   Page,
   ZeroWidth,
 
+  // Containers
+  Bar,
+  Nest,
+  Root,
+  Scroll,
+  Split,
+  Stack,
+
   // Elements
   Audio,
-  Bar,
   Block,
   Button,
+  Cabinet,
   Canvas,
   Checkbox,
   Form,
@@ -123,18 +134,11 @@ export default {
   Paragraph,
   Quote,
   Radio,
-  Root,
   Select,
-  Stack,
   Switch,
   Text,
   TextArea,
   Video,
-
-  // Widgets
-  DropCard,
-  ScrollPane,
-  Split,
 };
 
 declare module '@recomp/core';

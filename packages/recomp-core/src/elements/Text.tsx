@@ -5,7 +5,7 @@ import * as util from '@recomp/utility/common';
 interface TextProps {
   className?: string;
   style?: React.CSSProperties;
-  size?: string;
+  size?: number;
   weight?: string;
   color?: string;
   b?: boolean;

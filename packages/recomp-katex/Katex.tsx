@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import katex from 'katex';
 import './index.styl';
+import 'katex/src/katex.less';
 
 import * as util from '@recomp/utility/common';
 
@@ -21,6 +22,7 @@ interface KatexProps {
 const Katex = (props: KatexProps) => {
   props = util.structureUnion(defaultProps, props);
 
+  // const {children, display, size, margin, nlbreak} = props;
   let text = props.children;
 
   if (props.nlbreak) {
@@ -43,21 +45,22 @@ const Katex = (props: KatexProps) => {
 
   const style = {
     ...props.style,
+    marginBottom: props.margin,
+    marginTop: props.margin,
   };
 
+  console.log(props);
+  console.log(className);
+  props.children = 'x';
   const Component =
     props.display === 'inline'
-      ? (props: KatexProps) => <span {...props}></span>
-      : (props: KatexProps) => <div {...props}></div>;
+      ? (props: any) => <span {...props}></span>
+      : (props: any) => <div {...props}></div>;
 
   return (
     <Component
       className={className}
-      style={{
-        ...style,
-        marginBottom: props.margin,
-        marginTop: props.margin,
-      }}
+      style={style}
       dangerouslySetInnerHTML={{ __html: html }}
     ></Component>
   );

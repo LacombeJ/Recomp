@@ -1,15 +1,19 @@
 // Recomp style api
 
 @import './src/styles/common/*'
+@import './src/styles/containers/*'
 @import './src/styles/elements/*'
-@import './src/styles/widgets/*'
 
 recomp-init() {
 
-  // Elements
+  // Containers
   recomp-bar();
+  recomp-split();
+
+  // Elements
   recomp-block();
   recomp-button();
+  recomp-cabinet();
   recomp-checkbox();
   recom-form();
   recomp-heading();
@@ -23,9 +27,5 @@ recomp-init() {
   recomp-switch();
   recomp-text();
   recomp-textarea();
-
-  // Widgets
-  recomp-dropcard();
-  recomp-split();
 
 }
