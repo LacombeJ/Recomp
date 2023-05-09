@@ -210,18 +210,26 @@ const Split = (props: SplitProps) => {
   }
 
   return (
-    <div className={className} style={style} ref={nodeRef}>
-      {renderItem(contents.items[0], 0, actualSize, view)}
-      {view === -1 ? (
-        <Resizer
-          classNames={props.classNames.resizer}
-          split={props.split}
-          onMouseDown={handleResizerDown}
-          resizing={resizing}
-        ></Resizer>
-      ) : null}
-      {renderItem(contents.items[1], 1, actualSize, view)}
-      {contents.rest}
+    <div
+      style={{
+        inset: '0px',
+        position: 'absolute',
+        overflow: 'hidden',
+      }}
+    >
+      <div className={className} style={style} ref={nodeRef}>
+        {renderItem(contents.items[0], 0, actualSize, view)}
+        {view === -1 ? (
+          <Resizer
+            classNames={props.classNames.resizer}
+            split={props.split}
+            onMouseDown={handleResizerDown}
+            resizing={resizing}
+          ></Resizer>
+        ) : null}
+        {renderItem(contents.items[1], 1, actualSize, view)}
+        {contents.rest}
+      </div>
     </div>
   );
 };

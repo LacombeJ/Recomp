@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Split } from '@recomp/core';
+import { Split, Stack } from '@recomp/core';
 import './stories.styl';
 
 export default {
@@ -9,20 +9,29 @@ export default {
   argTypes: {},
 };
 
-const Template = (args) => (
-  <div className="split-container">
-    <Split {...args} />
-  </div>
-);
+const Template = (args) => <Split {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
   children: [
-    <Split.Item key="1" minSize={100}>
+    <Split.Item key="1">
       <div className="split-left">Left</div>
     </Split.Item>,
-    <Split.Item key="2" minSize={100}>
+    <Split.Item key="2">
       <div className="split-right">Right</div>
+    </Split.Item>,
+  ],
+};
+
+export const Horizontal = Template.bind({});
+Horizontal.args = {
+  split: 'horizontal',
+  children: [
+    <Split.Item key="1">
+      <div className="split-top">Top</div>
+    </Split.Item>,
+    <Split.Item key="2">
+      <div className="split-bottom">Bottom</div>
     </Split.Item>,
   ],
 };

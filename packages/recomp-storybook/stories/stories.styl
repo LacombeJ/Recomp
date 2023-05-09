@@ -36,30 +36,39 @@ recomp-init()
   background-color: #6f9451;
 }
 
-.split-left {
+split-panel() {
   font-size: 40px;
   font-weight: 200;
   text-align: center;
   justify-content: center;
   align-items: center;
   display: flex;
-  height: 300px;
   width: 100%;
+  height: 100%;
+}
+
+.split-left {
+  split-panel();
   background-color: rgba(30, 0, 0, 0.5);
   border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .split-right {
-  font-size: 40px;
-  font-weight: 200;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  height: 300px;
-  width: 100%;
+  split-panel();
   background-color: rgba(0, 0, 30, 0.5);
 }
+
+.split-top {
+  split-panel();
+  background-color: rgba(30, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.split-bottom {
+  split-panel();
+  background-color: rgba(0, 0, 30, 0.5);
+}
+
 
 .scrollpane {
   max-height: 300px;
