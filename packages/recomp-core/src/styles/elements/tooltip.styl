@@ -1,0 +1,38 @@
+recomp-tooltip() {
+
+  .recomp-tooltip {
+    position: relative;
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.75);
+    background-color: rgb(40, 40, 40);
+    border: 1px solid rgb(100, 100, 100);
+    border-radius: 2px;
+    box-shadow: inset rgba(0, 0, 0, 0.0) 0 4px 8px, rgba(0, 0, 0, 0.0) 0px 4px 8px;
+    padding: 4px 8px;
+    text-align: center;
+    white-space: nowrap;
+    display: inline-block;
+
+    .triangle {
+      position: absolute;
+      // bottom: 100%;
+      // left: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      // clipping issue: https://stackoverflow.com/questions/26554832/keep-svg-element-on-exact-pixel
+      // transform: translate(0, 0);
+      // transform: rotate(90deg);
+
+      .outline {
+        position: absolute;
+        color: rgb(100, 100, 100);
+      }
+
+      .inner {
+        position: absolute;
+        color: rgb(40, 40, 40);
+      }
+    }
+  }
+}

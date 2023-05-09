@@ -98,6 +98,9 @@ export { Text };
 import TextArea from './src/elements/TextArea';
 export { TextArea };
 
+import Tooltip from './src/elements/Tooltip';
+export { Tooltip };
+
 import Video from './src/elements/Video';
 export { Video };
 
@@ -138,6 +141,7 @@ export default {
   Switch,
   Text,
   TextArea,
+  Tooltip,
   Video,
 };
 
