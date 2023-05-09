@@ -9,11 +9,11 @@ interface StackProps {
 }
 
 interface StackItemProps {
-  className: string;
-  style: React.CSSProperties;
+  className?: string;
+  style?: React.CSSProperties;
   size: string | number;
-  scroll: Scroll;
-  scrollPolicy: ScrollPolicy;
+  scroll?: Scroll;
+  scrollPolicy?: ScrollPolicy;
   settings?: ChildSettings;
   children?: React.ReactNode;
 }

@@ -2,8 +2,10 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
+import { useSpring, animated } from '@react-spring/web';
+
 import { Collapse, Expand } from '@recomp/icons';
-import { useStateOrProps, useHover } from '@recomp/hooks';
+import { useStateOrProps, useHover, useMeasure } from '@recomp/hooks';
 
 interface CabinetProps {
   children?: React.ReactNode;
@@ -41,6 +43,37 @@ const Cabinet = (props: CabinetProps) => {
     props.onCollapse
   );
 
+  // Using this because of react spring. We'll wait until animation finishes
+  // before making invisible again
+  const [visible, setVisible] = React.useState(expanded);
+
+  const [contentHeight, setContentHeight] = React.useState(0);
+  const [bodyRef, { height }] = useMeasure();
+
+  React.useEffect(() => {
+    // added margins for correct height, not sure why this is needed
+    let actualHeight = height + 8 + 8 + 4 + 4;
+
+    setContentHeight(actualHeight);
+    const setFunction = () => setContentHeight(actualHeight);
+
+    window.addEventListener('resize', setFunction);
+    return window.removeEventListener('resize', setFunction);
+  }, [height]);
+
+  const expand = useSpring({
+    height: expanded ? `${contentHeight}px` : '0px',
+  });
+  const spin = useSpring({
+    onRest: () => {
+      // If rested, is visible, and no longer expanded, make invisible
+      if (visible && !expanded) {
+        setVisible(true);
+      }
+    },
+    transform: expanded ? `rotate(90deg)` : 'rotate(0deg)',
+  });
+
   const classNames = props.classNames;
 
   const className = util.classnames({
@@ -50,7 +83,13 @@ const Cabinet = (props: CabinetProps) => {
   });
 
   const handleClick = () => {
+    // Toggle expanded
     setExpanded(!expanded);
+
+    // If element isn't expanded, toggle visibility
+    if (!expanded) {
+      setVisible(true);
+    }
   };
 
   return (
@@ -66,12 +105,16 @@ const Cabinet = (props: CabinetProps) => {
           <span className={classNames.title}>{props.title}</span>
           <span className={classNames.subtitle}>{props.subtitle}</span>
         </div>
-        <span className={classNames.control}>
-          {props.controlIcon(expanded)}
-        </span>
+        <animated.span className={classNames.control} style={spin}>
+          {props.controlIcon(false)}
+        </animated.span>
       </div>
-      {expanded ? (
-        <div className={classNames.body}>{props.children}</div>
+      {visible ? (
+        <animated.div style={{ ...expand, overflow: 'hidden' }}>
+          <div ref={bodyRef} className={classNames.body}>
+            {props.children}
+          </div>
+        </animated.div>
       ) : null}
     </div>
   );

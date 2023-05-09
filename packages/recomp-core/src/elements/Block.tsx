@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
-import useNestedProps from '@recomp/hooks/useNestedProps';
+import { useNestedProps } from '@recomp/hooks';
 import NestBreak from '../fragments/NestBreak';
 
 interface BlockProps {
