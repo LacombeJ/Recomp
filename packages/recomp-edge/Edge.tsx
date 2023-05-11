@@ -5,7 +5,6 @@ import * as util from '@recomp/utility/common';
 import { useSpring, animated } from '@react-spring/web';
 
 import {
-  useNestedProps,
   useMeasure,
   Rect,
   useTimeout,
@@ -73,12 +72,12 @@ const useTooltipCalculations = () => {
   const hoverTimeout = useTimeout();
   const recentTimeout = useTimeout();
 
-  const handleItemClick = (id: string, rect: Rect) => {
+  const handleItemClick = (_id: string, _rect: Rect) => {
     setTipActive(false);
     setRecentHover(false);
   };
 
-  const handleItemMouseEnter = (id: string, tooltip: string, rect: Rect) => {
+  const handleItemMouseEnter = (_id: string, tooltip: string, rect: Rect) => {
     setHoverRect(rect);
     hoverTimeout.cancel();
 
@@ -98,7 +97,7 @@ const useTooltipCalculations = () => {
     recentTimeout.cancel();
   };
 
-  const handleItemMouseLeave = (id: string) => {
+  const handleItemMouseLeave = (_id: string) => {
     hoverTimeout.cancel();
     setTipActive(false);
     recentTimeout.begin(1000, () => {
@@ -176,7 +175,7 @@ const Tabs = (props: TabsProps) => {
     tooltipCalc.setParentRef(element);
   };
 
-  const [selected, setSelected] = React.useState('A1');
+  const [selected, setSelected] = React.useState('');
   const [selectedRect, setSelectedRect] = React.useState<Rect>();
 
   const tooltipCalc = useTooltipCalculations();
@@ -193,9 +192,11 @@ const Tabs = (props: TabsProps) => {
       return (
         <EdgeItem
           className={childProps.className}
+          classNames={childProps.classNames}
           style={childProps.style}
           id={childProps.id}
           tooltip={childProps.tooltip}
+          active={childProps.id === selected}
           onClick={handleItemClick}
           onMouseEnter={tooltipCalc.handleItemMouseEnter}
           onMouseLeave={tooltipCalc.handleItemMouseLeave}
@@ -221,10 +222,12 @@ const Tabs = (props: TabsProps) => {
 
   return (
     <div className={className} style={style} ref={setParentRef}>
-      <animated.div
-        className={props.classNames.hint}
-        style={moveHint}
-      ></animated.div>
+      {selected ? (
+        <animated.div
+          className={props.classNames.hint}
+          style={moveHint}
+        ></animated.div>
+      ) : null}
       {tooltipCalc.tooltipVisible ? (
         <animated.div
           className={props.classNames.tooltip}
@@ -261,6 +264,9 @@ const tabsDefaultProps: TabsProps = {
 
 interface TabProps {
   className?: string;
+  classNames?: {
+    active?: string;
+  };
   style?: React.CSSProperties;
   id: string;
   tooltip?: string;
@@ -280,6 +286,9 @@ Edge.Tab = Tab;
 
 const tabDefaultProps = {
   className: 'tab',
+  classNames: {
+    active: 'active',
+  },
 };
 
 // ----------------------------------------------------------------------------
@@ -311,9 +320,11 @@ const Controls = (props: ControlsProps) => {
       return (
         <EdgeItem
           className={childProps.className}
+          classNames={childProps.classNames}
           style={childProps.style}
           id={childProps.id}
           tooltip={childProps.tooltip}
+          active={false}
           onClick={tooltipCalc.handleItemClick}
           onMouseEnter={tooltipCalc.handleItemMouseEnter}
           onMouseLeave={tooltipCalc.handleItemMouseLeave}
@@ -363,6 +374,9 @@ const controlsDefaultProps: ControlsProps = {
 
 interface ControlProps {
   className?: string;
+  classNames?: {
+    active?: string;
+  };
   id: string;
   tooltip?: string;
   style?: React.CSSProperties;
@@ -382,15 +396,22 @@ Edge.Control = Control;
 
 const controlDefaultProps = {
   className: 'control',
+  classNames: {
+    active: 'active',
+  },
 };
 
 // ----------------------------------------------------------------------------
 
 interface EdgeItemProps {
   className?: string;
+  classNames?: {
+    active?: string;
+  };
   style?: React.CSSProperties;
   id?: string;
   tooltip?: string;
+  active?: boolean;
   onClick?: (id: string, rect: Rect) => any;
   onMouseEnter?: (id: string, tooltip: string, rect: Rect) => any;
   onMouseLeave?: (id: string) => any;
@@ -398,6 +419,11 @@ interface EdgeItemProps {
 }
 
 const EdgeItem = (props: EdgeItemProps) => {
+  const className = util.classnames({
+    [props.className]: true,
+    [props.classNames.active]: props.active,
+  });
+
   const [divRef, measureResult] = useMeasure();
 
   const handleClick = () => {
@@ -414,7 +440,7 @@ const EdgeItem = (props: EdgeItemProps) => {
 
   return (
     <div
-      className={props.className}
+      className={className}
       style={props.style}
       ref={divRef}
       onClick={handleClick}
