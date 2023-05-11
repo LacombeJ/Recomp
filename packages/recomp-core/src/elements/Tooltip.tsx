@@ -2,6 +2,10 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
+import { animated } from '@react-spring/web';
+
+import { useMeasure } from '@recomp/hooks';
+
 type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
 
 interface TooltipProps {
@@ -10,6 +14,7 @@ interface TooltipProps {
     triangle?: string;
     outline?: string;
     inner?: string;
+    body?: string;
   };
   style?: React.CSSProperties;
   position?: TooltipPosition;
@@ -18,12 +23,12 @@ interface TooltipProps {
   borderSize?: number;
 }
 
-const Tooltip = (props: TooltipProps) => {
+const TooltipGeneric = (props: TooltipProps) => {
   props = util.structureUnion(defaultProps, props);
   const { className, style } = props;
 
   return (
-    <span className={className} style={style}>
+    <div className={className} style={style}>
       <Triangle
         className={props.classNames.triangle}
         classNames={{
@@ -34,8 +39,19 @@ const Tooltip = (props: TooltipProps) => {
         tipSize={props.tipSize}
         borderSize={props.borderSize}
       ></Triangle>
-      <span className="body">{props.children}</span>
-    </span>
+      {props.children}
+    </div>
+  );
+};
+
+const Tooltip = (props: TooltipProps) => {
+  props = util.structureUnion(defaultProps, props);
+  const { children, ...genericProps } = props;
+
+  return (
+    <TooltipGeneric {...genericProps}>
+      <div className={props.classNames.body}>{props.children}</div>
+    </TooltipGeneric>
   );
 };
 
@@ -45,10 +61,41 @@ const defaultProps: TooltipProps = {
     triangle: 'triangle',
     outline: 'outline',
     inner: 'inner',
+    body: 'body',
   },
   position: 'top',
   tipSize: 14,
   borderSize: 2,
+};
+
+// ----------------------------------------------------------------------------
+
+interface TooltipAnimatedProps extends TooltipProps {
+  animatedStyle: any;
+  onResize: (width: number, height: number) => void;
+}
+
+Tooltip.Animated = (props: TooltipAnimatedProps) => {
+  props = util.structureUnion(defaultProps, props);
+
+  const [bodyRef, bodyMeasure] = useMeasure();
+  const { width, height } = bodyMeasure.clientRect;
+
+  React.useEffect(() => {
+    props.onResize(width, height);
+  }, [width, height]);
+
+  const { animatedStyle, children, ...genericProps } = props;
+
+  return (
+    <TooltipGeneric {...genericProps}>
+      <animated.div style={{ ...animatedStyle, overflow: 'hidden' }}>
+        <div ref={bodyRef} className={props.classNames.body}>
+          {props.children}
+        </div>
+      </animated.div>
+    </TooltipGeneric>
+  );
 };
 
 // ----------------------------------------------------------------------------
@@ -81,7 +128,7 @@ const Triangle = (props: TriangleProps) => {
       // tooltip appears on top, so arrow pointing down
       style.top = '100%';
       style.left = '50%';
-      style.transform = 'translate(0, 0.8px) rotate(180deg)';
+      style.transform = 'translate(0, 0px) rotate(180deg)';
       break;
     case 'right':
       // tooltip appears to right, so arrow pointing left

@@ -16,12 +16,18 @@ const useDelay = (
   const delayHandledRef: React.MutableRefObject<boolean> = React.createRef();
 
   React.useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       if (cancelOnUnmount && !delayHandledRef.current) {
         delayHandledRef.current = true;
         handleDelayComplete();
       }
     }, ms);
+
+    return () => {
+      if (cancelOnUnmount) {
+        clearTimeout(timeout);
+      }
+    }
   });
 
   return [delayed];

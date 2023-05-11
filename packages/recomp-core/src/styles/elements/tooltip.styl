@@ -1,37 +1,42 @@
+@import '../common/colors';
+
 recomp-tooltip() {
+
+  TOOLTIP_BORDER = lighten(desaturate(RECOMP_PRIMARY, 50%), 15%);
+  TOOLTIP_BACKGROUND = darken(desaturate(RECOMP_PRIMARY, 70%), 40%);
 
   .recomp-tooltip {
     position: relative;
     font-size: 0.9em;
     color: rgba(255, 255, 255, 0.75);
-    background-color: rgb(40, 40, 40);
-    border: 1px solid rgb(100, 100, 100);
+    background-color: TOOLTIP_BACKGROUND;
+    border: 1px solid TOOLTIP_BORDER;
     border-radius: 2px;
     box-shadow: inset rgba(0, 0, 0, 0.0) 0 4px 8px, rgba(0, 0, 0, 0.0) 0px 4px 8px;
     padding: 4px 8px;
-    text-align: center;
-    white-space: nowrap;
     display: inline-block;
+    user-select: none;
+
+    .body {
+      display: inline-block;
+      white-space: nowrap;
+    }
 
     .triangle {
       position: absolute;
-      // bottom: 100%;
-      // left: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-      // clipping issue: https://stackoverflow.com/questions/26554832/keep-svg-element-on-exact-pixel
-      // transform: translate(0, 0);
-      // transform: rotate(90deg);
 
       .outline {
         position: absolute;
-        color: rgb(100, 100, 100);
+        color: TOOLTIP_BORDER;
       }
 
       .inner {
         position: absolute;
-        color: rgb(40, 40, 40);
+        color: TOOLTIP_BACKGROUND;
+        transform: translateY(0.5px);
       }
     }
   }

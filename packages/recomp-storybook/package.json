@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "@recomp/core": "link:../recomp-core",
-    "@recomp/monaco": "link:../recomp-monaco"
+    "@recomp/monaco": "link:../recomp-monaco",
+    "@tabler/icons-react": "^2.18.0"
   },
   "devDependencies": {
     "react": "^18.2.0",

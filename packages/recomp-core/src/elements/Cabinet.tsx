@@ -47,28 +47,19 @@ const Cabinet = (props: CabinetProps) => {
   // before making invisible again
   const [visible, setVisible] = React.useState(expanded);
 
-  const [contentHeight, setContentHeight] = React.useState(0);
-  const [bodyRef, { height }] = useMeasure();
+  const [bodyRef, { contentRect }] = useMeasure();
+  const { height } = contentRect;
 
-  React.useEffect(() => {
-    // added margins for correct height, not sure why this is needed
-    let actualHeight = height + 8 + 8 + 4 + 4;
-
-    setContentHeight(actualHeight);
-    const setFunction = () => setContentHeight(actualHeight);
-
-    window.addEventListener('resize', setFunction);
-    return window.removeEventListener('resize', setFunction);
-  }, [height]);
-
+  // added margins for correct height, not sure why this is needed
+  const actualHeight = height + 8 + 8 + 4 + 4;
   const expand = useSpring({
-    height: expanded ? `${contentHeight}px` : '0px',
+    height: expanded ? `${actualHeight}px` : '0px',
   });
   const spin = useSpring({
     onRest: () => {
       // If rested, is visible, and no longer expanded, make invisible
       if (visible && !expanded) {
-        setVisible(true);
+        setVisible(false);
       }
     },
     transform: expanded ? `rotate(90deg)` : 'rotate(0deg)',

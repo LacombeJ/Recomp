@@ -89,6 +89,9 @@ export { Radio };
 import Select from './src/elements/Select';
 export { Select };
 
+import Spacer from './src/elements/Spacer';
+export { Spacer };
+
 import Switch from './src/elements/Switch';
 export { Switch };
 
@@ -138,6 +141,7 @@ export default {
   Quote,
   Radio,
   Select,
+  Spacer,
   Switch,
   Text,
   TextArea,
