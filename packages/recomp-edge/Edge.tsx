@@ -9,6 +9,7 @@ import {
   Rect,
   useTimeout,
   useReplaceChildren,
+  useChildrenProps,
 } from '@recomp/hooks';
 import { Spacer, Tooltip } from '@recomp/core';
 
@@ -31,20 +32,38 @@ import { Spacer, Tooltip } from '@recomp/core';
 interface EdgeProps {
   className?: string;
   style?: React.CSSProperties;
+  position?: Position;
   children?: React.ReactNode;
 }
 
 const Edge = (props: EdgeProps) => {
   props = util.structureUnion(defaultProps, props);
+  const className = util.classnames({
+    [props.className]: true,
+    [props.position]: true,
+  });
+  const [cloner] = useChildrenProps<any>((child, _childProps) => {
+    if (
+      child &&
+      child.type &&
+      (child.type.identifier === Edge.Tabs.identifier ||
+        child.type.identifier === Edge.Controls.identifier)
+    ) {
+      return {
+        position: props.position,
+      };
+    }
+  });
   return (
-    <div className={props.className} style={props.style}>
-      {props.children}
+    <div className={className} style={props.style}>
+      {cloner(props.children)}
     </div>
   );
 };
 
 const defaultProps: EdgeProps = {
   className: 'recomp-edge',
+  position: 'left',
 };
 
 // ----------------------------------------------------------------------------
@@ -161,10 +180,13 @@ interface TabsProps {
     bar?: string;
   };
   style?: React.CSSProperties;
+  position?: Position;
   children?: React.ReactNode;
 }
 
 const Tabs = (props: TabsProps) => {
+  console.log(props);
+  
   props = util.structureUnion(tabsDefaultProps, props);
   const { className, style } = props;
 
@@ -235,7 +257,7 @@ const Tabs = (props: TabsProps) => {
         >
           <div className={props.classNames.tooltipOffset}>
             <Tooltip.Animated
-              position="right"
+              position={tooltipPosition(props.position)}
               animatedStyle={tooltipCalc.expandTip}
               onResize={tooltipCalc.handleTooltipSize}
             >
@@ -248,6 +270,7 @@ const Tabs = (props: TabsProps) => {
     </div>
   );
 };
+Tabs.identifier = 'recomp-edge-tabs';
 Edge.Tabs = Tabs;
 
 const tabsDefaultProps: TabsProps = {
@@ -301,6 +324,7 @@ interface ControlsProps {
     bar?: string;
   };
   style?: React.CSSProperties;
+  position?: Position;
   children?: React.ReactNode;
 }
 
@@ -346,7 +370,7 @@ const Controls = (props: ControlsProps) => {
         >
           <div className={props.classNames.tooltipOffset}>
             <Tooltip.Animated
-              position="right"
+              position={tooltipPosition(props.position)}
               animatedStyle={tooltipCalc.expandTip}
               onResize={tooltipCalc.handleTooltipSize}
             >
@@ -359,6 +383,7 @@ const Controls = (props: ControlsProps) => {
     </div>
   );
 };
+Controls.identifier = 'recomp-edge-controls';
 Edge.Controls = Controls;
 
 const controlsDefaultProps: ControlsProps = {
@@ -455,5 +480,15 @@ const EdgeItem = (props: EdgeItemProps) => {
 // ----------------------------------------------------------------------------
 
 Edge.Spacer = Spacer;
+
+type Position = 'left' | 'right';
+
+const tooltipPosition = (position: Position): Position => {
+  if (position === 'left') {
+    return 'right';
+  } else {
+    return 'left';
+  }
+};
 
 export default Edge;

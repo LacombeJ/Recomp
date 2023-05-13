@@ -115,7 +115,12 @@ interface TriangleProps {
 const Triangle = (props: TriangleProps) => {
   props = util.structureUnion(triangleDefaultProps, props);
 
-  const { className, tipSize, borderSize } = props;
+  const { tipSize, borderSize } = props;
+
+  const className = util.classnames({
+    [props.className]: true,
+    [props.position]: true,
+  });
 
   const style = {
     ...props.style,

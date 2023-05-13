@@ -1,3 +1,4 @@
+export { default as useChildrenProps } from './useChildrenProps';
 export { default as useDelay } from './useDelay';
 export { default as useEffectOnReady } from './useEffectOnReady';
 export { default as useEventListener } from './useEventListener';

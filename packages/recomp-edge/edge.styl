@@ -3,37 +3,54 @@
 recomp-edge() {
 
   .recomp-edge {
-    background-color: rgb(30, 30, 30, 0.3);
+    background-color: rgb(30, 30, 30);
     display: inline-flex;
     justify-content: space-between;
     flex-direction: column;
     align-items: stretch;
-  }
-
-  .recomp-edge .tabs {
-    position: relative;
-    display: inline-block;
 
     .tooltip {
+      
+    }
+
+    &.right .tooltip {
+      position: absolute;
+      right: 100%;
+    }
+    &.left .tooltip {
       position: absolute;
       left: 100%;
     }
 
-    .tooltip-offset {
+    &.right .tooltip-offset {
+      transform: translateX(-10px);
+    }
+    &.left .tooltip-offset {
       transform: translateX(10px);
     }
+
 
     .hint {
       position: absolute;
       width: 49px;
       height: 50px;
-      border-left: 2px solid lighten(RECOMP_PRIMARY, 40%);
       pointer-events: none;
+    }
+    &.right .hint {
+      border-right: 2px solid lighten(RECOMP_PRIMARY, 40%);
+    }
+    &.left .hint {
+      border-left: 2px solid lighten(RECOMP_PRIMARY, 40%);
     }
 
     .bar {
       display: flex;
       flex-direction: column;
+      display: inline-block;
+    }
+    
+    .tabs {
+      position: relative;
       display: inline-block;
 
       .tab {
@@ -56,32 +73,8 @@ recomp-edge() {
       }
     }
 
-  }
-
-  .recomp-edge .controls {
-    position: relative;
-    display: inline-block;
-
-    .tooltip {
-      position: absolute;
-      left: 100%;
-    }
-
-    .tooltip-offset {
-      transform: translateX(10px);
-    }
-
-    .hint {
-      position: absolute;
-      width: 49px;
-      height: 50px;
-      border-left: 2px solid lighten(RECOMP_PRIMARY, 40%);
-      pointer-events: none;
-    }
-
-    .bar {
-      display: flex;
-      flex-direction: column;
+    .controls {
+      position: relative;
       display: inline-block;
 
       .control {
