@@ -17,7 +17,7 @@ import { Spacer, Tooltip } from '@recomp/core';
  * Move these notes to a README
  *
  * About the component:
- * An Edge is a bar component that is meant to be placed on the
+ * An Coast is a bar component that is meant to be placed on the
  * left side of an application. It consists of a tab group that appears
  * on the top of the bar, and a control group that appears on the
  * bottom. Inspired by VSCode.
@@ -29,14 +29,14 @@ import { Spacer, Tooltip } from '@recomp/core';
  * - tooltip opacity will fade in slowly, fade out quickly
  */
 
-interface EdgeProps {
+interface CoastProps {
   className?: string;
   style?: React.CSSProperties;
   position?: Position;
   children?: React.ReactNode;
 }
 
-const Edge = (props: EdgeProps) => {
+const Coast = (props: CoastProps) => {
   props = util.structureUnion(defaultProps, props);
   const className = util.classnames({
     [props.className]: true,
@@ -46,8 +46,8 @@ const Edge = (props: EdgeProps) => {
     if (
       child &&
       child.type &&
-      (child.type.identifier === Edge.Tabs.identifier ||
-        child.type.identifier === Edge.Controls.identifier)
+      (child.type.identifier === Coast.Tabs.identifier ||
+        child.type.identifier === Coast.Controls.identifier)
     ) {
       return {
         position: props.position,
@@ -61,8 +61,8 @@ const Edge = (props: EdgeProps) => {
   );
 };
 
-const defaultProps: EdgeProps = {
-  className: 'recomp-edge',
+const defaultProps: CoastProps = {
+  className: 'recomp-coast',
   position: 'left',
 };
 
@@ -185,8 +185,6 @@ interface TabsProps {
 }
 
 const Tabs = (props: TabsProps) => {
-  console.log(props);
-  
   props = util.structureUnion(tabsDefaultProps, props);
   const { className, style } = props;
 
@@ -209,10 +207,10 @@ const Tabs = (props: TabsProps) => {
   };
 
   const [replace] = useReplaceChildren<TabProps>((child, childProps) => {
-    if (child && child.type && child.type.identifier === Edge.Tab.identifier) {
+    if (child && child.type && child.type.identifier === Coast.Tab.identifier) {
       childProps = util.structureUnion(tabDefaultProps, childProps);
       return (
-        <EdgeItem
+        <CoastItem
           className={childProps.className}
           classNames={childProps.classNames}
           style={childProps.style}
@@ -224,10 +222,10 @@ const Tabs = (props: TabsProps) => {
           onMouseLeave={tooltipCalc.handleItemMouseLeave}
         >
           {childProps.children}
-        </EdgeItem>
+        </CoastItem>
       );
     } else {
-      console.error('Expected only Edge.Tab children of Edge.Tabs');
+      console.error('Expected only Coast.Tab children of Coast.Tabs');
     }
   });
 
@@ -270,8 +268,8 @@ const Tabs = (props: TabsProps) => {
     </div>
   );
 };
-Tabs.identifier = 'recomp-edge-tabs';
-Edge.Tabs = Tabs;
+Tabs.identifier = 'recomp-coast-tabs';
+Coast.Tabs = Tabs;
 
 const tabsDefaultProps: TabsProps = {
   className: 'tabs',
@@ -304,8 +302,8 @@ const Tab = (props: TabProps) => {
     </div>
   );
 };
-Tab.identifier = 'recomp-edge-tab';
-Edge.Tab = Tab;
+Tab.identifier = 'recomp-coast-tab';
+Coast.Tab = Tab;
 
 const tabDefaultProps = {
   className: 'tab',
@@ -338,11 +336,11 @@ const Controls = (props: ControlsProps) => {
     if (
       child &&
       child.type &&
-      child.type.identifier === Edge.Control.identifier
+      child.type.identifier === Coast.Control.identifier
     ) {
       childProps = util.structureUnion(controlDefaultProps, childProps);
       return (
-        <EdgeItem
+        <CoastItem
           className={childProps.className}
           classNames={childProps.classNames}
           style={childProps.style}
@@ -354,10 +352,10 @@ const Controls = (props: ControlsProps) => {
           onMouseLeave={tooltipCalc.handleItemMouseLeave}
         >
           {childProps.children}
-        </EdgeItem>
+        </CoastItem>
       );
     } else {
-      console.error('Expected only Edge.Control children of Edge.Controls');
+      console.error('Expected only Coast.Control children of Coast.Controls');
     }
   });
 
@@ -383,8 +381,8 @@ const Controls = (props: ControlsProps) => {
     </div>
   );
 };
-Controls.identifier = 'recomp-edge-controls';
-Edge.Controls = Controls;
+Controls.identifier = 'recomp-coast-controls';
+Coast.Controls = Controls;
 
 const controlsDefaultProps: ControlsProps = {
   className: 'controls',
@@ -416,8 +414,8 @@ const Control = (props: ControlProps) => {
     </div>
   );
 };
-Control.identifier = 'recomp-edge-control';
-Edge.Control = Control;
+Control.identifier = 'recomp-coast-control';
+Coast.Control = Control;
 
 const controlDefaultProps = {
   className: 'control',
@@ -428,7 +426,7 @@ const controlDefaultProps = {
 
 // ----------------------------------------------------------------------------
 
-interface EdgeItemProps {
+interface CoastItemProps {
   className?: string;
   classNames?: {
     active?: string;
@@ -443,7 +441,7 @@ interface EdgeItemProps {
   children?: React.ReactNode;
 }
 
-const EdgeItem = (props: EdgeItemProps) => {
+const CoastItem = (props: CoastItemProps) => {
   const className = util.classnames({
     [props.className]: true,
     [props.classNames.active]: props.active,
@@ -479,7 +477,7 @@ const EdgeItem = (props: EdgeItemProps) => {
 
 // ----------------------------------------------------------------------------
 
-Edge.Spacer = Spacer;
+Coast.Spacer = Spacer;
 
 type Position = 'left' | 'right';
 
@@ -491,4 +489,4 @@ const tooltipPosition = (position: Position): Position => {
   }
 };
 
-export default Edge;
+export default Coast;

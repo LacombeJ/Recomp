@@ -1,5 +1,5 @@
 {
-  "name": "@recomp/edge",
+  "name": "@recomp/coast",
   "private": true,
   "version": "0.0.0",
   "main": "index.ts",
