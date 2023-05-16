@@ -6,7 +6,7 @@
 // Scrollbar
 VOGUE_SCROLLBAR_DEFAULT_ARGUMENTS = {
   _width: 12px,
-  _margin: 100,
+  _margin: 100px,
   _trackColor: transparent,
   _thumbColor: alpha(white, 0.1),
   _thumbRadius: 2px,
@@ -15,6 +15,9 @@ VOGUE_SCROLLBAR_DEFAULT_ARGUMENTS = {
 }
 vogue-scrollbar(args=null) {
   args = vogue-merge-default(args, VOGUE_SCROLLBAR_DEFAULT_ARGUMENTS);
+
+  // Standard (Chrome, etc)
+  // I think webkit style prioritizes ancestors
   ::-webkit-scrollbar {
     width: args._width;
     margin: args._margin;
@@ -32,4 +35,8 @@ vogue-scrollbar(args=null) {
   ::-webkit-scrollbar-corner {
     background: args._cornerColor;
   }
+
+  // Firefox, this style needs to be applied to overflow: scroll elements
+  scrollbar-width: thin;
+  scrollbar-color: args._thumbColor args._trackColor;
 }

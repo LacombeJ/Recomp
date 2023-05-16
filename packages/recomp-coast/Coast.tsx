@@ -17,7 +17,7 @@ import { Spacer, Tooltip } from '@recomp/core';
  * Move these notes to a README
  *
  * About the component:
- * An Coast is a bar component that is meant to be placed on the
+ * A Coast is a bar component that is meant to be placed on the
  * left side of an application. It consists of a tab group that appears
  * on the top of the bar, and a control group that appears on the
  * bottom. Inspired by VSCode.
