@@ -112,8 +112,12 @@ export const mapTabElements = (children: any) => {
   return { mapppedElements, orderedIds };
 };
 
-const isItem = (element: TabElement): element is TabItem => {
+export const isItem = (element: TabElement): element is TabItem => {
   return element.type === 'item';
+};
+
+export const isGroup = (element: TabElement): element is TabGroup => {
+  return element.type === 'group';
 };
 
 export const elementChildren = (element: TabElement) => {
@@ -121,5 +125,13 @@ export const elementChildren = (element: TabElement) => {
     return element.children;
   } else {
     return null; // TODO
+  }
+};
+
+export const elementTabItems = (element: TabElement) => {
+  if (!isItem(element)) {
+    return element.children;
+  } else {
+    return null;
   }
 };

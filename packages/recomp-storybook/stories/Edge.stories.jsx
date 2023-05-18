@@ -15,12 +15,14 @@ const tabs = [
   {
     group: 'Components',
     color: '#CA5D49',
-    items: ['Button.tsx', 'List.tsx', 'Navbar.tsx'],
+    // items: ['Button.tsx', 'List.tsx', 'Navbar.tsx'],
+    items: [],
   },
   {
     group: 'Styles',
     color: '#31AC9F',
-    items: ['button.styl', 'list.styl', 'navbar.styl'],
+    // items: ['button.styl', 'list.styl', 'navbar.styl'],
+    items: [],
   },
   'index.ts',
   'index.html',
