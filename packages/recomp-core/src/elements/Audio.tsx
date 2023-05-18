@@ -11,7 +11,7 @@ interface AudioProps
   style?: React.CSSProperties;
 }
 
-const Audio = (props: AudioProps) => {
+export const Audio = (props: AudioProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { className, style, src, ...audioProps } = props;
@@ -27,5 +27,3 @@ const defaultProps: AudioProps = {
   className: 'recomp-audio',
   controls: true,
 };
-
-export default Audio;

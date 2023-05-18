@@ -13,7 +13,7 @@ interface QuoteProps {
   children?: React.ReactNode;
 }
 
-const Quote = (props: QuoteProps) => {
+export const Quote = (props: QuoteProps) => {
   props = util.structureUnion(defaultProps, props);
 
   return (
@@ -34,5 +34,3 @@ const defaultProps: QuoteProps = {
   },
   by: 'unknown',
 };
-
-export default Quote;

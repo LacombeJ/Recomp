@@ -8,7 +8,7 @@ interface ImageProps
     HTMLImageElement
   > {}
 
-const Audio = (props: ImageProps) => {
+export const Image = (props: ImageProps) => {
   props = util.structureUnion(defaultProps, props);
   return <img {...props} />;
 };
@@ -16,5 +16,3 @@ const Audio = (props: ImageProps) => {
 const defaultProps: ImageProps = {
   className: 'recomp-image',
 };
-
-export default Audio;

@@ -19,7 +19,7 @@ interface OverlayProps {
   children?: React.ReactNode;
 };
 
-const Overlay = (props: OverlayProps) => {
+export const Overlay = (props: OverlayProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const className = util.classnames({
@@ -61,5 +61,3 @@ const defaultProps: OverlayProps = {
     blur: 'blur',
   },
 };
-
-export default Overlay;

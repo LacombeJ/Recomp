@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
-import ZeroWidth from '../fragments/ZeroWidth';
+import { ZeroWidth } from '../fragments/ZeroWidth';
 import { useNestedProps } from '@recomp/hooks';
-import NestBreak from '../fragments/NestBreak';
+import { NestBreak } from '../fragments/NestBreak';
 
 interface ListProps {
   className?: string;
@@ -17,7 +17,7 @@ interface ListProps {
   children?: React.ReactNode;
 }
 
-const List = (props: ListProps) => {
+export const List = (props: ListProps) => {
   props = util.structureUnion(defaultProps, props);
   const { className } = props;
 
@@ -196,5 +196,3 @@ const itemDefaultProps: ItemProps = {
   level: 0,
   nesting: false,
 };
-
-export default List;

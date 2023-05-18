@@ -9,7 +9,7 @@ interface HeadingProps {
   children?: React.ReactNode;
 }
 
-const Heading = (props: HeadingProps) => {
+export const Heading = (props: HeadingProps) => {
   props = util.structureUnion(defaultProps, props);
 
   if (!props.level) {
@@ -44,5 +44,3 @@ const headingMap = {
   5: (props: HeadingElementProps) => <h5 {...props} />,
   6: (props: HeadingElementProps) => <h6 {...props} />,
 };
-
-export default Heading;

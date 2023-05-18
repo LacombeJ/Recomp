@@ -6,9 +6,7 @@ interface NestBreakProps {
   children?: React.ReactNode;
 }
 
-const NestBreak = (props: NestBreakProps) => {
+export const NestBreak = (props: NestBreakProps) => {
   return props.children;
 };
 NestBreak.identifier = 'recomp-nest-break';
-
-export default NestBreak;

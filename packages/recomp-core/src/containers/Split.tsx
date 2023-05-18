@@ -26,7 +26,7 @@ interface SplitProps {
   children?: React.ReactNode;
 }
 
-const Split = (props: SplitProps) => {
+export const Split = (props: SplitProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const nodeRef: React.Ref<HTMLDivElement> = React.useRef();
@@ -417,5 +417,3 @@ const resizerDefaultProps: ResizerProps = {
 
 Split.Item = Item;
 Split.Resizer = Resizer;
-
-export default Split;

@@ -8,7 +8,7 @@ interface ParagraphProps
     HTMLParagraphElement
   > {}
 
-const Paragraph = (props: ParagraphProps) => {
+export const Paragraph = (props: ParagraphProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { dangerouslySetInnerHTML: _0, ...paragraphProps } = props;
@@ -19,5 +19,3 @@ const Paragraph = (props: ParagraphProps) => {
 const defaultProps: ParagraphProps = {
   className: 'recomp-paragraph',
 };
-
-export default Paragraph;

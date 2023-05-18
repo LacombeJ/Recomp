@@ -10,7 +10,7 @@ interface SpacerProps {
   children?: React.ReactNode;
 }
 
-const Spacer = (props: SpacerProps) => {
+export const Spacer = (props: SpacerProps) => {
   props = util.structureUnion(defaultProps, props);
   const { className } = props;
 
@@ -37,5 +37,3 @@ const defaultProps: SpacerProps = {
   direction: 'vertical',
   size: 50,
 };
-
-export default Spacer;

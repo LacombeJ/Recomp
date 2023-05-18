@@ -25,7 +25,7 @@ interface TextProps {
   children?: React.ReactNode;
 }
 
-const Text = (props: TextProps) => {
+export const Text = (props: TextProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { style } = props;
@@ -109,5 +109,3 @@ const propTagMap = {
   del: 'del',
   code: 'code',
 };
-
-export default Text;

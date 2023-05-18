@@ -8,7 +8,7 @@ interface LabelProps
     HTMLLabelElement
   > {}
 
-const Label = (props: LabelProps) => {
+export const Label = (props: LabelProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { dangerouslySetInnerHTML: _0, ...labelProps } = props;
@@ -19,5 +19,3 @@ const Label = (props: LabelProps) => {
 const defaultProps: LabelProps = {
   className: 'recomp-label',
 };
-
-export default Label;

@@ -8,7 +8,7 @@ interface TextAreaProps
     HTMLTextAreaElement
   > {}
 
-const Paragraph = (props: TextAreaProps) => {
+export const TextArea = (props: TextAreaProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { dangerouslySetInnerHTML: _0, ...textAreaProps } = props;
@@ -20,4 +20,3 @@ const defaultProps: TextAreaProps = {
   className: 'recomp-textarea',
 };
 
-export default Paragraph;

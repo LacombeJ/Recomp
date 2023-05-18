@@ -9,7 +9,7 @@ interface ErrorBoundaryProps {
   hasError: boolean;
 }
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   state: {
     hasError: boolean;
     error: null | any;
@@ -77,5 +77,3 @@ const defaultProps = {
   onCatch: () => {},
   hasError: false,
 };
-
-export default ErrorBoundary;

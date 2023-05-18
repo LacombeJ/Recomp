@@ -10,10 +10,7 @@ interface PageProps {
   placeHolder?: any;
 }
 
-/**
- * @param {Page.defaultProps} props
- */
-const Page = (props: PageProps) => {
+export const Page = (props: PageProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const ActivePage = props.pages[props.page];
@@ -42,5 +39,3 @@ const defaultProps: any = {
   pageProps: null,
   placeHolder: null,
 };
-
-export default Page;

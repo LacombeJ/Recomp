@@ -15,7 +15,7 @@ interface RootProps {
   children?: React.ReactNode;
 }
 
-const Root = (props: RootProps) => {
+export const Root = (props: RootProps) => {
   props = util.structureUnion(defaultProps, props);
 
   useEventListener(document, 'resize', props.onResize);
@@ -43,5 +43,3 @@ const defaultProps: RootProps = {
   onUnmount: () => {},
   onResize: () => {},
 };
-
-export default Root;

@@ -12,7 +12,7 @@ interface SelectProps {
   children?: React.ReactNode;
 }
 
-const Select = (props: SelectProps) => {
+export const Select = (props: SelectProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { className, style } = props;
@@ -47,5 +47,3 @@ const selectChildren = (props: any) => {
   }
   return props.children;
 };
-
-export default Select;

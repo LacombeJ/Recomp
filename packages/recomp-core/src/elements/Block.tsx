@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as util from '@recomp/utility/common';
 
 import { useNestedProps } from '@recomp/hooks';
-import NestBreak from '../fragments/NestBreak';
+import { NestBreak } from '../fragments/NestBreak';
 
 interface BlockProps {
   className?: string;
@@ -19,7 +19,7 @@ interface BlockProps {
   children?: React.ReactNode;
 }
 
-const Block = (props: BlockProps) => {
+export const Block = (props: BlockProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { setRef: _0, style } = props;
@@ -71,5 +71,3 @@ const defaultProps: BlockProps = {
   onClick: () => {},
   setRef: null,
 };
-
-export default Block;

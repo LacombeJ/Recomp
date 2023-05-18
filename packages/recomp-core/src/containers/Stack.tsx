@@ -30,7 +30,7 @@ interface ChildSettings {
   direction: Direction;
 }
 
-const Stack = (props: StackProps) => {
+export const Stack = (props: StackProps) => {
   return (
     <React.Fragment>
       {childrenWithSettings(props.children, props.direction)}
@@ -197,5 +197,3 @@ const childrenWithSettings = (
     }
   });
 };
-
-export default Stack;

@@ -1,160 +1,46 @@
 // Fragments
-
-import ErrorBoundary from './src/fragments/ErrorBoundary';
-export { ErrorBoundary };
-
-import NestBreak from './src/fragments/NestBreak';
-export { NestBreak };
-
-import Page from './src/fragments/Page';
-export { Page };
-
-import ZeroWidth from './src/fragments/ZeroWidth';
-export { ZeroWidth };
+export { ErrorBoundary } from './src/fragments/ErrorBoundary';
+export { NestBreak } from './src/fragments/NestBreak';
+export { Page } from './src/fragments/Page';
+export { ZeroWidth } from './src/fragments/ZeroWidth';
 
 // ----------------------------------------------------------------------------
 
-// Widgets
-
-import Bar from './src/containers/Bar';
-export { Bar };
-
-import Nest from './src/containers/Nest';
-export { Nest };
-
-import Overlay from './src/containers/Overlay';
-export { Overlay };
-
-import Root from './src/containers/Root';
-export { Root };
-
-import Scroll from './src/containers/Scroll';
-export { Scroll };
-
-import Split from './src/containers/Split';
-export { Split };
-
-import Stack from './src/containers/Stack';
-export { Stack };
+// Containers
+export { Bar } from './src/containers/Bar';
+export { Nest } from './src/containers/Nest';
+export { Overlay } from './src/containers/Overlay';
+export { Root } from './src/containers/Root';
+export { Scroll } from './src/containers/Scroll';
+export { Split } from './src/containers/Split';
+export { Stack } from './src/containers/Stack';
 
 // ----------------------------------------------------------------------------
 
 // Elements
-
-import Audio from './src/elements/Audio';
-export { Audio };
-
-import Block from './src/elements/Block';
-export { Block };
-
-import Button from './src/elements/Button';
-export { Button };
-
-import Cabinet from './src/elements/Cabinet';
-export { Cabinet };
-
-import Canvas from './src/elements/Canvas';
-export { Canvas };
-
-import Checkbox from './src/elements/Checkbox';
-export { Checkbox };
-
-import Form from './src/elements/Form';
-export { Form };
-
-import Heading from './src/elements/Heading';
-export { Heading };
-
-import Image from './src/elements/Image';
-export { Image };
-
-import Input from './src/elements/Input';
-export { Input };
-
-import Label from './src/elements/Label';
-export { Label };
-
-import Link from './src/elements/Link';
-export { Link };
-
-import List from './src/elements/List';
-export { List };
-
-import Paragraph from './src/elements/Paragraph';
-export { Paragraph };
-
-import Quote from './src/elements/Quote';
-export { Quote };
-
-import Radio from './src/elements/Radio';
-export { Radio };
-
-import Select from './src/elements/Select';
-export { Select };
-
-import Spacer from './src/elements/Spacer';
-export { Spacer };
-
-import Switch from './src/elements/Switch';
-export { Switch };
-
-import Table from './src/elements/Table';
-export { Table };
-
-import Text from './src/elements/Text';
-export { Text };
-
-import TextArea from './src/elements/TextArea';
-export { TextArea };
-
-import Tooltip from './src/elements/Tooltip';
-export { Tooltip };
-
-import Video from './src/elements/Video';
-export { Video };
-
-// ----------------------------------------------------------------------------
-
-export default {
-  // Fragments
-  ErrorBoundary,
-  Page,
-  ZeroWidth,
-
-  // Containers
-  Bar,
-  Nest,
-  Overlay,
-  Root,
-  Scroll,
-  Split,
-  Stack,
-
-  // Elements
-  Audio,
-  Block,
-  Button,
-  Cabinet,
-  Canvas,
-  Checkbox,
-  Form,
-  Heading,
-  Image,
-  Input,
-  Label,
-  Link,
-  List,
-  Paragraph,
-  Quote,
-  Radio,
-  Select,
-  Table,
-  Spacer,
-  Switch,
-  Text,
-  TextArea,
-  Tooltip,
-  Video,
-};
+export { Audio } from './src/elements/Audio';
+export { Block } from './src/elements/Block';
+export { Button }from './src/elements/Button';
+export { Cabinet }from './src/elements/Cabinet';
+export { Canvas }from './src/elements/Canvas';
+export { Checkbox }from './src/elements/Checkbox';
+export { Form }from './src/elements/Form';
+export { Heading }from './src/elements/Heading';
+export { Image }from './src/elements/Image';
+export { Input }from './src/elements/Input';
+export { Label }from './src/elements/Label';
+export { Link }from './src/elements/Link';
+export { List }from './src/elements/List';
+export { Paragraph }from './src/elements/Paragraph';
+export { Quote }from './src/elements/Quote';
+export { Radio }from './src/elements/Radio';
+export { Select }from './src/elements/Select';
+export { Spacer }from './src/elements/Spacer';
+export { Switch }from './src/elements/Switch';
+export { Table }from './src/elements/Table';
+export { Text }from './src/elements/Text';
+export { TextArea }from './src/elements/TextArea';
+export { Tooltip }from './src/elements/Tooltip';
+export { Video }from './src/elements/Video';
 
 declare module '@recomp/core';

@@ -8,7 +8,7 @@ interface FormProps
     HTMLFormElement
   > {}
 
-const Form = (props: FormProps) => {
+export const Form = (props: FormProps) => {
   props = util.structureUnion(defaultProps, props);
   const { dangerouslySetInnerHTML: _0, ...formProps } = props;
   return <form {...formProps} />;
@@ -48,5 +48,3 @@ const rowDefaultProps: RowProps = {
   className: 'recomp-form-row',
   direction: 'column',
 };
-
-export default Form;

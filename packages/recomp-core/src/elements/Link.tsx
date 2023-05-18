@@ -8,7 +8,7 @@ interface LinkProps
     HTMLAnchorElement
   > {}
 
-const Link = (props: LinkProps) => {
+export const Link = (props: LinkProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { dangerouslySetInnerHTML: _0, ...linkProps } = props;
@@ -19,5 +19,3 @@ const Link = (props: LinkProps) => {
 const defaultProps: LinkProps = {
   className: 'recomp-link',
 };
-
-export default Link;

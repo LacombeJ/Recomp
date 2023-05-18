@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
-import ZeroWidth from '../fragments/ZeroWidth';
+import { ZeroWidth } from '../fragments/ZeroWidth';
 
 interface ButtonProps
   extends React.DetailedHTMLProps<
@@ -25,7 +25,7 @@ interface ButtonProps
   setRef: any;
 }
 
-const Button = (props: ButtonProps) => {
+export const Button = (props: ButtonProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const {
@@ -94,5 +94,3 @@ const defaultProps: ButtonProps = {
   loadingIcon: null,
   setRef: null,
 };
-
-export default Button;

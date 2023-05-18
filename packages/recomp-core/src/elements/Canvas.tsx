@@ -10,7 +10,7 @@ interface CanvasProps
   render?: (ctx: CanvasRenderingContext2D) => any;
 }
 
-const Canvas = (props: CanvasProps) => {
+export const Canvas = (props: CanvasProps) => {
   props = util.structureUnion(defaultProps, props);
   const {
     render,
@@ -37,5 +37,3 @@ const defaultProps: CanvasProps = {
   height: 150,
   render: () => {},
 };
-
-export default Canvas;

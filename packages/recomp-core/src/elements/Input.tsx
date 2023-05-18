@@ -12,7 +12,7 @@ interface InputProps
   };
 }
 
-const Input = (props: InputProps) => {
+export const Input = (props: InputProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const {
@@ -40,5 +40,3 @@ const defaultProps: InputProps = {
   readOnly: false,
   disabled: false,
 };
-
-export default Input;

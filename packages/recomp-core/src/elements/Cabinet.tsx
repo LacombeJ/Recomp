@@ -30,7 +30,7 @@ interface CabinetProps {
   onCollapse?: () => any;
 }
 
-const Cabinet = (props: CabinetProps) => {
+export const Cabinet = (props: CabinetProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { style } = props;
@@ -133,5 +133,3 @@ const defaultProps: CabinetProps = {
   controlIcon: controlIconCallback,
   onCollapse: () => {},
 };
-
-export default Cabinet;

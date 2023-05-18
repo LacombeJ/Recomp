@@ -44,7 +44,7 @@ const TooltipGeneric = (props: TooltipProps) => {
   );
 };
 
-const Tooltip = (props: TooltipProps) => {
+export const Tooltip = (props: TooltipProps) => {
   props = util.structureUnion(defaultProps, props);
   const { children, ...genericProps } = props;
 
@@ -198,5 +198,3 @@ const triangleDefaultProps: TriangleProps = {
   tipSize: 14,
   borderSize: 2,
 };
-
-export default Tooltip;

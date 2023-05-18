@@ -18,7 +18,7 @@ interface CheckboxProps {
   children?: React.ReactNode;
 }
 
-const Checkbox = (props: CheckboxProps) => {
+export const Checkbox = (props: CheckboxProps) => {
   props = util.structureUnion(defaultProps, props);
   const { className, classNames } = props;
   const style = {
@@ -55,5 +55,3 @@ const defaultProps: CheckboxProps = {
   block: false,
   onChange: () => {},
 };
-
-export default Checkbox;

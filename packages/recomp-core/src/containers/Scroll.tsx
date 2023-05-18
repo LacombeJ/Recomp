@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
-import Stack from './Stack';
+import { Stack } from './Stack';
 
 interface ScrollProps {
   children?: React.ReactNode;
@@ -17,7 +17,7 @@ interface ScrollProps {
 type ScrollDirection = 'x' | 'y' | 'xy';
 type ScrollPolicy = 'scroll' | 'auto' | 'overlay' | 'none';
 
-const Scroll = (props: ScrollProps) => {
+export const Scroll = (props: ScrollProps) => {
   props = util.structureUnion(defaultProps, props);
 
   const { className, style } = props;
@@ -45,5 +45,3 @@ const defaultProps: ScrollProps = {
   scroll: 'xy',
   scrollPolicy: 'auto',
 };
-
-export default Scroll;

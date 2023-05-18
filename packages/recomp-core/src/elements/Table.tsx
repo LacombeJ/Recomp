@@ -80,7 +80,7 @@ interface TableData {
   rows: React.ReactNode[][];
 }
 
-const Table = (props: TableProps) => {
+export const Table = (props: TableProps) => {
   props = util.structureUnion(defaultProps, props);
 
   return (
@@ -184,5 +184,3 @@ const defaultProps = {
     children: React.ReactNode;
   }) => <td className={className}>{children}</td>,
 };
-
-export default Table;

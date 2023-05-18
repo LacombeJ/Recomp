@@ -12,7 +12,7 @@ interface NestProps {
   children?: React.ReactNode;
 }
 
-const Nest = (props: NestProps) => {
+export const Nest = (props: NestProps) => {
   props = util.structureUnion(defaultProps, props);
   const { className, style } = props;
 
@@ -43,5 +43,3 @@ const defaultProps = {
   stopPropagation: true,
   onToggle: () => {},
 };
-
-export default Nest;

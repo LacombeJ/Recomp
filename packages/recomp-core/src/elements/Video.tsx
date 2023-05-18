@@ -8,7 +8,7 @@ interface VideoProps
     HTMLIFrameElement
   > {}
 
-const Audio = (props: VideoProps) => {
+export const Video = (props: VideoProps) => {
   props = util.structureUnion(defaultProps, props);
 
   return <iframe {...props} />;
@@ -23,5 +23,3 @@ const defaultProps: VideoProps = {
   allowFullScreen: true,
   title: 'video',
 };
-
-export default Audio;

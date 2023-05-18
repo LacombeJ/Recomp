@@ -14,7 +14,7 @@ interface BarProps {
   children?: React.ReactNode;
 }
 
-const Bar = (props: BarProps) => {
+export const Bar = (props: BarProps) => {
   props = util.structureUnion(defaultProps, props);
   const { classNames, style } = props;
 
@@ -52,5 +52,3 @@ const defaultProps: BarProps = {
   },
   direction: 'horizontal',
 };
-
-export default Bar;
