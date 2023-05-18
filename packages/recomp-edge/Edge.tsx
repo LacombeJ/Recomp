@@ -162,14 +162,16 @@ const Edge = (props: EdgeProps) => {
   };
 
   const handleDragOver = (event: DragMoveEvent) => {
-    const overId = event.over.id;
-    const activeNode = items.byId[event.active.id];
+    const { active, over } = event;
+
+    const overId = over.id;
+    const activeNode = items.byId[active.id];
     if (overId === null || activeNode.type === 'group') {
       return; // return if dragging group node or not over anything
     }
 
     const overContainer = findContainer(overId);
-    const activeContainer = findContainer(event.active.id);
+    const activeContainer = findContainer(active.id);
 
     if (!overContainer && !activeContainer) {
       return; // if not over a container, just return
@@ -187,10 +189,9 @@ const Edge = (props: EdgeProps) => {
         newIndex = overItems.length + 1;
       } else {
         const isBelowOverItem =
-          event.over &&
-          event.active.rect.current.translated &&
-          event.active.rect.current.translated.top >
-            event.over.rect.top + event.over.rect.height;
+          over &&
+          active.rect.current.translated &&
+          active.rect.current.translated.top > over.rect.top + over.rect.height;
 
         const modifier = isBelowOverItem ? 1 : 0;
         newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
@@ -204,15 +205,13 @@ const Edge = (props: EdgeProps) => {
 
       if (!activeContainer) {
         // If not in container remove from root
-        newItems.rootIds = items.rootIds.filter(
-          (item) => item !== event.active.id
-        );
+        newItems.rootIds = items.rootIds.filter((item) => item !== active.id);
       } else if (activeContainer) {
         // If in old container, remove from container, else remove from root
         newItems.byId[activeContainer] = {
           ...newItems.byId[activeContainer],
           children: newItems.byId[activeContainer].children.filter(
-            (item) => item !== event.active.id
+            (item) => item !== active.id
           ),
         };
       }
@@ -222,7 +221,7 @@ const Edge = (props: EdgeProps) => {
         // If not over container, add to root
         newItems.rootIds = [
           ...newItems.rootIds.slice(0, newIndex),
-          event.active.id as string,
+          active.id as string,
           ...newItems.rootIds.slice(newIndex),
         ];
       } else {
@@ -231,7 +230,7 @@ const Edge = (props: EdgeProps) => {
           ...newItems.byId[overContainer],
           children: [
             ...newItems.byId[overContainer].children.slice(0, newIndex),
-            event.active.id as string,
+            active.id as string,
             ...newItems.byId[overContainer].children.slice(newIndex),
           ],
         };
@@ -245,7 +244,7 @@ const Edge = (props: EdgeProps) => {
     const { active, over } = event;
 
     setDragging(null);
-    if (active.id !== over.id) {
+    if (items.byId[active.id].type === 'group') {
       setItems((items: TreeState) => {
         const oldIndex = items.rootIds.findIndex((id) => id === active.id);
         const newIndex = items.rootIds.findIndex((id) => id === over.id);

@@ -1,16 +1,12 @@
 import * as React from 'react';
 
-import { DraggableAttributes } from '@dnd-kit/core';
-
 import {
   verticalListSortingStrategy,
   SortableContext,
 } from '@dnd-kit/sortable';
 
-import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
-
 import * as util from '@recomp/utility/common';
-import { TabItem, TabTree, elementChildren } from './common';
+import { TabTree, elementChildren } from './common';
 import { EdgeElement } from './Edge';
 import { Sortable } from './Sortable';
 
@@ -47,8 +43,7 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
   if (props.invisible) {
     style.visibility = 'hidden';
   }
-  // const { mapppedElements, orderedIds } = mapTabElements(props.tabItems);
-  // const [items, setItems] = React.useState(orderedIds);
+
   const items = props.tabItems;
 
   const headStyle: React.CSSProperties = {
@@ -58,10 +53,11 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
     border: `1px solid ${props.color}`,
   };
   const handleClick = () => {
+    // toggle collapse
     // props.onClick?.(props.id);
   };
   const handleItemClick = (id: string) => {
-    // setSelected(id);
+    props.onClick?.(id);
   };
   return (
     <div className={className} style={style} ref={props.divRef}>
@@ -75,13 +71,8 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
             {items.map((id) => {
               const node = props.tree.state.byId[id];
               const element = props.tree.static[id];
-              // return null;
               return (
-                <Sortable
-                  className={'sortable'}
-                  key={node.id}
-                  id={node.id}
-                >
+                <Sortable className={'sortable'} key={node.id} id={node.id}>
                   <EdgeElement
                     className={element.className}
                     classNames={element.classNames}
