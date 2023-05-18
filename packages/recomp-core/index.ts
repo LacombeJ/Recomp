@@ -22,6 +22,9 @@ export { Bar };
 import Nest from './src/containers/Nest';
 export { Nest };
 
+import Overlay from './src/containers/Overlay';
+export { Overlay };
+
 import Root from './src/containers/Root';
 export { Root };
 
@@ -95,6 +98,9 @@ export { Spacer };
 import Switch from './src/elements/Switch';
 export { Switch };
 
+import Table from './src/elements/Table';
+export { Table };
+
 import Text from './src/elements/Text';
 export { Text };
 
@@ -118,6 +124,7 @@ export default {
   // Containers
   Bar,
   Nest,
+  Overlay,
   Root,
   Scroll,
   Split,
@@ -141,6 +148,7 @@ export default {
   Quote,
   Radio,
   Select,
+  Table,
   Spacer,
   Switch,
   Text,
