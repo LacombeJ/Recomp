@@ -10,7 +10,9 @@ import {
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 
 import * as util from '@recomp/utility/common';
-import { TabItem, elementChildren, mapTabElements } from './common';
+import { TabItem, TabTree, elementChildren } from './common';
+import { EdgeElement } from './Edge';
+import { Sortable } from './Sortable';
 
 interface EdgeGroupProps {
   className?: string;
@@ -21,12 +23,14 @@ interface EdgeGroupProps {
   };
   style?: React.CSSProperties;
   id: string;
-  dragging: boolean;
+  dragging?: string;
+  selected?: string;
   invisible: boolean;
   icon?: React.ReactNode;
   color?: string;
   onClick?: (id: string) => any;
-  tabItems?: TabItem[];
+  tabItems?: string[];
+  tree?: TabTree;
   divRef?: React.LegacyRef<HTMLDivElement>;
 }
 
@@ -68,25 +72,33 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
       <div className="body" style={bodyStyle}>
         <div className="inner">
           <SortableContext items={items} strategy={verticalListSortingStrategy}>
-            {items.map((element) => {
-              // const element = mapppedElements[id];
-              return null;
-              // return (
-              //   <SortableItem
-              //     className={element.className}
-              //     classNames={element.classNames}
-              //     style={element.style}
-              //     key={element.id}
-              //     id={element.id}
-              //     type={element.type}
-              //     dragging={false}
-              //     selected={false}
-              //     icon={element.icon}
-              //     color={element.color}
-              //     onClick={handleItemClick}
-              //     children={elementChildren(element)}
-              //   />
-              // );
+            {items.map((id) => {
+              const node = props.tree.state.byId[id];
+              const element = props.tree.static[id];
+              // return null;
+              return (
+                <Sortable
+                  className={'sortable'}
+                  key={node.id}
+                  id={node.id}
+                >
+                  <EdgeElement
+                    className={element.className}
+                    classNames={element.classNames}
+                    style={element.style}
+                    id={node.id}
+                    type={element.type}
+                    dragging={props.dragging}
+                    selected={props.selected}
+                    invisible={props.dragging === node.id}
+                    icon={element.icon}
+                    color={element.color}
+                    onClick={handleItemClick}
+                    children={elementChildren(element)}
+                    tabItems={node.children}
+                  />
+                </Sortable>
+              );
             })}
           </SortableContext>
         </div>

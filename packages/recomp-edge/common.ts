@@ -10,6 +10,28 @@ import {
   GroupProps,
 } from './Edge';
 
+/**
+ * The tab tree has two properties, "state" which is the structure
+ * of the tree and "static" which is variables that are not changed
+ * by the sortable interface (classes, styles, nodes, etc).
+ */
+export interface TabTree {
+  state: TreeState;
+  static: { [key: string]: TabElement };
+}
+
+export interface TreeState {
+  byId: { [key: string]: TabNode };
+    allIds: string[];
+    rootIds: string[];
+}
+
+export interface TabNode {
+  id: string;
+  type: TabItemType;
+  children: string[];
+}
+
 interface TabBase {
   className?: string;
   classNames?: {
@@ -19,18 +41,16 @@ interface TabBase {
   };
   style?: React.CSSProperties;
   type?: TabItemType;
-  id: string;
   color?: string;
   icon?: React.ReactNode;
 }
 
 export interface TabItem extends TabBase {
+  /** Tab item content node */
   children?: React.ReactNode;
 }
 
-export interface TabGroup extends TabBase {
-  children?: TabItem[];
-}
+export interface TabGroup extends TabBase {}
 
 export type TabElement = TabItem | TabGroup;
 
@@ -38,42 +58,57 @@ export type TabItemType = 'item' | 'group';
 
 // ----------------------------------------------------------------------------
 
-const mapTabItem = (props: TabProps): TabItem => {
+const mapTabItem = (props: TabProps): { id: string; item: TabItem } => {
   props = util.structureUnion(tabDefaultProps, props);
   return {
     id: props.id,
-    className: props.className,
-    classNames: props.classNames,
-    style: props.style,
-    type: 'item',
-    icon: props.icon,
-    children: props.children,
+    item: {
+      className: props.className,
+      classNames: props.classNames,
+      style: props.style,
+      type: 'item',
+      icon: props.icon,
+      children: props.children,
+    },
   };
 };
 
-const mapTabGroup = (props: GroupProps): TabGroup => {
+const mapTabGroup = (
+  props: GroupProps,
+  tree: TabTree
+): { id: string; group: TabGroup; children: string[] } => {
   props = util.structureUnion(groupDefaultProps, props);
   return {
     id: props.id,
-    className: props.className,
-    classNames: props.classNames,
-    style: props.style,
-    type: 'group',
-    color: props.color,
-    icon: props.icon,
-    children: mapTabItems(props.children),
+    group: {
+      className: props.className,
+      classNames: props.classNames,
+      style: props.style,
+      type: 'group',
+      color: props.color,
+      icon: props.icon,
+    },
+    children: mapTabItems(props.children, tree),
   };
 };
 
-const mapTabItems = (children: any) => {
-  const items: TabItem[] = [];
+const mapTabItems = (children: any, tree: TabTree) => {
+  const items: string[] = [];
 
   React.Children.forEach(children, (child: any) => {
     if (React.isValidElement(child)) {
       const c = child as any;
       if (c && c.type) {
         if (c.type.identifier === Edge.Tab.identifier) {
-          items.push(mapTabItem(c.props));
+          const item = mapTabItem(c.props);
+          tree.static[item.id] = item.item;
+          tree.state.allIds.push(item.id);
+          tree.state.byId[item.id] = ({
+            id: item.id,
+            type: item.item.type,
+            children: [],
+          });
+          items.push(item.id);
           return;
         }
       }
@@ -85,9 +120,15 @@ const mapTabItems = (children: any) => {
   return items;
 };
 
-export const mapTabElements = (children: any) => {
-  const mapppedElements: { [key: string]: TabElement } = {};
-  const orderedIds: string[] = []; // string of ids
+export const createTabTree = (children: any): TabTree => {
+  const tree: TabTree = {
+    state: {
+      byId: {},
+      allIds: [],
+      rootIds: [],
+    },
+    static: {},
+  };
 
   React.Children.forEach(children, (child: any) => {
     if (React.isValidElement(child)) {
@@ -95,13 +136,25 @@ export const mapTabElements = (children: any) => {
       if (c && c.type) {
         if (c.type.identifier === Edge.Tab.identifier) {
           const item = mapTabItem(c.props);
-          mapppedElements[item.id] = item;
-          orderedIds.push(item.id);
+          tree.static[item.id] = item.item;
+          tree.state.allIds.push(item.id);
+          tree.state.rootIds.push(item.id);
+          tree.state.byId[item.id] = ({
+            id: item.id,
+            type: item.item.type,
+            children: [],
+          });
           return;
         } else if (c.type.identifier === Edge.Group.identifier) {
-          const item = mapTabGroup(c.props);
-          mapppedElements[item.id] = item;
-          orderedIds.push(item.id);
+          const item = mapTabGroup(c.props, tree);
+          tree.static[item.id] = item.group;
+          tree.state.allIds.push(item.id);
+          tree.state.rootIds.push(item.id);
+          tree.state.byId[item.id] = ({
+            id: item.id,
+            type: item.group.type,
+            children: item.children,
+          });
           return;
         }
       }
@@ -109,7 +162,8 @@ export const mapTabElements = (children: any) => {
 
     console.error('Edge.Tabs child expected to be Edge.Tab or Edge.Group');
   });
-  return { mapppedElements, orderedIds };
+
+  return tree;
 };
 
 export const isItem = (element: TabElement): element is TabItem => {
@@ -125,13 +179,5 @@ export const elementChildren = (element: TabElement) => {
     return element.children;
   } else {
     return null; // TODO
-  }
-};
-
-export const elementTabItems = (element: TabElement) => {
-  if (!isItem(element)) {
-    return element.children;
-  } else {
-    return null;
   }
 };

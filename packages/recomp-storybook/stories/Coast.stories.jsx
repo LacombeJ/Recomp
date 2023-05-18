@@ -33,7 +33,7 @@ const coastItems = [
     <Coast.Tab id="apps" tooltip="Apps (Ctrl+Shift+A)">
       <IconApps size="26" stroke="1"></IconApps>
     </Coast.Tab>
-    <Coast.Tab id="plugins" tooltip="Plugins">
+    <Coast.Tab id="extensions" tooltip="Extensions">
       <IconPuzzle size="26" stroke="1"></IconPuzzle>
     </Coast.Tab>
     <Coast.Tab id="tasks" tooltip="Tasks">

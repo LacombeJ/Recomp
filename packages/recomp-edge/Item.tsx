@@ -12,8 +12,8 @@ interface EdgeItemProps {
   };
   style?: React.CSSProperties;
   id: string;
-  dragging: boolean;
-  selected: boolean;
+  dragging?: string;
+  selected?: string;
   invisible: boolean;
   icon?: React.ReactNode;
   onClick?: (id: string) => any;
@@ -24,8 +24,8 @@ interface EdgeItemProps {
 export const EdgeItem = (props: EdgeItemProps) => {
   const className = util.classnames({
     [props.className]: true,
-    [props.classNames.dragging]: props.dragging,
-    [props.classNames.selected]: props.selected,
+    [props.classNames.dragging]: props.dragging === props.id,
+    [props.classNames.selected]: props.selected === props.id,
   });
   const style: React.CSSProperties = {
     ...props.style,

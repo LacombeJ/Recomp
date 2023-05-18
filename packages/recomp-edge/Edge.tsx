@@ -30,13 +30,14 @@ import * as util from '@recomp/utility/common';
 import { Chevron, File } from '@recomp/icons';
 
 import {
-  mapTabElements,
+  createTabTree,
   elementChildren,
-  elementTabItems,
   isGroup,
   TabItemType,
-  TabItem,
   TabElement,
+  TabTree,
+  TreeState,
+  TabNode,
 } from './common';
 import { EdgeItem } from './Item';
 import { EdgeGroup } from './Group';
@@ -61,8 +62,10 @@ const Edge = (props: EdgeProps) => {
 
   const [selected, setSelected] = React.useState('');
 
-  const { mapppedElements, orderedIds } = mapTabElements(props.children);
-  const [items, setItems] = React.useState(orderedIds);
+  const { state: defaultTreeState, static: treeStatic } = createTabTree(
+    props.children
+  );
+  const [items, setItems] = React.useState(defaultTreeState);
   const [dragging, setDragging] = React.useState<string | null>(null);
 
   const lastOverId = React.useRef<UniqueIdentifier | null>(null);
@@ -84,13 +87,19 @@ const Edge = (props: EdgeProps) => {
 
   const collisionDetectionStrategy: CollisionDetection = React.useCallback(
     (args) => {
-      const draggingElement = mapppedElements[dragging];
-      if (draggingElement && draggingElement.type === 'group') {
+      // If group, then just perform closest center with other root items,
+      // since groups cannot be placed under other groups
+      const draggingElement = items.byId[dragging];
+      if (dragging && draggingElement.type === 'group') {
         return closestAdjustedCenter({
           ...args,
+          droppableContainers: args.droppableContainers.filter((container) => {
+            return items.rootIds.includes(container.id as string);
+          }),
         });
       }
-      // Start by finding any intersecting droppable
+
+      // Start by finding any pointer intersecting droppable
       const pointerInteractions = pointerWithin(args);
       const intersections =
         pointerInteractions.length > 0
@@ -99,19 +108,17 @@ const Edge = (props: EdgeProps) => {
       let overId = getFirstCollision(intersections, 'id');
 
       if (overId !== null) {
-        if (overId in orderedIds) {
-          const element = mapppedElements[overId];
-          if (isGroup(element)) {
-            const containerItems = element.children;
-            overId = closestAdjustedCenter({
-              ...args,
-              droppableContainers: args.droppableContainers.filter(
-                (container) =>
-                  container.id !== overId &&
-                  containerItems.find((e) => e.id === container.id)
-              ),
-            })[0]?.id;
-          }
+        const overNode = items.byId[overId];
+        if (overNode.type === 'group') {
+          // const containerItems = overNode.children;
+          // overId = closestAdjustedCenter({
+          //   ...args,
+          //   droppableContainers: args.droppableContainers.filter(
+          //     (container) =>
+          //       container.id !== overId &&
+          //       containerItems.includes(container.id as string)
+          //   ),
+          // })[0]?.id;
         }
 
         lastOverId.current = overId;
@@ -119,14 +126,34 @@ const Edge = (props: EdgeProps) => {
         return [{ id: overId }];
       }
 
+      // When a draggable item moves to a new container, the layout may shift
+      // and the `overId` may become `null`. We manually set the cached `lastOverId`
+      // to the id of the draggable item that was moved to the new container, otherwise
+      // the previous `overId` will be returned which can cause items to incorrectly shift positions
       if (recentlyMovedToNewContainer.current) {
         lastOverId.current = dragging;
       }
 
+      // If no droppable is matched, return the last match
       return lastOverId.current ? [{ id: lastOverId.current }] : [];
     },
-    [dragging, props.children]
+    [dragging, items]
   );
+
+  const findContainer = (id: UniqueIdentifier) => {
+    const node = items.byId[id];
+    if (node.type === 'group') {
+      return id;
+    }
+
+    for (const rootId of items.rootIds) {
+      if (items.byId[rootId].children.includes(id as string)) {
+        return rootId;
+      }
+    }
+
+    return null;
+  };
 
   const handleDragStart = (event: DragMoveEvent) => {
     if (event.active) {
@@ -134,15 +161,98 @@ const Edge = (props: EdgeProps) => {
     }
   };
 
+  const handleDragOver = (event: DragMoveEvent) => {
+    const overId = event.over.id;
+    const activeNode = items.byId[event.active.id];
+    if (overId === null || activeNode.type === 'group') {
+      return; // return if dragging group node or not over anything
+    }
+
+    const overContainer = findContainer(overId);
+    const activeContainer = findContainer(event.active.id);
+
+    if (!overContainer && !activeContainer) {
+      return; // if not over a container, just return
+    }
+
+    setItems((items) => {
+      const overItems = overContainer
+        ? items.byId[overContainer].children
+        : items.rootIds;
+      const overIndex = overItems.indexOf(overId as string);
+
+      let newIndex = 0;
+      if (items.byId[overId].type === 'group') {
+        // overId is just the container, push to last item
+        newIndex = overItems.length + 1;
+      } else {
+        const isBelowOverItem =
+          event.over &&
+          event.active.rect.current.translated &&
+          event.active.rect.current.translated.top >
+            event.over.rect.top + event.over.rect.height;
+
+        const modifier = isBelowOverItem ? 1 : 0;
+        newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+      }
+
+      recentlyMovedToNewContainer.current = true;
+
+      const newItems = {
+        ...items,
+      };
+
+      if (!activeContainer) {
+        // If not in container remove from root
+        newItems.rootIds = items.rootIds.filter(
+          (item) => item !== event.active.id
+        );
+      } else if (activeContainer) {
+        // If in old container, remove from container, else remove from root
+        newItems.byId[activeContainer] = {
+          ...newItems.byId[activeContainer],
+          children: newItems.byId[activeContainer].children.filter(
+            (item) => item !== event.active.id
+          ),
+        };
+      }
+
+      // Insert into new container
+      if (!overContainer) {
+        // If not over container, add to root
+        newItems.rootIds = [
+          ...newItems.rootIds.slice(0, newIndex),
+          event.active.id as string,
+          ...newItems.rootIds.slice(newIndex),
+        ];
+      } else {
+        // If over container, insert into new container
+        newItems.byId[overContainer] = {
+          ...newItems.byId[overContainer],
+          children: [
+            ...newItems.byId[overContainer].children.slice(0, newIndex),
+            event.active.id as string,
+            ...newItems.byId[overContainer].children.slice(newIndex),
+          ],
+        };
+      }
+
+      return newItems;
+    });
+  };
+
   const handleDragEnd = (event: DragMoveEvent) => {
     const { active, over } = event;
 
     setDragging(null);
     if (active.id !== over.id) {
-      setItems((items: string[]) => {
-        const oldIndex = items.findIndex((id) => id === active.id);
-        const newIndex = items.findIndex((id) => id === over.id);
-        return arrayMove(items, oldIndex, newIndex);
+      setItems((items: TreeState) => {
+        const oldIndex = items.rootIds.findIndex((id) => id === active.id);
+        const newIndex = items.rootIds.findIndex((id) => id === over.id);
+        return {
+          ...items,
+          rootIds: arrayMove(items.rootIds, oldIndex, newIndex),
+        };
       });
     }
   };
@@ -151,22 +261,27 @@ const Edge = (props: EdgeProps) => {
     setSelected(id);
   };
 
-  const renderElement = (element: TabElement, visible: boolean) => {
+  const renderElement = (
+    node: TabNode,
+    element: TabElement,
+    visible: boolean
+  ) => {
     return (
       <EdgeElement
         className={element.className}
         classNames={element.classNames}
         style={element.style}
-        id={element.id}
+        id={node.id}
         type={element.type}
-        dragging={dragging === element.id}
-        selected={selected === element.id}
+        dragging={dragging}
+        selected={selected}
         invisible={!visible}
         icon={element.icon}
         color={element.color}
         onClick={handleItemClick}
         children={elementChildren(element)}
-        tabItems={elementTabItems(element)}
+        tabItems={node.children}
+        tree={{ state: items, static: treeStatic }}
       />
     );
   };
@@ -178,28 +293,31 @@ const Edge = (props: EdgeProps) => {
           sensors={sensors}
           collisionDetection={collisionDetectionStrategy}
           onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
           modifiers={[
             restrictToVerticalAxis,
             restrictToFirstScrollableAncestor,
           ]}
         >
-          <SortableContext items={items} strategy={verticalListSortingStrategy}>
-            {items.map((id) => {
-              const element = mapppedElements[id];
+          <SortableContext
+            items={items.rootIds}
+            strategy={verticalListSortingStrategy}
+          >
+            {items.rootIds.map((id) => {
+              const node = items.byId[id];
+              const element = treeStatic[id];
               return (
-                <Sortable
-                  className={'sortable'}
-                  key={element.id}
-                  id={element.id}
-                >
-                  {renderElement(element, dragging !== element.id)}
+                <Sortable className={'sortable'} key={node.id} id={node.id}>
+                  {renderElement(node, element, dragging !== node.id)}
                 </Sortable>
               );
             })}
           </SortableContext>
           <DragOverlay>
-            {dragging ? renderElement(mapppedElements[dragging], true) : null}
+            {dragging
+              ? renderElement(items.byId[dragging], treeStatic[dragging], true)
+              : null}
           </DragOverlay>
         </DndContext>
       </div>
@@ -296,14 +414,15 @@ export interface EdgeElementProps {
   style?: React.CSSProperties;
   id: string;
   type?: TabItemType;
-  dragging: boolean;
-  selected: boolean;
+  dragging?: string;
+  selected?: string;
   invisible: boolean;
   icon?: React.ReactNode;
   color?: string;
   onClick?: (id: string) => any;
   children?: React.ReactNode;
-  tabItems?: TabItem[];
+  tabItems?: string[];
+  tree?: TabTree;
 }
 
 export const EdgeElement = (props: EdgeElementProps) => {
