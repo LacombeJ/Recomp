@@ -1,0 +1,23 @@
+{
+  "name": "@recomp/menu",
+  "private": true,
+  "version": "0.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@react-spring/web": "^9.7.2",
+    "@recomp/hooks": "link:../recomp-hooks",
+    "@recomp/icons": "link:../recomp-icons",
+    "@recomp/utility": "link:../recomp-utils"
+  },
+  "devDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

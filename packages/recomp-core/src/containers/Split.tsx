@@ -349,7 +349,7 @@ const itemDefaultStyle: React.CSSProperties = {
 };
 
 const itemDefaultProps: SplitItemProps = {
-  className: '',
+  className: 'item',
   onSetRef: () => {},
 };
 
