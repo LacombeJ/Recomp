@@ -24,10 +24,25 @@ const useElementRect = <E extends Element>(): [
   (element: E) => void,
   MeasureResult
 ] => {
-  const [element, ref] = React.useState(null);
+  const [element, ref] = React.useState<Element>(null);
   const [rect, setRect] = React.useState<MeasureResult>({
     clientRect: defaultRect(),
     contentRect: defaultRect(),
+  });
+
+  const updateWidthAndHeight = () => {
+    if (element) {
+      setRect({
+        ...rect,
+        clientRect: getRect(element.getBoundingClientRect()),
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    window.addEventListener('resize', updateWidthAndHeight);
+
+    return () => window.removeEventListener('resize', updateWidthAndHeight);
   });
 
   const observer = React.useMemo(() => {

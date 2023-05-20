@@ -156,6 +156,22 @@ const useTooltipCalculations = () => {
   };
 };
 
+const calculateParentAnchor = (
+  position: 'left' | 'right',
+  parentX: number,
+  parentWidth: number
+) => {
+  const style: React.CSSProperties = {};
+
+  if (position === 'left') {
+    style.left = `${parentX + parentWidth + 10}px`;
+  } else {
+    style.right = `${window.innerWidth - parentX + 10}px`;
+  }
+
+  return style;
+};
+
 // ----------------------------------------------------------------------------
 
 interface TabsProps {
@@ -176,12 +192,17 @@ const Tabs = (props: TabsProps) => {
   props = util.structureUnion(tabsDefaultProps, props);
   const { className, style } = props;
 
-  const parentRef: React.MutableRefObject<HTMLDivElement> = React.useRef();
+  const [parentRef, parentMeasure] = useMeasure();
 
   const [selected, setSelected] = React.useState('');
   const [selectedRect, setSelectedRect] = React.useState<Rect>();
 
   const tooltipCalc = useTooltipCalculations();
+  const tooltipAnchor = calculateParentAnchor(
+    props.position,
+    parentMeasure.clientRect.x,
+    parentMeasure.clientRect.width
+  );
 
   const handleItemClick = (id: string, rect: Rect) => {
     setSelected(id);
@@ -212,29 +233,17 @@ const Tabs = (props: TabsProps) => {
     }
   });
 
-  let parentYOffset = 0;
-  if (parentRef.current) {
-    const parentRect = parentRef.current.getBoundingClientRect();
-    parentYOffset = parentRect.y;
-  }
-
   const moveHint = useSpring({
     config: { mass: 1, tension: 1000, friction: 100 },
-    y: selectedRect ? `${selectedRect.y - parentYOffset}px` : '0px',
+    y: selectedRect
+      ? `${selectedRect.y - parentMeasure.clientRect.y}px`
+      : '0px',
   });
 
   const tooltipStyle: any = {
     ...tooltipCalc.moveTip,
+    ...tooltipAnchor,
   };
-
-  if (parentRef.current) {
-    const parentRect = parentRef.current.getBoundingClientRect();
-    if (props.position === 'left') {
-      tooltipStyle.left = `${parentRect.x + parentRect.width + 10}px`;
-    } else {
-      tooltipStyle.right = `${window.innerWidth - parentRect.x + 10}px`;
-    }
-  }
 
   return (
     <div className={className} style={style} ref={parentRef}>
@@ -330,9 +339,14 @@ const Controls = (props: ControlsProps) => {
   props = util.structureUnion(controlsDefaultProps, props);
   const { className, style } = props;
 
-  const parentRef: React.MutableRefObject<HTMLDivElement> = React.useRef();
+  const [parentRef, parentMeasure] = useMeasure();
 
   const tooltipCalc = useTooltipCalculations();
+  const tooltipAnchor = calculateParentAnchor(
+    props.position,
+    parentMeasure.clientRect.x,
+    parentMeasure.clientRect.width
+  );
 
   const [replace] = useReplaceChildren<ControlProps>((child, childProps) => {
     if (
@@ -363,16 +377,8 @@ const Controls = (props: ControlsProps) => {
 
   const tooltipStyle: any = {
     ...tooltipCalc.moveTip,
+    ...tooltipAnchor,
   };
-
-  if (parentRef.current) {
-    const parentRect = parentRef.current.getBoundingClientRect();
-    if (props.position === 'left') {
-      tooltipStyle.left = `${parentRect.x + parentRect.width + 10}px`;
-    } else {
-      tooltipStyle.right = `${window.innerWidth - parentRect.x + 10}px`;
-    }
-  }
 
   return (
     <div className={className} style={style} ref={parentRef}>
