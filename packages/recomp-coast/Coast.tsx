@@ -213,11 +213,9 @@ const Tabs = (props: TabsProps) => {
   });
 
   let parentYOffset = 0;
-  let parentRight = 0;
   if (parentRef.current) {
     const parentRect = parentRef.current.getBoundingClientRect();
     parentYOffset = parentRect.y;
-    parentRight = parentRect.x + parentRect.width;
   }
 
   const moveHint = useSpring({
@@ -227,8 +225,16 @@ const Tabs = (props: TabsProps) => {
 
   const tooltipStyle: any = {
     ...tooltipCalc.moveTip,
-    x: `${parentRight + 10}px`,
   };
+
+  if (parentRef.current) {
+    const parentRect = parentRef.current.getBoundingClientRect();
+    if (props.position === 'left') {
+      tooltipStyle.left = `${parentRect.x + parentRect.width + 10}px`;
+    } else {
+      tooltipStyle.right = `${window.innerWidth - parentRect.x + 10}px`;
+    }
+  }
 
   return (
     <div className={className} style={style} ref={parentRef}>
@@ -355,16 +361,18 @@ const Controls = (props: ControlsProps) => {
     }
   });
 
-  let parentRight = 0;
-  if (parentRef.current) {
-    const parentRect = parentRef.current.getBoundingClientRect();
-    parentRight = parentRect.x + parentRect.width;
-  }
-
   const tooltipStyle: any = {
     ...tooltipCalc.moveTip,
-    x: `${parentRight + 10}px`,
   };
+
+  if (parentRef.current) {
+    const parentRect = parentRef.current.getBoundingClientRect();
+    if (props.position === 'left') {
+      tooltipStyle.left = `${parentRect.x + parentRect.width + 10}px`;
+    } else {
+      tooltipStyle.right = `${window.innerWidth - parentRect.x + 10}px`;
+    }
+  }
 
   return (
     <div className={className} style={style} ref={parentRef}>
