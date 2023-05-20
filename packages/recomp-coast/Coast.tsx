@@ -69,12 +69,6 @@ const defaultProps: CoastProps = {
 // ----------------------------------------------------------------------------
 
 const useTooltipCalculations = () => {
-  const parentRef: React.MutableRefObject<HTMLElement> = React.useRef();
-
-  const setParentRef = (element: HTMLElement) => {
-    parentRef.current = element;
-  };
-
   const [tooltipSize, setTooltipSize] = React.useState({ width: 0, height: 0 });
   const handleTooltipSize = (width: number, height: number) => {
     setTooltipSize({ width, height });
@@ -124,12 +118,6 @@ const useTooltipCalculations = () => {
     });
   };
 
-  let parentYOffset = 0;
-  if (parentRef.current) {
-    const parentRect = parentRef.current.getBoundingClientRect();
-    parentYOffset = parentRect.y;
-  }
-
   const expandTip = useSpring({
     width: `${tooltipSize.width}px`,
   });
@@ -143,7 +131,7 @@ const useTooltipCalculations = () => {
   let moveConfig = {};
   let moveY = '0px';
   moveConfig = { mass: 1, tension: 1000, friction: 100 };
-  moveY = hoverRect ? `${tipY - parentYOffset}px` : '0px';
+  moveY = hoverRect ? `${tipY}px` : '0px';
 
   const moveTip = useSpring({
     config: moveConfig,
@@ -157,7 +145,6 @@ const useTooltipCalculations = () => {
   });
 
   return {
-    setParentRef,
     handleTooltipSize,
     tooltip,
     handleItemClick,
@@ -177,6 +164,7 @@ interface TabsProps {
     hint?: string;
     tooltip?: string;
     tooltipOffset?: string;
+    tooltipOverlay?: string;
     bar?: string;
   };
   style?: React.CSSProperties;
@@ -188,12 +176,7 @@ const Tabs = (props: TabsProps) => {
   props = util.structureUnion(tabsDefaultProps, props);
   const { className, style } = props;
 
-  const parentRef: React.MutableRefObject<HTMLElement> = React.useRef();
-
-  const setParentRef = (element: HTMLElement) => {
-    parentRef.current = element;
-    tooltipCalc.setParentRef(element);
-  };
+  const parentRef: React.MutableRefObject<HTMLDivElement> = React.useRef();
 
   const [selected, setSelected] = React.useState('');
   const [selectedRect, setSelectedRect] = React.useState<Rect>();
@@ -230,9 +213,11 @@ const Tabs = (props: TabsProps) => {
   });
 
   let parentYOffset = 0;
+  let parentRight = 0;
   if (parentRef.current) {
     const parentRect = parentRef.current.getBoundingClientRect();
     parentYOffset = parentRect.y;
+    parentRight = parentRect.x + parentRect.width;
   }
 
   const moveHint = useSpring({
@@ -240,30 +225,37 @@ const Tabs = (props: TabsProps) => {
     y: selectedRect ? `${selectedRect.y - parentYOffset}px` : '0px',
   });
 
+  const tooltipStyle: any = {
+    ...tooltipCalc.moveTip,
+    x: `${parentRight + 10}px`,
+  };
+
   return (
-    <div className={className} style={style} ref={setParentRef}>
+    <div className={className} style={style} ref={parentRef}>
       {selected ? (
         <animated.div
           className={props.classNames.hint}
           style={moveHint}
         ></animated.div>
       ) : null}
-      {tooltipCalc.tooltipVisible ? (
-        <animated.div
-          className={props.classNames.tooltip}
-          style={tooltipCalc.moveTip}
-        >
-          <div className={props.classNames.tooltipOffset}>
-            <Tooltip.Animated
-              position={tooltipPosition(props.position)}
-              animatedStyle={tooltipCalc.expandTip}
-              onResize={tooltipCalc.handleTooltipSize}
-            >
-              {tooltipCalc.tooltip}
-            </Tooltip.Animated>
-          </div>
-        </animated.div>
-      ) : null}
+      <div className={props.classNames.tooltipOverlay}>
+        {tooltipCalc.tooltipVisible ? (
+          <animated.div
+            className={props.classNames.tooltip}
+            style={tooltipStyle}
+          >
+            <div className={props.classNames.tooltipOffset}>
+              <Tooltip.Animated
+                position={tooltipPosition(props.position)}
+                animatedStyle={tooltipCalc.expandTip}
+                onResize={tooltipCalc.handleTooltipSize}
+              >
+                {tooltipCalc.tooltip}
+              </Tooltip.Animated>
+            </div>
+          </animated.div>
+        ) : null}
+      </div>
       <div className={props.classNames.bar}>{replace(props.children)}</div>
     </div>
   );
@@ -277,6 +269,7 @@ const tabsDefaultProps: TabsProps = {
     hint: 'hint',
     tooltip: 'tooltip',
     tooltipOffset: 'tooltip-offset',
+    tooltipOverlay: 'tooltip-overlay',
     bar: 'bar',
   },
 };
@@ -319,6 +312,7 @@ interface ControlsProps {
   classNames?: {
     tooltip?: string;
     tooltipOffset?: string;
+    tooltipOverlay?: string;
     bar?: string;
   };
   style?: React.CSSProperties;
@@ -329,6 +323,8 @@ interface ControlsProps {
 const Controls = (props: ControlsProps) => {
   props = util.structureUnion(controlsDefaultProps, props);
   const { className, style } = props;
+
+  const parentRef: React.MutableRefObject<HTMLDivElement> = React.useRef();
 
   const tooltipCalc = useTooltipCalculations();
 
@@ -359,24 +355,37 @@ const Controls = (props: ControlsProps) => {
     }
   });
 
+  let parentRight = 0;
+  if (parentRef.current) {
+    const parentRect = parentRef.current.getBoundingClientRect();
+    parentRight = parentRect.x + parentRect.width;
+  }
+
+  const tooltipStyle: any = {
+    ...tooltipCalc.moveTip,
+    x: `${parentRight + 10}px`,
+  };
+
   return (
-    <div className={className} style={style} ref={tooltipCalc.setParentRef}>
-      {tooltipCalc.tooltipVisible ? (
-        <animated.div
-          className={props.classNames.tooltip}
-          style={tooltipCalc.moveTip}
-        >
-          <div className={props.classNames.tooltipOffset}>
-            <Tooltip.Animated
-              position={tooltipPosition(props.position)}
-              animatedStyle={tooltipCalc.expandTip}
-              onResize={tooltipCalc.handleTooltipSize}
-            >
-              {tooltipCalc.tooltip}
-            </Tooltip.Animated>
-          </div>
-        </animated.div>
-      ) : null}
+    <div className={className} style={style} ref={parentRef}>
+      <div className={props.classNames.tooltipOverlay}>
+        {tooltipCalc.tooltipVisible ? (
+          <animated.div
+            className={props.classNames.tooltip}
+            style={tooltipStyle}
+          >
+            <div className={props.classNames.tooltipOffset}>
+              <Tooltip.Animated
+                position={tooltipPosition(props.position)}
+                animatedStyle={tooltipCalc.expandTip}
+                onResize={tooltipCalc.handleTooltipSize}
+              >
+                {tooltipCalc.tooltip}
+              </Tooltip.Animated>
+            </div>
+          </animated.div>
+        ) : null}
+      </div>
       <div className={props.classNames.bar}>{replace(props.children)}</div>
     </div>
   );
@@ -389,6 +398,7 @@ const controlsDefaultProps: ControlsProps = {
   classNames: {
     tooltip: 'tooltip',
     tooltipOffset: 'tooltip-offset',
+    tooltipOverlay: 'tooltip-overlay',
     bar: 'bar',
   },
 };
