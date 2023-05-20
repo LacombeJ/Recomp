@@ -1,0 +1,227 @@
+@mixin recomp-titlebar($backgroundColor: #202020, $fontColor: #f8f8f8) {
+  background-color: $backgroundColor;
+  color: $fontColor;
+  -webkit-app-region: drag;
+  margin: 0;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  user-select: none;
+  z-index: 2000;
+}
+
+@mixin recomp-titleicon($backgroundColor: transparent) {
+  background-color: $backgroundColor;
+  background-size: 20px 20px;
+  width: 20px;
+  height: 20%;
+}
+
+@mixin recomp-menubar($backgroundColor: transparent) {
+  background-color: $backgroundColor;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+@mixin recomp-menubutton($backgroundColor: transparent, $backgroundColorHover: #363636) {
+  background-color: $backgroundColor;
+  height: 100%;
+  -webkit-app-region: no-drag;
+  padding-left: 7px;
+  padding-right: 7px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+
+  &:hover {
+    background-color: $backgroundColorHover;
+  }
+
+  &.active {
+    background-color: $backgroundColorHover;
+  }
+}
+
+@mixin recomp-titleheader($backgroundColor: transparent, $backgroundColorHover: #363636) {
+  display: block;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  flex-wrap: wrap;
+  overflow: hidden;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+@mixin recomp-controlbar($backgroundColor: transparent) {
+  background-color: $backgroundColor;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-grow: 1;
+}
+
+@mixin recomp-controlbutton($backgroundColor: transparent,
+  $backgroundColorHover: #363636,
+  $closeButtonSelector: '.recomp-close',
+  $closeButtonColorHover: rgba(red, 0.75),
+  $buttonWidth: 30px) {
+
+  background-color: $backgroundColor;
+  -webkit-app-region: no-drag;
+  padding-left: 8px;
+  padding-right: 8px;
+  width: $buttonWidth;
+  height: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: $backgroundColorHover;
+  }
+
+  &#{$closeButtonSelector}:hover {
+    background-color: $closeButtonColorHover;
+  }
+}
+
+@mixin recomp-dropbar($separatorSelector: '.recomp-dropbar-separator',
+  $backgroundColor: #202020,
+  $borderColor: #555b5e,
+  $separatorColor: #555b5e,
+  $separatorWidth: 4px) {
+
+  background-color: $backgroundColor;
+  position: fixed;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.4);
+  min-width: 200px;
+  z-index: 1000;
+  padding: 8px 0 8px 0;
+  border: 1px solid $borderColor;
+
+  #{$separatorSelector} {
+    min-height: $separatorWidth;
+    border-bottom: 1px solid $separatorColor;
+    margin-bottom: $separatorWidth;
+    margin-left: 30px;
+    margin-right: 6px;
+  }
+}
+
+@mixin recomp-dropbutton($labelSelector: '.recomp-dropbutton-label',
+  $acceleratorSelector: '.recomp-dropbutton-accelerator',
+  $backgroundColor: transparent,
+  $backgroundColorHover: #363636) {
+
+  background-color: $backgroundColor;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1;
+  flex-wrap: wrap;
+  overflow: hidden;
+  height: 22px;
+
+  &:hover {
+    background-color: $backgroundColorHover;
+  }
+
+  #{$labelSelector} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 30px 2px 30px;
+  }
+
+  #{$acceleratorSelector  } {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow: 1;
+    padding: 2px 30px 2px 30px;
+  }
+}
+
+@mixin recomp-titlebar-master($titlebar_selector: '.recomp-titlebar',
+  $titleicon_selector: '.recomp-titleicon',
+  $menubar_selector: '.recomp-menubar',
+  $menubutton_selector: '.recomp-menubutton',
+  $dropbar_selector: 'recomp-dropbar',
+  $dropbar_separator_selector: '.recomp-dropbar-separator',
+  $dropbutton_selector: '.recomp-dropbutton',
+  $dropbutton_label_selector: '.recomp-dropbutton-label',
+  $dropbutton_accelerator_selector: '.recomp-dropbutton-accelerator',
+  $titleheader_selector: '.recomp-titleheader',
+  $controlbar_selector: '.recomp-controlbar',
+  $controlbutton_selector: '.recomp-controlbutton',
+  $close_selector: '.recomp-close',
+  $fontColor: #aea194,
+  $backgroundColor: #202020,
+  $hoverColor: #363636,
+  $dropdownColor: #202020,
+  $borderColor: #555b5e,
+  $controlButtonWidth: 30px) {
+
+  #{$titlebar_selector} {
+    @include recomp-titlebar($backgroundColor: $backgroundColor,
+      $fontColor: $fontColor,
+    );
+  }
+
+  #{$titleicon_selector} {
+    @include recomp-titleicon();
+  }
+
+  #{$menubar_selector} {
+    @include recomp-menubar();
+  }
+
+  #{$menubutton_selector} {
+    @include recomp-menubutton($backgroundColorHover: $hoverColor,
+    );
+  }
+
+  #{$dropbar_selector} {
+    @include recomp-dropbar($separatorSelector: $dropbar_separator_selector,
+      $backgroundColor: $dropdownColor,
+      $borderColor: $borderColor,
+      $separatorColor: $borderColor,
+    );
+  }
+
+  #{$dropbutton_selector} {
+    @include recomp-dropbutton($labelSelector: $dropbutton_label_selector,
+      $acceleratorSelector: $dropbutton_accelerator_selector,
+      $backgroundColorHover: $hoverColor,
+    );
+  }
+
+  #{$titleheader_selector} {
+    @include recomp-titleheader();
+  }
+
+  #{$controlbar_selector} {
+    @include recomp-controlbar();
+  }
+
+  #{$controlbutton_selector} {
+    @include recomp-controlbutton($backgroundColorHover: $hoverColor,
+      $closeButtonSelector: $close_selector,
+      $buttonWidth: $controlButtonWidth,
+    );
+  }
+}
