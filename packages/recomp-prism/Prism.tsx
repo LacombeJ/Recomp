@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import * as prism from 'prismjs';
-import './prism.styl';
+
 import 'prismjs/plugins/line-numbers/prism-line-numbers';
 
 import * as util from '@recomp/utility/common';

@@ -1,0 +1,40 @@
+@use "sass:color" as color;
+
+@use '../common/colors.scss' as recomp;
+
+@function desaturate_then_lighten($color, $desaturation_amount, $lighten_amount) {
+  @return color.scale(color.scale($color,
+      $saturation: -$desaturation_amount ),
+    $lightness: $lighten_amount );
+}
+
+@mixin init() {
+
+  $V0: 20%; // desaturation value
+  $V1: 70%; // lighten value
+  
+  .recomp-list {
+    margin: 0;
+    padding: 0 0 0 28px;
+  }
+  
+  .recomp-list-item {
+    &.level-1 {
+      color: desaturate_then_lighten(recomp.$level_1, $V0, $V1);
+    }
+  
+    &.level-2 {
+      color: desaturate_then_lighten(recomp.$level_2, $V0, $V1);
+    }
+  
+    &.level-3 {
+      color: desaturate_then_lighten(recomp.$level_3, $V0, $V1);
+    }
+  }
+  
+  .recomp-listitemcontent {
+    position: absolute;
+    transform: translateX(-25%) translateX(-17px);
+  }
+
+}

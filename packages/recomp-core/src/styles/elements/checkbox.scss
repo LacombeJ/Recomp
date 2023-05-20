@@ -1,0 +1,75 @@
+@use "sass:color" as color;
+
+@use '../common/colors.scss' as recomp;
+
+@mixin init() {
+
+  .recomp-checkbox {
+    $checkbox_color: color.scale(recomp.$primary, $lightness: 10%);
+
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+
+    & .label {
+      margin-left: 1.5em;
+    }
+
+    & input {
+      opacity: 0;
+      position: absolute;
+      height: 0;
+      width: 0;
+    }
+
+    & .mark {
+      position: absolute;
+      height: 1em;
+      width: 1em;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: transparent;
+      border: 1px solid rgba(white, 0.3);
+      border-radius: 3px;
+      transition: all .3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+
+    &:hover input:not(:checked)~.mark {
+      border-color: $checkbox_color;
+    }
+
+    &:hover input:checked~.mark {
+      border-color: rgba(white, 0.3);
+    }
+
+    & .mark::after {
+      content: "";
+      position: absolute;
+      display: block;
+      width: 0%;
+      height: 0%;
+      border: solid white;
+      border-width: 0 0 0 0;
+      transition: all .2s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transform: translateX(0.475em) translateY(0.5em);
+    }
+
+    & input:checked~.mark {
+      background-color: $checkbox_color;
+      border-color: transparent;
+
+      &::after {
+        $mark_width: 0.3em;
+        $mark_height: 0.6em;
+        $post_y: -(calc(min($mark_width, $mark_height) / 4));
+        width: $mark_width;
+        height: $mark_height;
+        border-width: 0 0.15em 0.15em 0;
+        transform: translateX(calc((1em - $mark_width) / 2.3)) translateY(calc((1em - $mark_height) / 3)) rotate(45deg) translateX($post_y) translateY($post_y);
+      }
+    }
+
+  }
+
+}

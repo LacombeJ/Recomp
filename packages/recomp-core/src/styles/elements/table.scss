@@ -1,0 +1,43 @@
+@mixin init() {
+
+  .recomp-table {
+
+    overflow-y: auto;
+    display: inline-block;
+    border: 1px solid rgba(150, 150, 150, 0.5);
+
+    .table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .th {
+      font-size: 14px;
+      color: rgb(200, 200, 200);
+    }
+
+    .th,
+    .td {
+      padding: 8px;
+      border: 1px solid rgba(150, 150, 150, 0.5);
+    }
+
+    .th {
+      border-width: 1px 1px 2px 1px;
+    }
+
+    .tr .th {
+      background-color: rgba(10, 10, 10, 0.2);
+    }
+
+    .tr:nth-child(even) {
+      background-color: rgba(10, 10, 10, 0.25);
+    }
+
+    .tr {
+      font-size: 12px;
+    }
+
+  }
+
+}

@@ -9,11 +9,12 @@
   "dependencies": {
     "@recomp/core": "link:../recomp-core",
     "@recomp/monaco": "link:../recomp-monaco",
+    "@storybook/builder-vite": "^7.0.12",
     "@tabler/icons-react": "^2.18.0"
   },
   "devDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "stylus": "^0.58.1"
+    "sass": "^1.62.1"
   }
 }

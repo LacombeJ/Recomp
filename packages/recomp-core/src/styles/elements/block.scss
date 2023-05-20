@@ -1,0 +1,67 @@
+@use "sass:color" as color;
+
+@use '../common/colors.scss' as recomp;
+
+@function desaturate_then_darken($color, $desaturation_amount, $darken_amount) {
+  @return color.scale(color.scale($color,
+      $saturation: -$desaturation_amount ),
+    $lightness: -$darken_amount );
+}
+
+@mixin init() {
+
+  .recomp-block {
+    $V0: 60%; // desaturation value
+    $V1: 50%; // darken value
+
+    margin: 4px 0px 4px 0px;
+    padding: 4px 16px 4px 14px;
+
+    &:not(.solid) {
+      border-left: 4px solid rgba(recomp.$primary, 1);
+      background-color: rgba(0, 0, 0, 0.15);
+
+      &.level-1 {
+        border-color: recomp.$level_1;
+      }
+
+      &.level-2 {
+        border-color: recomp.$level_2;
+      }
+
+      &.level-3 {
+        border-color: recomp.$level_3;
+      }
+
+      &.level-4 {
+        border-color: recomp.$level_4;
+      }
+    }
+
+    &.solid {
+      background-color: desaturate_then_darken(recomp.$primary, $V0, $V1);
+      border: 1px solid recomp.$primary;
+
+      &.level-1 {
+        background-color: desaturate_then_darken(recomp.$level_1, $V0, $V1);
+        border-color: recomp.$level_1;
+      }
+
+      &.level-2 {
+        background-color: desaturate_then_darken(recomp.$level_2, $V0, $V1);
+        border-color: recomp.$level_2;
+      }
+
+      &.level-3 {
+        background-color: desaturate_then_darken(recomp.$level_3, $V0, $V1);
+        border-color: recomp.$level_3;
+      }
+
+      &.level-4 {
+        background-color: desaturate_then_darken(recomp.$level_4, $V0, $V1);
+        border-color: recomp.$level_4;
+      }
+    }
+  }
+
+}

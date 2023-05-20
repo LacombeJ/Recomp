@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Katex } from '@recomp/katex';
-import '../stories.styl';
+import '../stories.scss';
 
 export default {
   title: 'Components/Katex',

@@ -1,0 +1,69 @@
+@use "sass:color" as color;
+
+@use '../common/colors.scss' as recomp;
+
+@function desaturate_then_lighten($color, $desaturation_amount, $lighten_amount) {
+  @return color.scale(color.scale($color,
+      $saturation: -$desaturation_amount ),
+    $lightness: $lighten_amount );
+}
+
+@mixin init() {
+
+  .recomp-tooltip {
+    $tooltip_border: desaturate_then_lighten(recomp.$primary, 50%, 15%);
+    $tooltip_background: desaturate_then_lighten(recomp.$primary, 70%, -40%);
+
+    position: relative;
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.75);
+    background-color: $tooltip_background;
+    border: 1px solid $tooltip_border;
+    border-radius: 2px;
+    box-shadow: rgba(30, 30, 30, 0.3) 0 4px 8px,
+      rgba(30, 30, 30, 0.7) 0px 4px 4px;
+    padding: 4px 8px;
+    display: inline-block;
+
+    .body {
+      display: inline-block;
+      white-space: nowrap;
+
+    }
+
+    .triangle {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .outline {
+        position: absolute;
+        color: $tooltip_border;
+      }
+
+      &.top .outline {
+        filter: drop-shadow(0px 4px 2px rgba(20, 20, 20, 0.5));
+      }
+
+      &.right .outline {
+        filter: drop-shadow(-4px 0px 2px rgba(20, 20, 20, 0.5));
+      }
+
+      // &.bottom .outline {
+      //   // no shadow (arrow on top)
+      // }
+
+      &.left .outline {
+        filter: drop-shadow(4px 0px 2px rgba(20, 20, 20, 0.5));
+      }
+
+      .inner {
+        position: absolute;
+        color: $tooltip_background;
+        transform: translateY(0.5px);
+      }
+    }
+  }
+
+}

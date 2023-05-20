@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Split, Stack } from '@recomp/core';
-import '../stories.styl';
+import '../stories.scss';
 
 export default {
   title: 'Containers/Split',

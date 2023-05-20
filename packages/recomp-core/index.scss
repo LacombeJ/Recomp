@@ -1,0 +1,136 @@
+@forward 'src/styles/common/colors.scss';
+
+// Containers:
+@use 'src/styles/containers/bar.scss';
+@use 'src/styles/containers/overlay.scss';
+@use 'src/styles/containers/split.scss';
+
+// Elements:
+@use 'src/styles/elements/block.scss';
+@use 'src/styles/elements/button.scss';
+@use 'src/styles/elements/cabinet.scss';
+@use 'src/styles/elements/checkbox.scss';
+@use 'src/styles/elements/form.scss';
+@use 'src/styles/elements/heading.scss';
+@use 'src/styles/elements/input.scss';
+@use 'src/styles/elements/link.scss';
+@use 'src/styles/elements/list.scss';
+@use 'src/styles/elements/paragraph.scss';
+@use 'src/styles/elements/quote.scss';
+@use 'src/styles/elements/radio.scss';
+@use 'src/styles/elements/select.scss';
+@use 'src/styles/elements/switch.scss';
+@use 'src/styles/elements/table.scss';
+@use 'src/styles/elements/text.scss';
+@use 'src/styles/elements/textarea.scss';
+@use 'src/styles/elements/tooltip.scss';
+
+// Initialization
+@mixin init() {
+  // Containers
+  @include bar.init();
+  @include overlay.init();
+  @include split.init();
+
+  // Elements
+  @include block.init();
+  @include button.init();
+  @include cabinet.init();
+  @include button.init();
+  @include checkbox.init();
+  @include form.init();
+  @include heading.init();
+  @include input.init();
+  @include link.init();
+  @include list.init();
+  @include paragraph.init();
+  @include quote.init();
+  @include radio.init();
+  @include select.init();
+  @include switch.init();
+  @include table.init();
+  @include text.init();
+  @include textarea.init();
+  @include tooltip.init();
+}
+
+// ----------------------------------------------------------------------------
+
+// Mixins:
+@mixin global() {
+  font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+}
+
+@mixin root() {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  white-space: wrap;
+}
+
+@mixin rootSub() {
+  overflow: hidden;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
+@mixin fill() {
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  position: absolute;
+}
+
+@mixin fillRelative() {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+@mixin shadow() {
+  box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.3);
+}
+
+@mixin scrollbar($width: 12px,
+  $margin: 100px,
+  $trackColor: transparent,
+  $thumbColor: rgba(white, 0.1),
+  $thumbRadius: 2px,
+  $thumbColorHover: rgba(white, 0.2),
+  $cornerColor: transparent) {
+
+  // Standard (Chrome, etc)
+  // I think webkit style prioritizes ancestors
+  ::-webkit-scrollbar {
+    width: $width;
+    margin: $margin;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: $trackColor;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: $thumbColor;
+    border-radius: $thumbRadius;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: $thumbColorHover;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: $cornerColor;
+  }
+
+  // Firefox, this style needs to be applied to overflow: scroll elements
+  scrollbar-width: thin;
+  scrollbar-color: $thumbColor $trackColor;
+}

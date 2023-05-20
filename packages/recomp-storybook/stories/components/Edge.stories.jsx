@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { Edge } from '@recomp/edge';
-import '../stories.styl';
+import '../stories.scss';
+import '../stories.scss';
 
 export default {
   title: 'Components/Edge',
@@ -20,7 +21,7 @@ const tabs = [
   {
     group: 'Styles',
     color: '#31AC9F',
-    items: ['button.styl', 'list.styl', 'navbar.styl'],
+    items: ['button.scss', 'list.scss', 'navbar.scss'],
   },
   'index.ts',
   'index.html',

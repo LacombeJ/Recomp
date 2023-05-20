@@ -1,0 +1,33 @@
+@mixin init() {
+
+  // Array(Level, Font Size, Top Margin, Bottom Margin)
+  $headings: "1" 38px 0.5em 0.4em,
+  "2" 31px 0.5em 0.4em,
+  "3" 26px 0.5em 0.4em,
+  "4" 22px 0.4em 0.4em,
+  "5" 19px 10px 10px,
+  "6" 16px 10px 10px;
+
+  .recomp-heading {
+    font-weight: 200;
+    line-height: 1.25;
+    margin: 0;
+    margin-bottom: 0.4em;
+  }
+
+  h1.recomp-heading {
+    font-weight: 400;
+  }
+
+  @each $level,
+  $size,
+  $top,
+  $bot in $headings {
+    h#{$level}.recomp-heading {
+      font-size: $size;
+      margin-top: $top;
+      margin-bottom: $bot;
+    }
+  }
+
+}

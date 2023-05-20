@@ -1,0 +1,60 @@
+@mixin init() {
+
+  $border_color: rgb(65, 65, 65);
+  $background_color: rgb(30, 30, 30);
+  $hover_color: rgb(50, 50, 50);
+
+  .recomp-menu {
+
+    display: inline-block;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.4);
+    min-width: 200px;
+    background-color: $background_color;
+    padding: 8px 0 8px 0;
+    border: 1px solid $border_color;
+    border-radius: 4px;
+
+    .item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-grow: 1;
+
+      flex-wrap: wrap;
+      overflow: hidden;
+
+      &:hover {
+        background-color: $hover_color;
+      }
+    }
+
+    .label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2px 30px 2px 30px;
+    }
+
+    .accelerator {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      flex-grow: 1;
+      padding: 2px 30px 2px 30px;
+    }
+
+    .separator {
+      $separator-width: 4px;
+      $separator-margin: 12px;
+      min-height: $separator-width;
+      border-bottom: 1px solid $border_color;
+      margin-bottom: $separator-width;
+      margin-left: 30px;
+      margin-right: 6px;
+    }
+
+  }
+
+}

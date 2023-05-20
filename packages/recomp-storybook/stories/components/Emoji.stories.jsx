@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Emoji } from '@recomp/emoji';
-import '../stories.styl';
+import '../stories.scss';
 
 export default {
   title: 'Components/Emoji',

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Menu } from '@recomp/menu';
-import '../stories.styl';
+import '../stories.scss';
 
 export default {
   title: 'Components/Menu',

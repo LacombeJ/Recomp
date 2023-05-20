@@ -11,7 +11,7 @@ import {
 } from '@tabler/icons-react';
 
 import { Coast } from '@recomp/coast';
-import '../stories.styl';
+import '../stories.scss';
 
 export default {
   title: 'Components/Coast',

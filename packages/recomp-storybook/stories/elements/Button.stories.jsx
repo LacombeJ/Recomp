@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button } from '@recomp/core';
-import '../stories.styl';
+import '../stories.scss';
 
 export default {
   title: 'Elements/Button',

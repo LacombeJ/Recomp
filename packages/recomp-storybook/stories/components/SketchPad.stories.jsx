@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { SketchPad } from '@recomp/sketchpad';
-import '../stories.styl';
+import '../stories.scss';
 
 export default {
   title: 'Components/SketchPad',

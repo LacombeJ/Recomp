@@ -22,7 +22,7 @@ interface ButtonProps
   disabled?: boolean;
   loading?: boolean;
   loadingIcon?: React.ReactNode;
-  setRef: any;
+  setRef?: any;
 }
 
 export const Button = (props: ButtonProps) => {

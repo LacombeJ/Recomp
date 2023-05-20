@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Prism } from '@recomp/prism';
-import '../stories.styl';
+import '../stories.scss';
 
 export default {
   title: 'Components/Prism',

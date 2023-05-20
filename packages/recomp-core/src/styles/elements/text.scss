@@ -1,0 +1,29 @@
+@mixin init() {
+
+  code {
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+  }
+
+  .recomp-text code {
+    color: rgb(200, 200, 200);
+    padding: .2em .4em;
+    font-size: 0.9em;
+    background: rgba(50, 50, 50, 0.3);
+    border: 1px solid rgba(100, 100, 100, 0.5);
+    border-radius: 3px;
+  }
+
+  .recomp-text.keyCode {
+    $color_value: 200;
+    $bg_value: 40;
+    $s1_color: rgb(20, 20, 20);
+    $s2_color: rgb(60, 60, 60);
+    color: rgb($color_value, $color_value, $color_value);
+    padding: .1em .6em;
+    font-size: 0.75em;
+    background: rgb($bg_value, $bg_value, $bg_value);
+    border-radius: 3px;
+    box-shadow: 0px 2px 0px 1px $s1_color, 0px 3px 0px 1px $s2_color;
+  }
+
+}

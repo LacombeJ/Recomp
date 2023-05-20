@@ -32,7 +32,6 @@ import { Chevron, File } from '@recomp/icons';
 import {
   createTabTree,
   elementChildren,
-  isGroup,
   TabItemType,
   TabElement,
   TabTree,

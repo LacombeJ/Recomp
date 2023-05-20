@@ -1,0 +1,79 @@
+@use '../common/colors.scss' as recomp;
+
+@mixin init() {
+
+  .recomp-button {
+    $default_background: recomp.$primary;
+    $default_border: lighten(recomp.$primary, 10%);
+
+    $plain_background: #a3a3a3;
+    $plain_border: #9ca5a4;
+
+    $warn_background: #852c33;
+    $warn_border: #e44c4c;
+
+    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba($default_background, 0.7);
+    border: 1px solid $default_border;
+
+    border-radius: 2px;
+    box-shadow: inset rgba(0, 0, 0, 0.0) 0 4px 8px, rgba(0, 0, 0, 0.0) 0px 4px 8px;
+    cursor: pointer;
+    display: inline-block;
+    line-height: 1.5em;
+    padding: 8px 16px;
+    text-align: center;
+    white-space: nowrap;
+    transition: all .2s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+    user-select: none;
+    touch-action: manipulation;
+
+    &:hover {
+      box-shadow: inset rgba(0, 0, 0, 0.0) 0 4px 8px, rgba(0, 0, 0, 0.9) 0px 4px 8px;
+      background-color: rgba($default_background, 0.8);
+      border: 1px solid lighten($default_border, 20%);
+    }
+
+    &.plain {
+      color: rgba(255, 255, 255, 0.9);
+      background-color: rgba($plain_background, 0.3);
+      border: 1px solid $plain_border;
+
+      &:hover {
+        background-color: rgba($plain_background, 0.6);
+        border: 1px solid lighten($plain_border, 20%);
+      }
+    }
+
+    &.warn {
+      color: rgba(255, 255, 255, 0.9);
+      background-color: rgba($warn_background, 0.7);
+      border: 1px solid $warn_border;
+
+      &:hover {
+        background-color: rgba($warn_background, 0.8);
+        border: 1px solid lighten($warn_border, 20%);
+      }
+    }
+
+    &:active {
+      transition-duration: .1s;
+      box-shadow: inset rgba(0, 0, 0, 0.3) 0 4px 8px, rgba(0, 0, 0, 0.9) 0px 4px 8px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: .6;
+
+      &:active {
+        pointer-events: none;
+      }
+
+      &:hover {
+        box-shadow: none;
+      }
+    }
+  }
+
+}

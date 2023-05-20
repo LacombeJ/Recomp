@@ -21,14 +21,15 @@ interface TextProps {
   delete?: boolean;
   code?: boolean;
   keyCode?: boolean;
-  ellipsis?: boolean;
   children?: React.ReactNode;
 }
 
 export const Text = (props: TextProps) => {
   props = util.structureUnion(defaultProps, props);
 
-  const { style } = props;
+  const style = {
+    ...props.style,
+  };
 
   const className = util.classnames({
     [props.className]: true,
@@ -66,6 +67,7 @@ export const Text = (props: TextProps) => {
 
 const defaultProps: TextProps = {
   className: 'recomp-text',
+  style: {},
   size: null,
   weight: null,
   color: null,
@@ -82,7 +84,6 @@ const defaultProps: TextProps = {
   delete: false,
   code: false,
   keyCode: false,
-  ellipsis: false,
 };
 
 const tagMap = {

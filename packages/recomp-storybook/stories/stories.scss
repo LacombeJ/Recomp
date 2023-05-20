@@ -1,0 +1,98 @@
+@use '@recomp/core';
+@use '@recomp/coast';
+@use '@recomp/edge';
+@use '@recomp/folder';
+@use '@recomp/katex';
+@use '@recomp/menu';
+@use '@recomp/monaco';
+@use '@recomp/prism';
+
+@include core.init();
+@include coast.init();
+@include edge.init();
+@include folder.init();
+@include katex.init();
+@include menu.init();
+@include monaco.init();
+@include prism.init();
+
+#root {
+  @include core.global();
+  color: rgba(white, 0.9);
+}
+
+.docs-story {
+  @include core.global();
+  color: rgba(white, 0.9);
+}
+
+.bar-start {
+  color: white;
+  min-width: 100px;
+  padding: 4px 4px;
+  background-color: #946051;
+}
+
+.bar-center {
+  color: white;
+  width: 100%;
+  padding: 4px 4px;
+  background-color: #517094;
+}
+
+.bar-end {
+  color: white;
+  min-width: 100px;
+  padding: 4px 4px;
+  background-color: #6f9451;
+}
+
+@mixin split-panel() {
+  font-size: 40px;
+  font-weight: 200;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.split-left {
+  @include split-panel();
+  background-color: rgba(30, 0, 0, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.split-right {
+  @include split-panel();
+  background-color: rgba(0, 0, 30, 0.5);
+}
+
+.split-top {
+  @include split-panel();
+  background-color: rgba(30, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.split-bottom {
+  @include split-panel();
+  background-color: rgba(0, 0, 30, 0.5);
+}
+
+
+.scrollpane {
+  max-height: 300px;
+  padding: 30px;
+}
+
+.scroll-container {
+  max-height: 300px;
+  padding: 30px;
+}
+
+.right-template {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}

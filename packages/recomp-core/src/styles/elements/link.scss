@@ -1,0 +1,34 @@
+@use "sass:color" as color;
+
+@use '../common/colors.scss' as recomp;
+
+@function lighten_then_desaturate($color, $lighten_amount, $desaturation_amount) {
+  @return color.scale(color.scale($color,
+      $lightness: $lighten_amount ),
+    $saturation: -$desaturation_amount );
+}
+
+@mixin init() {
+
+  $link_color: color.scale(recomp.$primary, $lightness: 40%);
+
+  a.recomp-link {
+    color: $link_color;
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:hover {
+      color: lighten_then_desaturate($link_color, 60%, 20%);
+      cursor: pointer;
+    }
+
+    &:focus {
+      color: lighten_then_desaturate($link_color, 80%, 20%);
+    }
+
+    &:active {
+      color: lighten_then_desaturate($link_color, 70%, 40%);
+    }
+  }
+
+}

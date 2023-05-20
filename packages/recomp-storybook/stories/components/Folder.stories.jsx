@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Folder } from '@recomp/folder';
-import '../stories.styl';
+import '../stories.scss';
 
 export default {
   title: 'Components/Folder',

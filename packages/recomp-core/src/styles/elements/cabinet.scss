@@ -1,0 +1,82 @@
+@use "sass:color" as color;
+
+@use '../common/colors.scss' as recomp;
+
+@mixin init() {
+
+  .recomp-cabinet {
+    $bg_color: recomp.$primary;
+    $hover_color: color.scale($bg_color, $lightness: 10%);
+    $inner_color: color.scale($bg_color, $lightness: -30%);
+    $TX: .3s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+    background-color: $bg_color;
+    box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    transition: background-color $TX, box-shadow $TX;
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+
+    &.hover {
+      background-color: $hover_color;
+      box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.4);
+    }
+
+    .head {
+      user-select: none;
+      height: 60px;
+      display: flex;
+
+      .icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 60px;
+      }
+
+      .label {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+
+        .title {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: 18px;
+          font-weight: 200;
+          color: rgba(white, 0.9);
+        }
+
+        .subtitle {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: 12px;
+          font-weight: 400;
+          color: rgba(white, 0.6);
+        }
+      }
+
+      .control {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 60px;
+        // the transform-origin is because default icon isn't centered
+        transform-origin: 26px 32px;
+      }
+    }
+
+    .body {
+      margin: 4px;
+      padding: 8px;
+      box-shadow: inset 0px 2px 4px 1px rgba(0, 0, 0, 0.2);
+      background-color: $inner_color;
+    }
+  }
+
+}

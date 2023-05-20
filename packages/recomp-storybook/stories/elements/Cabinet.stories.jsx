@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Cabinet } from '@recomp/core';
-import '../stories.styl';
+import '../stories.scss';
 
 export default {
   title: 'Elements/Cabinet',

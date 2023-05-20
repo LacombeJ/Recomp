@@ -1,0 +1,17 @@
+@use '../common/colors.scss' as recomp;
+
+@mixin init() {
+
+  .recomp-select {
+    background-color: rgb(40, 40, 40);
+    color: rgba(white, 0.75);
+    border-width: 0px;
+    padding: 4px 8px;
+    min-width: 200px;
+
+    &:focus {
+      outline: recomp.$primary solid 1px;
+    }
+  }
+
+}
