@@ -1,0 +1,20 @@
+{
+  "name": "@recomp/doodle",
+  "private": true,
+  "version": "0.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "css-doodle": "^0.34.9"
+  },
+  "devDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
