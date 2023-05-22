@@ -60,7 +60,6 @@ interface MenuProps {
 
 export const Menu = (props: MenuProps) => {
   props = util.structureUnion(defaultProps, props);
-
   if (props.model) {
     props.model = normalizeMenuElements(props.model);
   }
@@ -68,7 +67,13 @@ export const Menu = (props: MenuProps) => {
     props.model = createMenuElements(props.children);
   }
 
-  return <SubMenu {...props}></SubMenu>;
+  const { className, style, ...restProps } = props;
+
+  return (
+    <div className={props.className} style={props.style}>
+      <SubMenu {...restProps}></SubMenu>
+    </div>
+  );
 };
 
 const defaultProps: MenuProps = {
@@ -133,7 +138,7 @@ export const SubMenu = (props: SubMenuProps) => {
   };
 
   return (
-    <div className={props.className} style={props.style}>
+    <React.Fragment>
       <div
         className={props.classNames.menu}
         onMouseEnter={props.onMouseEnter}
@@ -181,7 +186,7 @@ export const SubMenu = (props: SubMenuProps) => {
           </div>
         </div>
       ) : null}
-    </div>
+    </React.Fragment>
   );
 };
 
