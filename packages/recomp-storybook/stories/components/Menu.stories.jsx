@@ -9,11 +9,7 @@ export default {
   argTypes: {},
 };
 
-const Template = (args) => (
-  
-    <Menu {...args} />
-  
-);
+const Template = (args) => <Menu {...args} />;
 
 const menuModel = [
   {

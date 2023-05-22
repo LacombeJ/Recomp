@@ -14,6 +14,12 @@ export const structureUnion = (left: any, right: any) => {
     return rightObj;
   }
 
+  // Arrays
+  if (Array.isArray(leftObj) || Array.isArray(rightObj)) {
+    return rightObj;
+  }
+
+  // Objects (non-arrays)
   let result: any = {};
 
   if (typeof leftObj === 'object' && leftObj !== null) {
