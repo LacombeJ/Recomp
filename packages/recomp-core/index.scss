@@ -74,17 +74,11 @@
 @mixin root-sub() {
   overflow: hidden;
   position: absolute;
-  left: 0px;
-  right: 0px;
-  top: 0px;
-  bottom: 0px;
+  inset: 0px;
 }
 
 @mixin fill() {
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
+  inset: 0px;
   position: absolute;
 }
 

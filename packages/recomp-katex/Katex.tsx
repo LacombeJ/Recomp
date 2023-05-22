@@ -49,8 +49,6 @@ const Katex = (props: KatexProps) => {
     marginTop: props.margin,
   };
 
-  console.log(props);
-  console.log(className);
   props.children = 'x';
   const Component =
     props.display === 'inline'

@@ -82,8 +82,8 @@ const useTooltipCalculations = () => {
   const [recentHover, setRecentHover] = React.useState(false);
   const [hoverRect, setHoverRect] = React.useState<Rect>();
 
-  const hoverTimeout = useTimeout();
-  const recentTimeout = useTimeout();
+  const hoverTimeout = useTimeout(1500);
+  const recentTimeout = useTimeout(1000);
 
   const handleItemClick = (_id: string, _rect: Rect) => {
     setTipActive(false);
@@ -99,7 +99,7 @@ const useTooltipCalculations = () => {
       setTipActive(true);
       setTooltipVisible(true);
     } else if (!tipActive) {
-      hoverTimeout.begin(1500, () => {
+      hoverTimeout.begin(() => {
         setTooltip(tooltip);
         setTipActive(true);
         setTooltipVisible(true);
@@ -113,7 +113,7 @@ const useTooltipCalculations = () => {
   const handleItemMouseLeave = (_id: string) => {
     hoverTimeout.cancel();
     setTipActive(false);
-    recentTimeout.begin(1000, () => {
+    recentTimeout.begin(() => {
       setRecentHover(false);
     });
   };

@@ -4,7 +4,7 @@ import * as util from '@recomp/utility/common';
 
 import { animated } from '@react-spring/web';
 
-import { useMeasure } from '@recomp/hooks';
+import { useSize } from '@recomp/hooks';
 
 type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
 
@@ -78,12 +78,9 @@ interface TooltipAnimatedProps extends TooltipProps {
 Tooltip.Animated = (props: TooltipAnimatedProps) => {
   props = util.structureUnion(defaultProps, props);
 
-  const [bodyRef, bodyMeasure] = useMeasure();
-  const { width, height } = bodyMeasure.clientRect;
-
-  React.useEffect(() => {
+  const bodyRef = useSize(({ width, height }) => {
     props.onResize(width, height);
-  }, [width, height]);
+  });
 
   const { animatedStyle, children, ...genericProps } = props;
 

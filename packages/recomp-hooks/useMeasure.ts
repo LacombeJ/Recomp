@@ -20,7 +20,7 @@ export type Rect = {
   right: number;
 };
 
-const useElementRect = <E extends Element>(): [
+export const useMeasure = <E extends Element>(): [
   (element: E) => void,
   MeasureResult
 ] => {
@@ -89,4 +89,3 @@ const defaultRect = (): Rect => {
   };
 };
 
-export default useElementRect;

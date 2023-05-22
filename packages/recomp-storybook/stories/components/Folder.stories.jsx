@@ -45,8 +45,6 @@ const buildTree = (builder) => {
 
   const root = buildTreeRecurse(exampleTree, builder);
   exampleTree.paths.rootId = root;
-  console.log(root);
-  console.log(exampleTree);
   return exampleTree;
 };
 
@@ -54,7 +52,6 @@ const buildTreeRecurse = (tree, current) => {
   const name = Object.keys(current)[0];
 
   const children = current[name];
-  // console.log(children);
   const item = {
     id: name,
     basename: name,

@@ -203,3 +203,66 @@ export const boundarySizeStyle = (
 
 type Size = string | number;
 type Direction = 'vertical' | 'horizontal';
+
+// ----------------------------------------------------------------------------
+
+export const clamp = (x: number, min = 0, max = 1) => {
+  return x < min ? min : x > max ? max : x;
+};
+
+export const isClamped = (x: number, min = 0, max = 1) => {
+  return x > min && x < max;
+};
+
+export const adjust = (rect: {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}) => {
+  const { innerWidth, innerHeight } = window;
+  return {
+    x: adjustDimension(rect.x, rect.width, innerWidth),
+    y: adjustDimension(rect.y, rect.height, innerHeight),
+  };
+};
+
+/**
+ * Adjusts a position so that the span fits within a dimension ("container")
+ * without overflowing (if possible)
+ */
+export const adjustDimension = (
+  x: number,
+  width: number,
+  container: number
+) => {
+  const margin = 10;
+
+  // Span is greater than zero, return 0 (top)
+  if (width > container) {
+    console.log('default 0');
+    return 0;
+  }
+
+  // Option 1: Keep dimension as is because it fits within container
+  const x1 = x;
+  if (isClamped(x1, 0, container) && isClamped(x1 + width, 0, container)) {
+    return x1;
+  }
+
+  // Option 2: Move the dimension by the size so that it fits within container
+  const x2 = x - width;
+  if (isClamped(x2, 0, container) && isClamped(x2 + width, 0, container)) {
+    return x2;
+  }
+
+  // Option 3: Move the dimension until it fits the container
+  const x3 = container - width - margin;
+  if (isClamped(x3, 0, container) && isClamped(x3 + width, 0, container)) {
+    return x3;
+  }
+
+  console.log('unmatched 0');
+
+  return 0;
+};

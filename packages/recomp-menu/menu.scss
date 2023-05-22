@@ -2,29 +2,33 @@
 
   $border_color: rgb(65, 65, 65);
   $background_color: rgb(30, 30, 30);
-  $hover_color: rgb(50, 50, 50);
+  $hover_color: rgb(60, 60, 60);
 
   .recomp-menu {
 
-    display: inline-block;
-    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.4);
-    min-width: 200px;
-    background-color: $background_color;
-    padding: 8px 0 8px 0;
-    border: 1px solid $border_color;
-    border-radius: 4px;
-
-    .item {
+    .item,
+    .group {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
       text-align: center;
       flex-grow: 1;
+      padding: 4px;
 
       flex-wrap: wrap;
       overflow: hidden;
 
-      &:hover {
+      .highlight {
+        $inset: 0px 4px 0px 4px;
+        position: absolute;
+        inset: $inset;
+        z-index: 0;
+        transition: background-color 0.3s;
+        border-radius: 4px;
+      }
+
+      &:hover .highlight {
         background-color: $hover_color;
       }
     }
@@ -34,15 +38,31 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 2px 30px 2px 30px;
+      padding: 0px 24px 0px 24px;
+      z-index: 1;
     }
 
-    .accelerator {
+    .accelerator,
+    .caret {
       display: flex;
       justify-content: flex-end;
       align-items: center;
       flex-grow: 1;
-      padding: 2px 30px 2px 30px;
+      z-index: 1;
+    }
+
+    .accelerator {
+      color: rgb(180, 180, 180);
+      padding: 0px 24px 0px 24px;
+    }
+
+    .caret {
+      padding: 0px 0px 0px 24px;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
 
     .separator {
@@ -51,8 +71,40 @@
       min-height: $separator-width;
       border-bottom: 1px solid $border_color;
       margin-bottom: $separator-width;
-      margin-left: 30px;
-      margin-right: 6px;
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+    .menu {
+      position: fixed;
+      z-index: 10;
+
+      font-size: 12px;
+      display: inline-block;
+      box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.4);
+      min-width: 200px;
+      background-color: $background_color;
+      padding: 8px 0 8px 0;
+      border: 1px solid $border_color;
+      border-radius: 4px;
+    }
+
+    .overlay {
+      pointer-events: none;
+      position: fixed;
+      top: 0px;
+      bottom: 0px;
+      left: 0;
+      right: 0;
+      z-index: 10;
+
+      .offset {
+        position: relative;
+      }
+
+      .menu {
+        pointer-events: all;
+      }
     }
 
   }

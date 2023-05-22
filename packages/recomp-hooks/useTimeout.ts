@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-const useTimeout = (): {
-  begin: (ms: number, callback: () => void) => void,
+const useTimeout = (ms: number): {
+  begin: (callback: () => void) => void,
   cancel: () => void
 } => {
   const timeoutRef: React.MutableRefObject<NodeJS.Timeout> = React.useRef();
 
-  const begin = (ms: number, callback: () => void) => {
+  const begin = (callback: () => void) => {
     timeoutRef.current = setTimeout(callback, ms);
   };
 
