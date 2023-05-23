@@ -1761,6 +1761,14 @@
 "@recomp/icons@link:packages/recomp-icons":
   version "0.0.0"
 
+"@recomp/menu@link:packages/recomp-menu":
+  version "0.0.0"
+  dependencies:
+    "@react-spring/web" "^9.7.2"
+    "@recomp/hooks" "link:packages/recomp-hooks"
+    "@recomp/icons" "link:packages/recomp-icons"
+    "@recomp/utility" "link:packages/recomp-utils"
+
 "@recomp/monaco@link:packages/recomp-monaco":
   version "0.0.0"
   dependencies:
