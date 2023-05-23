@@ -1,4 +1,17 @@
-@mixin recomp-titlebar($backgroundColor: #202020, $fontColor: #f8f8f8) {
+@mixin init() {
+  @include master($menubar_selector: '.menubar', $menubutton_selector: '.button');
+}
+
+$default_background: transparent;
+$default_hover: rgba(180, 180, 180, 0.3);
+$default_color: #f8f8f8;
+$default_button_width: 30px;
+$default_menu_background: #202020;
+$default_border_color: #555b5e;
+$default_separator_size: 4px;
+
+@mixin titlebar($backgroundColor: $default_background, $fontColor: $default_color) {
+  position: relative;
   background-color: $backgroundColor;
   color: $fontColor;
   -webkit-app-region: drag;
@@ -11,14 +24,19 @@
   z-index: 2000;
 }
 
-@mixin recomp-titleicon($backgroundColor: transparent) {
+@mixin titleicon($backgroundColor: $default_background) {
+  position: relative;
+  z-index: 1000;
   background-color: $backgroundColor;
-  background-size: 20px 20px;
   width: 20px;
-  height: 20%;
+  height: 100%;
+  padding: 0px 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@mixin recomp-menubar($backgroundColor: transparent) {
+@mixin menubar($backgroundColor: $default_background) {
   background-color: $backgroundColor;
   height: 100%;
   display: flex;
@@ -27,29 +45,46 @@
   flex-grow: 1;
   flex-wrap: wrap;
   overflow: hidden;
+  z-index: 1000;
 }
 
-@mixin recomp-menubutton($backgroundColor: transparent, $backgroundColorHover: #363636) {
+@mixin menubutton($backgroundColor: $default_background, $backgroundColorHover: $default_hover) {
+  position: relative;
+
   background-color: $backgroundColor;
   height: 100%;
   -webkit-app-region: no-drag;
-  padding-left: 7px;
-  padding-right: 7px;
   text-align: center;
   justify-content: center;
   align-items: center;
   display: flex;
 
-  &:hover {
+  .highlight {
+    position: absolute;
+    inset: 4px 2px;
+    z-index: 0;
+    transition: background-color 0.2s;
+    border-radius: 4px;
+  }
+
+  .label {
+    padding-left: 10px;
+    padding-right: 10px;
+    z-index: 1;
+  }
+
+  &:hover .highlight {
     background-color: $backgroundColorHover;
   }
 
-  &.active {
+  &.active .highlight {
     background-color: $backgroundColorHover;
   }
 }
 
-@mixin recomp-titleheader($backgroundColor: transparent, $backgroundColorHover: #363636) {
+@mixin header() {
+  position: relative;
+  z-index: 1000;
   display: block;
   margin: auto;
   justify-content: center;
@@ -63,7 +98,9 @@
   padding-right: 8px;
 }
 
-@mixin recomp-controlbar($backgroundColor: transparent) {
+@mixin controlbar($backgroundColor: $default_background) {
+  position: relative;
+  z-index: 1000;
   background-color: $backgroundColor;
   height: 100%;
   display: flex;
@@ -72,11 +109,11 @@
   flex-grow: 1;
 }
 
-@mixin recomp-controlbutton($backgroundColor: transparent,
-  $backgroundColorHover: #363636,
-  $closeButtonSelector: '.recomp-close',
+@mixin controlbutton($backgroundColor: $default_background,
+  $backgroundColorHover: $default_hover,
+  $closeButtonSelector: '.close',
   $closeButtonColorHover: rgba(red, 0.75),
-  $buttonWidth: 30px) {
+  $buttonWidth: $default_button_width) {
 
   background-color: $backgroundColor;
   -webkit-app-region: no-drag;
@@ -89,6 +126,7 @@
   text-align: center;
   justify-content: center;
   align-items: center;
+  transition: background-color 0.2s;
 
   &:hover {
     background-color: $backgroundColorHover;
@@ -99,11 +137,11 @@
   }
 }
 
-@mixin recomp-dropbar($separatorSelector: '.recomp-dropbar-separator',
-  $backgroundColor: #202020,
-  $borderColor: #555b5e,
-  $separatorColor: #555b5e,
-  $separatorWidth: 4px) {
+@mixin dropbar($separatorSelector: '.separator',
+  $backgroundColor: $default_menu_backgroun,
+  $borderColor: $default_border_color,
+  $separatorColor: $default_border_color,
+  $separatorWidth: $default_separator_size) {
 
   background-color: $backgroundColor;
   position: fixed;
@@ -122,10 +160,10 @@
   }
 }
 
-@mixin recomp-dropbutton($labelSelector: '.recomp-dropbutton-label',
-  $acceleratorSelector: '.recomp-dropbutton-accelerator',
-  $backgroundColor: transparent,
-  $backgroundColorHover: #363636) {
+@mixin dropbutton($labelSelector: '.label',
+  $acceleratorSelector: '.accelerator',
+  $backgroundColor: $default_background,
+  $backgroundColorHover: $default_hover) {
 
   background-color: $backgroundColor;
   display: flex;
@@ -156,72 +194,77 @@
   }
 }
 
-@mixin recomp-titlebar-master($titlebar_selector: '.recomp-titlebar',
-  $titleicon_selector: '.recomp-titleicon',
-  $menubar_selector: '.recomp-menubar',
-  $menubutton_selector: '.recomp-menubutton',
-  $dropbar_selector: 'recomp-dropbar',
-  $dropbar_separator_selector: '.recomp-dropbar-separator',
-  $dropbutton_selector: '.recomp-dropbutton',
-  $dropbutton_label_selector: '.recomp-dropbutton-label',
-  $dropbutton_accelerator_selector: '.recomp-dropbutton-accelerator',
-  $titleheader_selector: '.recomp-titleheader',
-  $controlbar_selector: '.recomp-controlbar',
-  $controlbutton_selector: '.recomp-controlbutton',
-  $close_selector: '.recomp-close',
-  $fontColor: #aea194,
-  $backgroundColor: #202020,
-  $hoverColor: #363636,
-  $dropdownColor: #202020,
-  $borderColor: #555b5e,
-  $controlButtonWidth: 30px) {
+@mixin master($titlebar_selector: '.recomp-titlebar',
+  $titleicon_selector: '.titleicon',
+  $menubar_selector: '.menubar',
+  $menubutton_selector: '.button',
+  $dropbar_offset: '.menu-offset',
+  $dropbar_selector: '.menu',
+  $dropbar_separator_selector: '.separator',
+  $dropbutton_selector: '.item',
+  $dropbutton_label_selector: '.label',
+  $dropbutton_accelerator_selector: '.accelerator',
+  $titleheader_selector: '.header',
+  $controlbar_selector: '.controlbar',
+  $controlbutton_selector: '.button',
+  $close_selector: '.close',
+  $fontColor: $default_color,
+  $backgroundColor: $default_background,
+  $hoverColor: $default_hover,
+  $dropdownColor: $default_menu_background,
+  $borderColor: $default_border_color,
+  $controlButtonWidth: $default_button_width) {
 
   #{$titlebar_selector} {
-    @include recomp-titlebar($backgroundColor: $backgroundColor,
+    @include titlebar($backgroundColor: $backgroundColor,
       $fontColor: $fontColor,
     );
-  }
 
-  #{$titleicon_selector} {
-    @include recomp-titleicon();
-  }
+    >#{$titleicon_selector} {
+      @include titleicon();
+    }
 
-  #{$menubar_selector} {
-    @include recomp-menubar();
-  }
+    >#{$menubar_selector} {
+      @include menubar();
 
-  #{$menubutton_selector} {
-    @include recomp-menubutton($backgroundColorHover: $hoverColor,
-    );
-  }
+      >#{$menubutton_selector} {
+        @include menubutton($backgroundColorHover: $hoverColor,
+        );
+      }
+    }
 
-  #{$dropbar_selector} {
-    @include recomp-dropbar($separatorSelector: $dropbar_separator_selector,
-      $backgroundColor: $dropdownColor,
-      $borderColor: $borderColor,
-      $separatorColor: $borderColor,
-    );
-  }
+    #{$dropbar_offset} {
+      position: fixed;
+    }
 
-  #{$dropbutton_selector} {
-    @include recomp-dropbutton($labelSelector: $dropbutton_label_selector,
-      $acceleratorSelector: $dropbutton_accelerator_selector,
-      $backgroundColorHover: $hoverColor,
-    );
-  }
+    >#{$dropbar_selector} {
+      @include dropbar($separatorSelector: $dropbar_separator_selector,
+        $backgroundColor: $dropdownColor,
+        $borderColor: $borderColor,
+        $separatorColor: $borderColor,
+      );
 
-  #{$titleheader_selector} {
-    @include recomp-titleheader();
-  }
+      >#{$dropbutton_selector} {
+        @include dropbutton($labelSelector: $dropbutton_label_selector,
+          $acceleratorSelector: $dropbutton_accelerator_selector,
+          $backgroundColorHover: $hoverColor,
+        );
+      }
+    }
 
-  #{$controlbar_selector} {
-    @include recomp-controlbar();
-  }
+    >#{$titleheader_selector} {
+      @include header();
+    }
 
-  #{$controlbutton_selector} {
-    @include recomp-controlbutton($backgroundColorHover: $hoverColor,
-      $closeButtonSelector: $close_selector,
-      $buttonWidth: $controlButtonWidth,
-    );
+    >#{$controlbar_selector} {
+      @include controlbar();
+
+      >#{$controlbutton_selector} {
+        @include controlbutton($backgroundColorHover: $hoverColor,
+          $closeButtonSelector: $close_selector,
+          $buttonWidth: $controlButtonWidth,
+        );
+      }
+    }
   }
 }

@@ -10,14 +10,14 @@ interface OverlayProps {
     container: string;
     tint: string;
     blur: string;
-  }
-  style?: React.CSSProperties,
+  };
+  style?: React.CSSProperties;
   enabled?: boolean;
   tint?: boolean;
   blur?: boolean;
   onClick?: (e: React.MouseEvent) => any;
   children?: React.ReactNode;
-};
+}
 
 export const Overlay = (props: OverlayProps) => {
   props = util.structureUnion(defaultProps, props);
@@ -28,9 +28,9 @@ export const Overlay = (props: OverlayProps) => {
     [props.classNames.blur]: props.blur,
   });
 
-  const [handleMouseHown, handleMouseUp, handleLeave] = usePress((e) => {
+  const [handleMouseDown, handleMouseUp, handleLeave] = usePress((e) => {
     props.onClick?.(e);
-  })
+  });
 
   if (!props.enabled) {
     return null;
@@ -41,7 +41,7 @@ export const Overlay = (props: OverlayProps) => {
       <div className={props.classNames.inner}>
         <div
           className={props.classNames.container}
-          onMouseDown={handleMouseHown}
+          onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
           onMouseOut={handleLeave}
         >

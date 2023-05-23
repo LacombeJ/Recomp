@@ -52,7 +52,7 @@ interface MenuProps {
     menu?: string;
   };
   style?: React.CSSProperties;
-  model?: MenuElement[];
+  model: MenuElement[];
 }
 
 export const Menu = (props: MenuProps) => {
@@ -123,6 +123,8 @@ export const SubMenu = (props: SubMenuProps) => {
   };
 
   // recursive callbacks, from bottom-up
+  // this is to make sure all ancestor's descendent submenus
+  // are closed properly
   const handleDescendentMouseEnter = () => {
     submenuCalc.handleSubmenuMouseEnter();
     props.onMouseEnter?.();
@@ -172,7 +174,7 @@ export const SubMenu = (props: SubMenuProps) => {
           <div className={props.classNames.offset} style={offsetStyle}>
             <SubMenu
               key={submenuCalc.active}
-              model={childrenOf(props.model, submenuCalc.active)}
+              model={menuChildren(props.model, submenuCalc.active)}
               {...restProps}
               onMouseEnter={handleDescendentMouseEnter}
               onMouseLeave={handleDescendentMouseLeave}
@@ -368,7 +370,7 @@ const groupDefaultProps = {
   },
 };
 
-const normalizeMenuElements = (items: any[]): MenuElement[] => {
+export const normalizeMenuElements = (items: any[]): MenuElement[] => {
   const model: MenuElement[] = [];
 
   for (const item of items) {
@@ -393,9 +395,13 @@ const normalizeMenuElements = (items: any[]): MenuElement[] => {
   return model;
 };
 
-const childrenOf = (model: MenuElement[], id: string) => {
-  const group = model.find((element) => {
-    return (element as MenuGroup).id === id;
-  }) as MenuGroup;
-  return group.children;
+export const menuChildren = (model: MenuElement[], id: string) => {
+  if (id) {
+    const group = model.find((element) => {
+      return (element as MenuGroup).id === id;
+    }) as MenuGroup;
+    return group.children;
+  } else {
+    return [];
+  }
 };
