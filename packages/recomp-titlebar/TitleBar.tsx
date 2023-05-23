@@ -14,13 +14,14 @@ interface TitleBarProps {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  ext?: any;
 }
 
 export const TitleBar = (props: TitleBarProps) => {
   props = util.structureUnion(defaultProps, props);
 
   return (
-    <div className={props.className} style={props.style}>
+    <div className={props.className} style={props.style} {...props.ext}>
       {props.children}
     </div>
   );
@@ -28,6 +29,7 @@ export const TitleBar = (props: TitleBarProps) => {
 
 const defaultProps: TitleBarProps = {
   className: 'recomp-titlebar',
+  ext: {},
 };
 
 // ----------------------------------------------------------------------------
@@ -36,12 +38,13 @@ interface IconProps {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  ext?: any;
 }
 
 const Icon = (props: IconProps) => {
   props = util.structureUnion(IconDefaultProps, props);
   return (
-    <div className={props.className} style={props.style}>
+    <div className={props.className} style={props.style} {...props.ext}>
       {props.children}
     </div>
   );
@@ -50,6 +53,7 @@ TitleBar.Icon = Icon;
 
 const IconDefaultProps: IconProps = {
   className: 'titleicon',
+  ext: {},
 };
 
 // ----------------------------------------------------------------------------
@@ -66,6 +70,7 @@ interface MenuBarProps {
   };
   style?: React.CSSProperties;
   model?: MenuGroup[];
+  ext?: any;
 }
 
 const MenuBar = (props: MenuBarProps) => {
@@ -106,10 +111,11 @@ const MenuBar = (props: MenuBarProps) => {
 
   return (
     <React.Fragment>
-      <div className={props.className} style={props.style}>
+      <div className={props.className} style={props.style} {...props.ext}>
         {props.model.map((item) => {
           return (
             <Button
+              key={item.id}
               className={props.classNames.button}
               classNames={{
                 active: props.classNames.active,
@@ -152,6 +158,7 @@ const menuDefaultProps: MenuBarProps = {
     label: 'label',
     overlay: 'overlay',
   },
+  ext: {},
 };
 
 interface ButtonProps {
@@ -208,12 +215,13 @@ interface HeaderProps {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  ext?: any;
 }
 
 const Header = (props: HeaderProps) => {
   props = util.structureUnion(headerDefaultProps, props);
   return (
-    <div className={props.className} style={props.style}>
+    <div className={props.className} style={props.style} {...props.ext}>
       {props.children}
     </div>
   );
@@ -222,6 +230,7 @@ TitleBar.Header = Header;
 
 const headerDefaultProps: HeaderProps = {
   className: 'header',
+  ext: {},
 };
 
 // ----------------------------------------------------------------------------
@@ -230,12 +239,13 @@ interface ControlBarProps {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  ext?: any;
 }
 
 const ControlBar = (props: ControlBarProps) => {
   props = util.structureUnion(controlBarDefaultProps, props);
   return (
-    <div className={props.className} style={props.style}>
+    <div className={props.className} style={props.style} {...props.ext}>
       {props.children}
     </div>
   );
@@ -244,6 +254,7 @@ TitleBar.ControlBar = ControlBar;
 
 const controlBarDefaultProps: ControlBarProps = {
   className: 'controlbar',
+  ext: {},
 };
 
 type ControlType = 'minimize' | 'maximize' | 'close' | 'other';

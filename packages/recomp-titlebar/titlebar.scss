@@ -1,14 +1,14 @@
+@use '@recomp/menu';
+
 @mixin init() {
-  @include master($menubar_selector: '.menubar', $menubutton_selector: '.button');
+  @include menu.init();
+  @include master();
 }
 
 $default_background: transparent;
 $default_hover: rgba(180, 180, 180, 0.3);
 $default_color: #f8f8f8;
 $default_button_width: 30px;
-$default_menu_background: #202020;
-$default_border_color: #555b5e;
-$default_separator_size: 4px;
 
 @mixin titlebar($backgroundColor: $default_background, $fontColor: $default_color) {
   position: relative;
@@ -137,73 +137,11 @@ $default_separator_size: 4px;
   }
 }
 
-@mixin dropbar($separatorSelector: '.separator',
-  $backgroundColor: $default_menu_backgroun,
-  $borderColor: $default_border_color,
-  $separatorColor: $default_border_color,
-  $separatorWidth: $default_separator_size) {
-
-  background-color: $backgroundColor;
-  position: fixed;
-  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.4);
-  min-width: 200px;
-  z-index: 1000;
-  padding: 8px 0 8px 0;
-  border: 1px solid $borderColor;
-
-  #{$separatorSelector} {
-    min-height: $separatorWidth;
-    border-bottom: 1px solid $separatorColor;
-    margin-bottom: $separatorWidth;
-    margin-left: 30px;
-    margin-right: 6px;
-  }
-}
-
-@mixin dropbutton($labelSelector: '.label',
-  $acceleratorSelector: '.accelerator',
-  $backgroundColor: $default_background,
-  $backgroundColorHover: $default_hover) {
-
-  background-color: $backgroundColor;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-grow: 1;
-  flex-wrap: wrap;
-  overflow: hidden;
-  height: 22px;
-
-  &:hover {
-    background-color: $backgroundColorHover;
-  }
-
-  #{$labelSelector} {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2px 30px 2px 30px;
-  }
-
-  #{$acceleratorSelector  } {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    flex-grow: 1;
-    padding: 2px 30px 2px 30px;
-  }
-}
-
 @mixin master($titlebar_selector: '.recomp-titlebar',
   $titleicon_selector: '.titleicon',
   $menubar_selector: '.menubar',
   $menubutton_selector: '.button',
-  $dropbar_offset: '.menu-offset',
-  $dropbar_selector: '.menu',
-  $dropbar_separator_selector: '.separator',
-  $dropbutton_selector: '.item',
-  $dropbutton_label_selector: '.label',
-  $dropbutton_accelerator_selector: '.accelerator',
+  $submenu_offset: '.menu-offset',
   $titleheader_selector: '.header',
   $controlbar_selector: '.controlbar',
   $controlbutton_selector: '.button',
@@ -211,8 +149,6 @@ $default_separator_size: 4px;
   $fontColor: $default_color,
   $backgroundColor: $default_background,
   $hoverColor: $default_hover,
-  $dropdownColor: $default_menu_background,
-  $borderColor: $default_border_color,
   $controlButtonWidth: $default_button_width) {
 
   #{$titlebar_selector} {
@@ -220,11 +156,11 @@ $default_separator_size: 4px;
       $fontColor: $fontColor,
     );
 
-    >#{$titleicon_selector} {
+    #{$titleicon_selector} {
       @include titleicon();
     }
 
-    >#{$menubar_selector} {
+    #{$menubar_selector} {
       @include menubar();
 
       >#{$menubutton_selector} {
@@ -233,30 +169,15 @@ $default_separator_size: 4px;
       }
     }
 
-    #{$dropbar_offset} {
+    #{$submenu_offset} {
       position: fixed;
     }
 
-    >#{$dropbar_selector} {
-      @include dropbar($separatorSelector: $dropbar_separator_selector,
-        $backgroundColor: $dropdownColor,
-        $borderColor: $borderColor,
-        $separatorColor: $borderColor,
-      );
-
-      >#{$dropbutton_selector} {
-        @include dropbutton($labelSelector: $dropbutton_label_selector,
-          $acceleratorSelector: $dropbutton_accelerator_selector,
-          $backgroundColorHover: $hoverColor,
-        );
-      }
-    }
-
-    >#{$titleheader_selector} {
+    #{$titleheader_selector} {
       @include header();
     }
 
-    >#{$controlbar_selector} {
+    #{$controlbar_selector} {
       @include controlbar();
 
       >#{$controlbutton_selector} {

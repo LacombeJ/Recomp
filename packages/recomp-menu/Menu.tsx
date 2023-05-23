@@ -7,7 +7,7 @@ import { Rect, useMeasure, useSize, useTimeout } from '@recomp/hooks';
 export type MenuElement = MenuItem | MenuGroup | MenuSeparator;
 
 export type MenuSeparator = {
-  type: 'separator';
+  type?: 'separator';
 };
 
 export interface MenuItem {
@@ -20,7 +20,7 @@ export interface MenuItem {
   };
   style?: React.CSSProperties;
   id: string;
-  type: 'item';
+  type?: 'item';
   icon?: React.ReactNode;
   label: React.ReactNode;
   accelerator?: string;
@@ -36,7 +36,7 @@ export interface MenuGroup {
   };
   style?: React.CSSProperties;
   id: string;
-  type: 'group';
+  type?: 'group';
   icon?: React.ReactNode;
   label: React.ReactNode;
   children?: MenuElement[];

@@ -3,7 +3,15 @@ import React from 'react';
 import { TitleBar } from '@recomp/titlebar';
 import '../stories.scss';
 
-import { IconLayoutNavbar } from '@tabler/icons-react';
+import {
+  IconLayoutNavbar,
+  IconFilePlus,
+  IconFileText,
+  IconDoorEnter,
+  IconDeviceFloppy,
+  IconCommand,
+  IconSettings,
+} from '@tabler/icons-react';
 
 export default {
   title: 'Components/TitleBar',
@@ -25,6 +33,7 @@ const menuModel = [
       {
         id: 'file.new',
         label: 'New File',
+        icon: <IconFilePlus stroke="1"></IconFilePlus>,
         children: [
           { id: 'file.new.document', label: 'Document', accelerator: 'Ctrl+N' },
           { id: 'file.new.spreadsheet', label: 'Spreadsheet' },
@@ -34,16 +43,33 @@ const menuModel = [
       {
         id: 'file.createdocument',
         label: 'Create Document',
+        icon: <IconFileText stroke="1"></IconFileText>,
         accelerator: 'Ctrl+N',
       },
       { type: 'separator' },
-      { id: 'file.open', label: 'Open...', accelerator: 'Ctrl+O' },
-      { id: 'file.save', label: 'Save', accelerator: 'Ctrl+S' },
+      {
+        id: 'file.open',
+        label: 'Open...',
+        icon: <IconDoorEnter stroke="1"></IconDoorEnter>,
+        accelerator: 'Ctrl+O',
+      },
+      {
+        id: 'file.save',
+        label: 'Save',
+        icon: <IconDeviceFloppy stroke="1"></IconDeviceFloppy>,
+        accelerator: 'Ctrl+S',
+      },
       { type: 'separator' },
-      { id: 'shortcuts', label: 'Shortcuts', accelerator: 'Ctrl+K' },
+      {
+        id: 'shortcuts',
+        label: 'Shortcuts',
+        icon: <IconCommand stroke="1"></IconCommand>,
+        accelerator: 'Ctrl+K',
+      },
       {
         id: 'preferences',
         label: 'Preferences',
+        icon: <IconSettings stroke="1"></IconSettings>,
         children: [
           {
             id: 'preferences.shortcuts',
