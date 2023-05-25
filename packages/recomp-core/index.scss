@@ -6,10 +6,12 @@
 @use 'src/styles/containers/split.scss';
 
 // Elements:
+@use 'src/styles/elements/action.scss';
 @use 'src/styles/elements/block.scss';
 @use 'src/styles/elements/button.scss';
 @use 'src/styles/elements/cabinet.scss';
 @use 'src/styles/elements/checkbox.scss';
+@use 'src/styles/elements/dialog.scss';
 @use 'src/styles/elements/form.scss';
 @use 'src/styles/elements/heading.scss';
 @use 'src/styles/elements/input.scss';
@@ -33,11 +35,12 @@
   @include split.init();
 
   // Elements
+  @include action.init();
   @include block.init();
   @include button.init();
   @include cabinet.init();
-  @include button.init();
   @include checkbox.init();
+  @include dialog.init();
   @include form.init();
   @include heading.init();
   @include input.init();

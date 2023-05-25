@@ -14,11 +14,11 @@ interface ButtonProps
     disabled?: string;
     variant?: {
       default?: string;
-      plain?: string;
+      primary?: string;
       warn?: string;
     };
   };
-  variant?: 'default' | 'plain' | 'warn';
+  variant?: 'default' | 'primary' | 'warn';
   disabled?: boolean;
   loading?: boolean;
   loadingIcon?: React.ReactNode;
@@ -83,12 +83,10 @@ const defaultProps: ButtonProps = {
     disabled: 'disabled',
     variant: {
       default: 'default',
-      plain: 'plain',
+      primary: 'primary',
       warn: 'warn',
     },
   },
-  role: 'button',
-  type: 'button',
   variant: 'default',
   loading: false,
   loadingIcon: null,

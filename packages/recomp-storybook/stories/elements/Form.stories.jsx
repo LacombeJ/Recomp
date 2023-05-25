@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Form } from '@recomp/core';
+import { Button, Form } from '@recomp/core';
 import '../stories.scss';
 
 export default {
@@ -9,21 +9,23 @@ export default {
   argTypes: {},
 };
 
-const Template = (args) => <Form {...args} />;
+const Template = (args) => (
+  <div style={{ width: 400 }}>
+    <Form {...args} />
+  </div>
+);
 
 export const Basic = Template.bind({});
 Basic.args = {
   children: [
-    <React.Fragment key={"form"}>
-      <div>
-        Form entry one: <input></input>
-      </div>
-      <div>
-        Form entry two: <input></input>
-      </div>
-      <div>
-        <button>Submit Form</button>
-      </div>
+    <React.Fragment key={'form'}>
+      <Form.Row>
+        <Form.Field>Form entry one: </Form.Field>
+      </Form.Row>
+      <Form.Row>
+        <Form.Field>Form entry two: </Form.Field>
+      </Form.Row>
+      <Button>Submit</Button>
     </React.Fragment>,
   ],
 };

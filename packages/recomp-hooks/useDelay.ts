@@ -10,7 +10,7 @@ const useDelay = (
 
   const handleDelayComplete = () => {
     setDelayed(true);
-    onComplete();
+    onComplete?.();
   };
 
   const delayHandledRef: React.MutableRefObject<boolean> = React.createRef();
