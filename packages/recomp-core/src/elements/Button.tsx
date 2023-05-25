@@ -88,6 +88,8 @@ const defaultProps: ButtonProps = {
     },
   },
   variant: 'default',
+  role: 'button',
+  type: 'button',
   loading: false,
   loadingIcon: null,
   setRef: null,

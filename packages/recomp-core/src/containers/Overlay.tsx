@@ -1,18 +1,21 @@
 import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
-import { usePress } from '@recomp/hooks';
+import { usePress, useTimeout } from '@recomp/hooks';
 
 interface OverlayProps {
   className?: string;
   classNames?: {
-    inner: string;
-    container: string;
-    tint: string;
-    blur: string;
+    inner?: string;
+    container?: string;
+    tint?: string;
+    blur?: string;
+    animated?: string;
   };
   style?: React.CSSProperties;
   enabled?: boolean;
+  animated?: boolean;
+
   tint?: boolean;
   blur?: boolean;
   onClick?: (e: React.MouseEvent) => any;
@@ -22,17 +25,41 @@ interface OverlayProps {
 export const Overlay = (props: OverlayProps) => {
   props = util.structureUnion(defaultProps, props);
 
+  // Visibility set for animation
+  const [visible, setVisible] = React.useState(props.enabled);
+
+  const fadeOut = useTimeout(300);
+
+  React.useEffect(() => {
+    if (props.animated) {
+      if (visible && !props.enabled) {
+        // Begin fade out
+        fadeOut.begin(() => {
+          setVisible(false);
+        });
+      } else if (!visible && props.enabled) {
+        // Begin fade in
+        setVisible(true);
+      }
+    } else {
+      setVisible(props.enabled);
+    }
+  }, [props.enabled]);
+
+  const classToggle = (visible && props.enabled) || !props.animated;
+
   const className = util.classnames({
     [props.className]: true,
-    [props.classNames.tint]: props.tint,
-    [props.classNames.blur]: props.blur,
+    [props.classNames.animated]: props.animated,
+    [props.classNames.tint]: props.tint && classToggle,
+    [props.classNames.blur]: props.blur && classToggle,
   });
 
   const [handleMouseDown, handleMouseUp, handleLeave] = usePress((e) => {
     props.onClick?.(e);
   });
 
-  if (!props.enabled) {
+  if (!visible && !props.enabled) {
     return null;
   }
 
@@ -45,7 +72,7 @@ export const Overlay = (props: OverlayProps) => {
           onMouseUp={handleMouseUp}
           onMouseOut={handleLeave}
         >
-          {props.children}
+          {props.enabled ? props.children : null}
         </div>
       </div>
     </div>
@@ -59,5 +86,6 @@ const defaultProps: OverlayProps = {
     container: 'container',
     tint: 'tint',
     blur: 'blur',
+    animated: 'animated',
   },
 };

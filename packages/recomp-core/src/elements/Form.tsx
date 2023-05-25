@@ -69,6 +69,7 @@ interface FieldProps
   button?: React.ReactNode;
   children?: React.ReactNode;
   onButtonClick?: () => any;
+  onComplete?: (event: { id: string; value: string }) => any;
 }
 
 Form.Field = (props: FieldProps) => {
@@ -80,9 +81,19 @@ Form.Field = (props: FieldProps) => {
     embed,
     button,
     children,
+    onBlur,
     onButtonClick,
+    onComplete,
     ...inputProps
   } = props;
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
+    props.onBlur?.(e);
+    props.onComplete?.({
+      id: props.id,
+      value: e.target.value,
+    });
+  };
 
   if (embed) {
     return (
@@ -90,7 +101,7 @@ Form.Field = (props: FieldProps) => {
         <Label htmlFor={id} className={classNames.label}>
           {children}
           <span className={classNames.field}>
-            <Input {...inputProps}></Input>
+            <Input {...inputProps} onBlur={handleBlur}></Input>
             {button ? (
               <Button disabled={props.disabled} onClick={props.onButtonClick}>
                 {button}
@@ -107,7 +118,7 @@ Form.Field = (props: FieldProps) => {
           {children}
         </Label>
         <span className={classNames.field}>
-          <Input {...inputProps}></Input>
+          <Input {...inputProps} onBlur={handleBlur}></Input>
           {button ? (
             <Button disabled={props.disabled} onClick={onButtonClick}>
               {button}

@@ -1,12 +1,16 @@
 @mixin init() {
 
   .recomp-overlay {
-    position: fixed;
+    position: absolute;
     top: 0px;
     bottom: 0px;
     left: 0;
     right: 0;
     z-index: 100;
+
+    &.animated {
+      transition: background-color 0.3s, backdrop-filter 0.3s;
+    }
 
     &.tint {
       background-color: rgba(black, 0.5);

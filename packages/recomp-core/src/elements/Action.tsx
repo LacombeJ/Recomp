@@ -50,5 +50,7 @@ const defaultProps: ActionProps = {
   classNames: {
     disabled: 'disabled',
   },
+  role: 'button',
+  type: 'button',
   setRef: null,
 };
