@@ -490,34 +490,34 @@ const rgbMetrics = (rgb: RGB) => {
  * - **#000 (3 hexit)** - rgb shorthand (`#fe4` => `#ffee44`)
  * - **#000000 (6 hexit)** - standard rgb hex color (`#rrggbb`)
  */
-type Hex = string;
+export type Hex = string;
 
 /** values range from 0-1 */
-interface HSL {
+export interface HSL {
   h: number;
   s: number;
   l: number;
 }
 
 /** values range from 0-1 */
-interface HSV {
+export interface HSV {
   h: number;
   s: number;
   v: number;
 }
 
 /** values range from 0-255 */
-interface RGB {
+export interface RGB {
   r: number;
   g: number;
   b: number;
 }
 
 /** String in format `rgb(0, 0, 0)` */
-type RGBText = string;
+export type RGBText = string;
 
 /** string color name like 'red' or 'blue' */
-type Name = string;
+export type Name = string;
 
 /**
  * - **hex** - hex string
@@ -525,6 +525,6 @@ type Name = string;
  * - **rgb** - {r,g,b} object
  * - **rgbText** - string in format "rgb(0, 0, 0)"
  */
-type Format = 'Hex' | 'HSL' | 'RGB' | 'RGBText' | 'Name';
+export type Format = 'Hex' | 'HSL' | 'RGB' | 'RGBText' | 'Name';
 
-type Color = Hex | HSL | RGB | RGBText;
+export type Color = Hex | HSL | RGB | RGBText;
