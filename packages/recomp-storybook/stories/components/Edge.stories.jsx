@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Edge } from '@recomp/edge';
+import { Edge, createModel } from '@recomp/edge';
 import '../stories.scss';
 import '../stories.scss';
 
@@ -12,15 +12,26 @@ export default {
 
 const Template = (args) => <Edge {...args} />;
 
-const tabs = [
-  {
-    group: 'Components',
+const edgeRenderMap = {
+  Components: {
     color: '#CA5D49',
+  },
+  Styles: {
+    color: '#31AC9F',
+  },
+};
+
+const renderGroup = (id) => {
+  return edgeRenderMap[id];
+};
+
+const edgeModel = [
+  {
+    id: 'Components',
     items: ['Button.tsx', 'List.tsx', 'Navbar.tsx'],
   },
   {
-    group: 'Styles',
-    color: '#31AC9F',
+    id: 'Styles',
     items: ['button.scss', 'list.scss', 'navbar.scss'],
   },
   'index.ts',
@@ -30,26 +41,8 @@ const tabs = [
   'README.md',
 ];
 
-const mapItems = (items) => {
-  return items.map((item) => {
-    if (typeof item === 'string') {
-      return (
-        <Edge.Tab id={item} key={item}>
-          {item}
-        </Edge.Tab>
-      );
-    } else {
-      const { group, color, items } = item;
-      return (
-        <Edge.Group id={group} key={group} color={color}>
-          {mapItems(items)}
-        </Edge.Group>
-      );
-    }
-  });
-};
-
 export const Basic = Template.bind({});
 Basic.args = {
-  children: mapItems(tabs),
+  defaultModel: createModel(edgeModel),
+  onRenderGroup: renderGroup,
 };

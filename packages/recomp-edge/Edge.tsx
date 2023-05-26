@@ -28,22 +28,27 @@ import {
 import * as util from '@recomp/utility/common';
 
 import { Chevron, File } from '@recomp/icons';
+import { useModel, Update, Draft } from '@recomp/hooks';
 
-import {
-  createTabTree,
-  elementChildren,
-  TabItemType,
-  TabElement,
-  TabTree,
-  TreeState,
-  TabNode,
-  isGroup,
-} from './common';
 import { EdgeItem } from './Item';
 import { EdgeGroup } from './Group';
 import { Sortable } from './Sortable';
 import { closestAdjustedCenter } from './collision';
-import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+
+// ----------------------------------------------------------------------------
+
+export interface EdgeModel {
+  byId: { [id: string]: EdgeTab };
+  rootIds: string[];
+}
+
+export type EdgeTab = string | EdgeTabGroup;
+
+export interface EdgeTabGroup {
+  id: string;
+  expanded?: boolean;
+  items: string[];
+}
 
 // ----------------------------------------------------------------------------
 
@@ -55,18 +60,32 @@ interface EdgeProps {
   };
   style?: React.CSSProperties;
   debug?: boolean;
+  model?: EdgeModel;
+  defaultModel?: EdgeModel;
+  selected?: string;
+  defaultSelected?: string;
   children?: React.ReactNode;
+  onRenderItem?: (id: string) => TabProps;
+  onRenderGroup?: (id: string) => GroupProps;
+  onUpdateModel?: Update<EdgeModel>;
+  onSelected?: Update<string>;
 }
 
-const Edge = (props: EdgeProps) => {
+export const Edge = (props: EdgeProps) => {
   props = util.structureUnion(defaultProps, props);
 
-  const [selected, setSelected] = React.useState('');
-
-  const { state: defaultTreeState, static: treeStatic } = createTabTree(
-    props.children
+  const [selected, setSelected] = useModel(
+    props.defaultSelected,
+    props.selected,
+    props.onSelected
   );
-  const [items, setItems] = React.useState(defaultTreeState);
+
+  const [model, setModel] = useModel(
+    props.defaultModel,
+    props.model,
+    props.onUpdateModel
+  );
+
   const [dragging, setDragging] = React.useState<string | null>(null);
 
   const lastOverId = React.useRef<UniqueIdentifier | null>(null);
@@ -90,12 +109,13 @@ const Edge = (props: EdgeProps) => {
     (args) => {
       // If group, then just perform closest center with other root items,
       // since groups cannot be placed under other groups
-      const draggingElement = items.byId[dragging];
-      if (dragging && draggingElement.type === 'group') {
+      const draggingElement = model.byId[dragging];
+
+      if (dragging && isGroup(draggingElement)) {
         return closestAdjustedCenter({
           ...args,
           droppableContainers: args.droppableContainers.filter((container) => {
-            return items.rootIds.includes(container.id as string);
+            return model.rootIds.includes(container.id as string);
           }),
         });
       }
@@ -109,8 +129,8 @@ const Edge = (props: EdgeProps) => {
       let overId = getFirstCollision(intersections, 'id');
 
       if (overId !== null) {
-        const overNode = items.byId[overId];
-        if (overNode.type === 'group') {
+        const overNode = model.byId[overId];
+        if (isGroup(overNode)) {
           // const containerItems = overNode.children;
           // overId = closestAdjustedCenter({
           //   ...args,
@@ -138,17 +158,19 @@ const Edge = (props: EdgeProps) => {
       // If no droppable is matched, return the last match
       return lastOverId.current ? [{ id: lastOverId.current }] : [];
     },
-    [dragging, items]
+    [dragging, model]
   );
 
   const findContainer = (id: UniqueIdentifier) => {
-    const node = items.byId[id];
-    if (node.type === 'group') {
+    const node = model.byId[id];
+
+    if (isGroup(node)) {
       return id;
     }
 
-    for (const rootId of items.rootIds) {
-      if (items.byId[rootId].children.includes(id as string)) {
+    for (const rootId of model.rootIds) {
+      const element = model.byId[rootId];
+      if (isGroup(element) && element.items.includes(id as string)) {
         return rootId;
       }
     }
@@ -166,8 +188,8 @@ const Edge = (props: EdgeProps) => {
     const { active, over } = event;
 
     const overId = over.id;
-    const activeNode = items.byId[active.id];
-    if (overId === null || activeNode.type === 'group') {
+    const activeNode = model.byId[active.id];
+    if (overId === null || isGroup(activeNode)) {
       return; // return if dragging group node or not over anything
     }
 
@@ -178,14 +200,14 @@ const Edge = (props: EdgeProps) => {
       return; // if not over a container, just return
     }
 
-    setItems((items) => {
+    setModel((model) => {
       const overItems = overContainer
-        ? items.byId[overContainer].children
-        : items.rootIds;
+        ? (model.byId[overContainer] as EdgeTabGroup).items
+        : model.rootIds;
       const overIndex = overItems.indexOf(overId as string);
 
       let newIndex = 0;
-      if (items.byId[overId].type === 'group') {
+      if (isGroup(model.byId[overId])) {
         // overId is just the container, push to last item
         newIndex = overItems.length + 1;
       } else {
@@ -200,44 +222,26 @@ const Edge = (props: EdgeProps) => {
 
       recentlyMovedToNewContainer.current = true;
 
-      const newItems = {
-        ...items,
-      };
-
       if (!activeContainer) {
         // If not in container remove from root
-        newItems.rootIds = items.rootIds.filter((item) => item !== active.id);
+        model.rootIds = model.rootIds.filter((item) => item !== active.id);
       } else if (activeContainer) {
-        // If in old container, remove from container, else remove from root
-        newItems.byId[activeContainer] = {
-          ...newItems.byId[activeContainer],
-          children: newItems.byId[activeContainer].children.filter(
-            (item) => item !== active.id
-          ),
-        };
+        // If in old container, remove from container
+        const oldContainer = model.byId[activeContainer] as Draft<EdgeTabGroup>;
+        oldContainer.items = oldContainer.items.filter(
+          (item) => item !== active.id
+        );
       }
 
       // Insert into new container
       if (!overContainer) {
         // If not over container, add to root
-        newItems.rootIds = [
-          ...newItems.rootIds.slice(0, newIndex),
-          active.id as string,
-          ...newItems.rootIds.slice(newIndex),
-        ];
+        model.rootIds.splice(newIndex, 0, active.id as string);
       } else {
         // If over container, insert into new container
-        newItems.byId[overContainer] = {
-          ...newItems.byId[overContainer],
-          children: [
-            ...newItems.byId[overContainer].children.slice(0, newIndex),
-            active.id as string,
-            ...newItems.byId[overContainer].children.slice(newIndex),
-          ],
-        };
+        const newContainer = model.byId[overContainer] as Draft<EdgeTabGroup>;
+        newContainer.items.splice(newIndex, 0, active.id as string);
       }
-
-      return newItems;
     });
   };
 
@@ -245,61 +249,64 @@ const Edge = (props: EdgeProps) => {
     const { active, over } = event;
 
     setDragging(null);
-    if (items.rootIds.includes(active.id as string)) {
-      setItems((items: TreeState) => {
-        const oldIndex = items.rootIds.findIndex((id) => id === active.id);
-        const newIndex = items.rootIds.findIndex((id) => id === over.id);
-        return {
-          ...items,
-          rootIds: arrayMove(items.rootIds, oldIndex, newIndex),
-        };
+    if (model.rootIds.includes(active.id as string)) {
+      setModel((model) => {
+        const oldIndex = model.rootIds.findIndex((id) => id === active.id);
+        const newIndex = model.rootIds.findIndex((id) => id === over.id);
+        model.rootIds = arrayMove(model.rootIds, oldIndex, newIndex);
       });
     }
   };
 
   const handleItemClick = (id: string) => {
-    if (items.byId[id].type === 'group') {
-      setItems((items: TreeState) => {
-        return {
-          ...items,
-          byId: {
-            ...items.byId,
-            [id]: {
-              ...items.byId[id],
-              expanded: !items.byId[id].expanded,
-            },
-          },
-        };
-      });
-    } else {
-      setSelected(id);
-    }
+    setSelected(() => id);
   };
 
-  const renderElement = (
-    node: TabNode,
-    element: TabElement,
-    visible: boolean
-  ) => {
-    return (
-      <EdgeElement
-        className={element.className}
-        classNames={element.classNames}
-        style={element.style}
-        id={node.id}
-        type={element.type}
-        dragging={dragging}
-        selected={selected}
-        expanded={node.expanded}
-        invisible={!visible}
-        icon={element.icon}
-        color={element.color}
-        onClick={handleItemClick}
-        children={elementChildren(element)}
-        tabItems={node.children}
-        tree={{ state: items, static: treeStatic }}
-      />
-    );
+  const handleGroupClick = (id: string) => {
+    setModel((model) => {
+      const group = model.byId[id] as Draft<EdgeTabGroup>;
+      group.expanded = !group.expanded;
+    });
+  };
+
+  const renderDragging = () => {
+    const node = model.byId[dragging];
+
+    if (isGroup(node)) {
+      const groupProps: GroupProps = util.structureUnion(
+        groupDefaultProps,
+        props.onRenderGroup(dragging)
+      );
+      return (
+        <EdgeGroup
+          id={node.id}
+          expanded={node.expanded}
+          invisible={false}
+          selected={selected}
+          dragging={dragging}
+          model={model}
+          onRenderItem={props.onRenderItem}
+          onItemClick={handleItemClick}
+          onGroupClick={handleGroupClick}
+          {...groupProps}
+        />
+      );
+    } else {
+      const itemProps: TabProps = util.structureUnion(
+        tabDefaultProps,
+        props.onRenderItem(dragging)
+      );
+      return (
+        <EdgeItem
+          id={node}
+          invisible={false}
+          selected={selected}
+          dragging={dragging}
+          onClick={handleItemClick}
+          {...itemProps}
+        />
+      );
+    }
   };
 
   return (
@@ -317,30 +324,59 @@ const Edge = (props: EdgeProps) => {
           ]}
         >
           <SortableContext
-            items={items.rootIds}
+            items={model.rootIds}
             strategy={verticalListSortingStrategy}
           >
-            {items.rootIds.map((id) => {
-              const node = items.byId[id];
-              const element = treeStatic[id];
-              const handle = isGroup(element);
-              return (
-                <Sortable
-                  className={'sortable'}
-                  key={node.id}
-                  id={node.id}
-                  handle={handle}
-                >
-                  {renderElement(node, element, dragging !== node.id)}
-                </Sortable>
-              );
+            {model.rootIds.map((id) => {
+              const node = model.byId[id];
+              if (isGroup(node)) {
+                const groupProps: GroupProps = util.structureUnion(
+                  groupDefaultProps,
+                  props.onRenderGroup(id)
+                );
+                return (
+                  <Sortable
+                    className={'sortable'}
+                    key={node.id}
+                    id={node.id}
+                    handle={true}
+                  >
+                    <EdgeGroup
+                      id={node.id}
+                      expanded={node.expanded}
+                      invisible={dragging === node.id}
+                      selected={selected}
+                      dragging={dragging}
+                      model={model}
+                      onRenderItem={props.onRenderItem}
+                      onItemClick={handleItemClick}
+                      onGroupClick={handleGroupClick}
+                      {...groupProps}
+                    />
+                  </Sortable>
+                );
+              } else {
+                const itemProps: TabProps = util.structureUnion(
+                  tabDefaultProps,
+                  props.onRenderItem(id)
+                );
+
+                return (
+                  <Sortable className={'sortable'} key={node} id={node}>
+                    <EdgeItem
+                      id={node}
+                      invisible={dragging === node}
+                      selected={selected}
+                      dragging={dragging}
+                      onClick={handleItemClick}
+                      {...itemProps}
+                    />
+                  </Sortable>
+                );
+              }
             })}
           </SortableContext>
-          <DragOverlay>
-            {dragging
-              ? renderElement(items.byId[dragging], treeStatic[dragging], true)
-              : null}
-          </DragOverlay>
+          <DragOverlay>{dragging ? renderDragging() : null}</DragOverlay>
         </DndContext>
       </div>
     </div>
@@ -353,6 +389,8 @@ const defaultProps: EdgeProps = {
     scrollable: 'scrollable',
     dragging: 'dragging',
   },
+  onRenderItem: (id: string) => ({ children: id }),
+  onRenderGroup: (id: string) => ({ children: id }),
 };
 
 // ----------------------------------------------------------------------------
@@ -361,22 +399,16 @@ export interface TabProps {
   className?: string;
   classNames?: {
     dragging?: string;
+    selected?: string;
     icon?: string;
     label?: string;
   };
   style?: React.CSSProperties;
-  id: string;
   icon?: React.ReactNode;
   children?: React.ReactNode;
 }
 
-const Tab = (_props: TabProps) => {
-  // Tab is a pseudo element, replaced not rendered
-  return <React.Fragment />;
-};
-Tab.identifier = 'recomp-edge-tab';
-
-export const tabDefaultProps = {
+export const tabDefaultProps: TabProps = {
   className: 'tab item',
   classNames: {
     dragging: 'dragging',
@@ -393,23 +425,17 @@ export interface GroupProps {
   className?: string;
   classNames?: {
     dragging?: string;
+    selected?: string;
     icon?: string;
     label?: string;
   };
   style?: React.CSSProperties;
-  id: string;
   icon?: React.ReactNode;
-  expanded?: boolean;
-  children?: React.ReactNode;
   color?: string;
+  children?: React.ReactNode;
 }
 
-const Group = (_props: GroupProps) => {
-  return <React.Fragment />;
-};
-Group.identifier = 'recomp-edge-group';
-
-export const groupDefaultProps = {
+export const groupDefaultProps: GroupProps = {
   className: 'tab group',
   color: '#1d5e7c',
   classNames: {
@@ -421,43 +447,40 @@ export const groupDefaultProps = {
   icon: <Chevron></Chevron>,
 };
 
-Edge.Tab = Tab;
-Edge.Group = Group;
-
 // ----------------------------------------------------------------------------
 
-export interface EdgeElementProps {
-  className?: string;
-  classNames?: {
-    dragging?: string;
-    selected?: string;
-    icon?: string;
-    label?: string;
-  };
-  style?: React.CSSProperties;
-  id: string;
-  type?: TabItemType;
-  dragging?: string;
-  selected?: string;
-  expanded: boolean;
-  invisible: boolean;
-  icon?: React.ReactNode;
-  color?: string;
-  onClick?: (id: string) => any;
-  children?: React.ReactNode;
-  tabItems?: string[];
-  tree?: TabTree;
-  handleRef?: React.LegacyRef<HTMLDivElement>;
-  handleListeners?: SyntheticListenerMap;
-}
-
-export const EdgeElement = (props: EdgeElementProps) => {
-  if (props.type === 'item') {
-    return <EdgeItem {...props} />;
-  } else {
-    return <EdgeGroup {...props} />;
-  }
+export const isItem = (element: EdgeTab): element is string => {
+  return typeof element === 'string';
 };
-EdgeElement.identifier = 'recomp-edge-element';
 
-export default Edge;
+export const isGroup = (element: EdgeTab): element is EdgeTabGroup => {
+  return typeof element !== 'string';
+};
+
+export const createModel = (items: EdgeTab[]): EdgeModel => {
+  const model: EdgeModel = {
+    byId: {},
+    rootIds: [],
+  };
+
+  for (const item of items) {
+    if (isItem(item)) {
+      model.byId[item] = item;
+      model.rootIds.push(item);
+    } else {
+      const group: EdgeTabGroup = {
+        id: item.id,
+        expanded: item.expanded,
+        items: [],
+      };
+      model.byId[item.id] = group;
+      model.rootIds.push(item.id);
+      for (const c of item.items) {
+        model.byId[c] = c;
+        group.items.push(c);
+      }
+    }
+  }
+
+  return model;
+};

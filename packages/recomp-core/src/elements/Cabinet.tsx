@@ -5,7 +5,7 @@ import * as util from '@recomp/utility/common';
 import { useSpring, animated } from '@react-spring/web';
 
 import { Collapse, Expand } from '@recomp/icons';
-import { useStateOrProps, useHover, useMeasure } from '@recomp/hooks';
+import { useHover, useMeasure, useModel, Update } from '@recomp/hooks';
 
 interface CabinetProps {
   children?: React.ReactNode;
@@ -27,7 +27,7 @@ interface CabinetProps {
   subtitle?: React.ReactNode;
   icon?: React.ReactNode;
   controlIcon?: (expanded: boolean) => any;
-  onCollapse?: () => any;
+  onExpanded?: Update<boolean>;
 }
 
 export const Cabinet = (props: CabinetProps) => {
@@ -37,10 +37,10 @@ export const Cabinet = (props: CabinetProps) => {
 
   const [hover, handleMouseEnter, handleMouseLeave] = useHover(false);
 
-  const [expanded, setExpanded] = useStateOrProps(
+  const [expanded, setExpanded] = useModel(
     props.defaultExpanded,
     props.expanded,
-    props.onCollapse
+    props.onExpanded
   );
 
   // Using this because of react spring. We'll wait until animation finishes
@@ -75,7 +75,7 @@ export const Cabinet = (props: CabinetProps) => {
 
   const handleClick = () => {
     // Toggle expanded
-    setExpanded(!expanded);
+    setExpanded((expanded) => !expanded);
 
     // If element isn't expanded, toggle visibility
     if (!expanded) {
@@ -131,5 +131,5 @@ const defaultProps: CabinetProps = {
     body: 'body',
   },
   controlIcon: controlIconCallback,
-  onCollapse: () => {},
+  onExpanded: () => {},
 };

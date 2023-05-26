@@ -11,28 +11,27 @@ import { useMeasure } from '@recomp/hooks';
 
 import * as util from '@recomp/utility/common';
 
-import { TabTree, elementChildren } from './common';
-import { EdgeElement } from './Edge';
+// import { TabTree, elementChildren } from './common';
 import { Sortable } from './Sortable';
+import {
+  EdgeModel,
+  EdgeTabGroup,
+  GroupProps,
+  TabProps,
+  tabDefaultProps,
+} from './Edge';
+import { EdgeItem } from './Item';
 
-interface EdgeGroupProps {
-  className?: string;
-  classNames?: {
-    dragging?: string;
-    icon?: string;
-    label?: string;
-  };
-  style?: React.CSSProperties;
+interface EdgeGroupProps extends GroupProps {
   id: string;
-  dragging?: string;
-  selected?: string;
+  dragging: string;
+  selected: string;
   expanded: boolean;
   invisible: boolean;
-  icon?: React.ReactNode;
-  color?: string;
-  onClick?: (id: string) => any;
-  tabItems?: string[];
-  tree?: TabTree;
+  onItemClick: (id: string) => any;
+  onGroupClick: (id: string) => any;
+  onRenderItem: (id: string) => TabProps;
+  model: EdgeModel;
   divRef?: React.LegacyRef<HTMLDivElement>;
   handleRef?: React.LegacyRef<HTMLDivElement>;
   handleListeners?: SyntheticListenerMap;
@@ -70,7 +69,7 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
     },
   });
 
-  const items = props.tabItems;
+  const items = (props.model.byId[props.id] as EdgeTabGroup).items;
 
   const headStyle: React.CSSProperties = {
     backgroundColor: props.color,
@@ -81,14 +80,14 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
   };
 
   const handeHeadClick = () => {
-    props.onClick?.(props.id);
+    props.onGroupClick?.(props.id);
     if (!props.expanded) {
       setBodyVisible(true);
     }
   };
 
   const handleItemClick = (id: string) => {
-    props.onClick?.(id);
+    props.onItemClick?.(id);
   };
 
   return (
@@ -112,25 +111,19 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
                 strategy={verticalListSortingStrategy}
               >
                 {items.map((id) => {
-                  const node = props.tree.state.byId[id];
-                  const element = props.tree.static[id];
+                  const itemProps = util.structureUnion(
+                    tabDefaultProps,
+                    props.onRenderItem(id)
+                  );
                   return (
-                    <Sortable className={'sortable'} key={node.id} id={node.id}>
-                      <EdgeElement
-                        className={element.className}
-                        classNames={element.classNames}
-                        style={element.style}
-                        id={node.id}
-                        type={element.type}
+                    <Sortable className={'sortable'} key={id} id={id}>
+                      <EdgeItem
+                        id={id}
                         dragging={props.dragging}
                         selected={props.selected}
-                        expanded={false}
-                        invisible={props.dragging === node.id}
-                        icon={element.icon}
-                        color={element.color}
+                        invisible={props.dragging === id}
                         onClick={handleItemClick}
-                        children={elementChildren(element)}
-                        tabItems={node.children}
+                        {...itemProps}
                       />
                     </Sortable>
                   );
@@ -143,3 +136,4 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
     </div>
   );
 };
+EdgeGroup.identifier = 'recomp-edge-group';

@@ -4,8 +4,8 @@
  * of undefined values that are undefined do not have preference
  */
 export const structureUnion = (left: any, right: any) => {
-  const leftObj = left as any;
-  const rightObj = right as any;
+  const leftObj = propValue(left);
+  const rightObj = propValue(right);
 
   if (rightObj === undefined) {
     return leftObj;
@@ -16,6 +16,9 @@ export const structureUnion = (left: any, right: any) => {
 
   // Arrays
   if (Array.isArray(leftObj) || Array.isArray(rightObj)) {
+    return rightObj;
+  }
+  if (typeof leftObj === 'function' || typeof rightObj === 'function') {
     return rightObj;
   }
 
@@ -43,6 +46,15 @@ export const structureUnion = (left: any, right: any) => {
   }
 
   return result;
+};
+
+const propValue = (prop: any) => {
+  // Not sure what a mockConstructor() is, I think it's added by storybook but in this
+  // this interferes unioning props
+  if (typeof prop === 'function' && prop._isMockFunction) {
+    return undefined;
+  }
+  return prop;
 };
 
 export const isNullOrWhitespace = (value: any) => {

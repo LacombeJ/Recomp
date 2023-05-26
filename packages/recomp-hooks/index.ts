@@ -6,6 +6,7 @@ export { default as useEventListener } from './useEventListener';
 export { default as useHover } from './useHover';
 export { default as useInteract } from './useInteract';
 export { useMeasure } from './useMeasure';
+export { useModel } from './useModel';
 export { default as useMount } from './useMount';
 export { default as useNestedProps } from './useNestedProps';
 export { default as usePostEffect } from './usePostEffect';
@@ -18,5 +19,6 @@ export { default as useStateOrProps } from './useStateOrProps';
 export { default as useTimeout } from './useTimeout';
 
 export type { MeasureResult, Rect } from './useMeasure';
+export type { Recipe, Action, Update, Draft } from './useModel';
 
 declare module '@recomp/hooks';

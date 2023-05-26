@@ -13,11 +13,11 @@ interface EdgeItemProps {
   };
   style?: React.CSSProperties;
   id: string;
-  dragging?: string;
-  selected?: string;
+  dragging: string;
+  selected: string;
   invisible: boolean;
   icon?: React.ReactNode;
-  onClick?: (id: string) => any;
+  onClick: (id: string) => any;
   children?: React.ReactNode;
   divRef?: React.LegacyRef<HTMLDivElement>;
 }

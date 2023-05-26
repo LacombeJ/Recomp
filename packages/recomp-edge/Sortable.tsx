@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useChildrenProps } from '@recomp/hooks';
-import { EdgeElement } from './Edge';
+import { EdgeGroup } from './Group';
 
 export interface SortableProps {
   className?: string;
@@ -33,7 +33,7 @@ export const Sortable = (props: SortableProps) => {
       if (
         child &&
         child.type &&
-        child.type.identifier === EdgeElement.identifier
+        child.type.identifier === EdgeGroup.identifier
       ) {
         return {
           handleListeners: listeners,

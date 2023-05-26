@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
-import { useStateOrProps } from '@recomp/hooks';
+import { useModel, Update } from '@recomp/hooks';
 
 interface CheckboxProps {
   className?: string;
@@ -14,7 +14,7 @@ interface CheckboxProps {
   checked?: boolean;
   defaultChecked?: boolean;
   block?: boolean;
-  onChange?: () => any;
+  onChecked?: Update<boolean>;
   children?: React.ReactNode;
 }
 
@@ -26,14 +26,14 @@ export const Checkbox = (props: CheckboxProps) => {
     fontSize: props.size,
   };
 
-  const [checked, setChecked] = useStateOrProps(
+  const [checked, setChecked] = useModel(
     props.defaultChecked,
     props.checked,
-    props.onChange
+    props.onChecked
   );
 
-  const handleChange = (e: any) => {
-    setChecked(e.target.checked);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(() => e.target.checked);
   };
 
   return (
@@ -53,5 +53,5 @@ const defaultProps: CheckboxProps = {
   },
   defaultChecked: false,
   block: false,
-  onChange: () => {},
+  onChecked: () => {},
 };

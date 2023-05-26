@@ -1,1 +1,1 @@
-export { default as Edge } from './Edge';
+export { Edge, createModel } from './Edge';
