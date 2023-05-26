@@ -18,6 +18,7 @@ interface EdgeItemProps {
   invisible: boolean;
   icon?: React.ReactNode;
   onClick: (id: string) => any;
+  onCloseClick: (id: string) => any;
   children?: React.ReactNode;
   divRef?: React.LegacyRef<HTMLDivElement>;
 }
@@ -38,7 +39,7 @@ export const EdgeItem = (props: EdgeItemProps) => {
   }
 
   const handleClick = () => {
-    props.onClick?.(props.id);
+    props.onClick(props.id);
   };
 
   const handleEventStop = (e: any) => {
@@ -48,6 +49,7 @@ export const EdgeItem = (props: EdgeItemProps) => {
 
   const handleClose = (e: any) => {
     e.stopPropagation();
+    props.onCloseClick(props.id);
   };
 
   return (

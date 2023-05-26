@@ -67,8 +67,20 @@ interface EdgeProps {
   children?: React.ReactNode;
   onRenderItem?: (id: string) => TabProps;
   onRenderGroup?: (id: string) => GroupProps;
+  onItemClose?: (id: string) => any;
   onUpdateModel?: Update<EdgeModel>;
+  onEmitUpdate?: (event: EdgeModelUpdateEvent) => any;
   onSelected?: Update<string>;
+}
+
+export interface EdgeModelUpdateEvent {
+  type: 'move' | 'swap' | 'expand';
+  active: string;
+  moveFrom: null | string;
+  moveTo: null | string;
+  moveFromIndex: number;
+  moveToIndex: number;
+  expand: boolean;
 }
 
 export const Edge = (props: EdgeProps) => {
@@ -131,15 +143,19 @@ export const Edge = (props: EdgeProps) => {
       if (overId !== null) {
         const overNode = model.byId[overId];
         if (isGroup(overNode)) {
-          // const containerItems = overNode.children;
-          // overId = closestAdjustedCenter({
-          //   ...args,
-          //   droppableContainers: args.droppableContainers.filter(
-          //     (container) =>
-          //       container.id !== overId &&
-          //       containerItems.includes(container.id as string)
-          //   ),
-          // })[0]?.id;
+          // If over a group, but possibly inbetween items, find closest
+          const containerItems = overNode.items;
+          const closestId = closestAdjustedCenter({
+            ...args,
+            droppableContainers: args.droppableContainers.filter(
+              (container) =>
+                container.id !== overId &&
+                containerItems.includes(container.id as string)
+            ),
+          })[0]?.id;
+          if (closestId) {
+            overId = closestId;
+          }
         }
 
         lastOverId.current = overId;
@@ -200,28 +216,38 @@ export const Edge = (props: EdgeProps) => {
       return; // if not over a container, just return
     }
 
+    const overItems = overContainer
+      ? (model.byId[overContainer] as EdgeTabGroup).items
+      : model.rootIds;
+    const overIndex = overItems.indexOf(overId as string);
+
+    let newIndex = 0;
+    if (isGroup(model.byId[overId])) {
+      // overId is just the container, push to last item
+      newIndex = overItems.length + 1;
+    } else {
+      const isBelowOverItem =
+        over &&
+        active.rect.current.translated &&
+        active.rect.current.translated.top > over.rect.top + over.rect.height;
+
+      const modifier = isBelowOverItem ? 1 : 0;
+      newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+    }
+
+    recentlyMovedToNewContainer.current = true;
+
+    props.onEmitUpdate?.({
+      type: 'move',
+      active: active.id as string,
+      moveFrom: activeContainer as string,
+      moveTo: overContainer as string,
+      moveFromIndex: -1,
+      moveToIndex: newIndex,
+      expand: false,
+    });
+
     setModel((model) => {
-      const overItems = overContainer
-        ? (model.byId[overContainer] as EdgeTabGroup).items
-        : model.rootIds;
-      const overIndex = overItems.indexOf(overId as string);
-
-      let newIndex = 0;
-      if (isGroup(model.byId[overId])) {
-        // overId is just the container, push to last item
-        newIndex = overItems.length + 1;
-      } else {
-        const isBelowOverItem =
-          over &&
-          active.rect.current.translated &&
-          active.rect.current.translated.top > over.rect.top + over.rect.height;
-
-        const modifier = isBelowOverItem ? 1 : 0;
-        newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
-      }
-
-      recentlyMovedToNewContainer.current = true;
-
       if (!activeContainer) {
         // If not in container remove from root
         model.rootIds = model.rootIds.filter((item) => item !== active.id);
@@ -249,10 +275,22 @@ export const Edge = (props: EdgeProps) => {
     const { active, over } = event;
 
     setDragging(null);
+
     if (model.rootIds.includes(active.id as string)) {
+      const oldIndex = model.rootIds.findIndex((id) => id === active.id);
+      const newIndex = model.rootIds.findIndex((id) => id === over.id);
+
+      props.onEmitUpdate?.({
+        type: 'swap',
+        active: active.id as string,
+        moveFrom: null,
+        moveTo: null,
+        moveFromIndex: oldIndex,
+        moveToIndex: newIndex,
+        expand: false,
+      });
+
       setModel((model) => {
-        const oldIndex = model.rootIds.findIndex((id) => id === active.id);
-        const newIndex = model.rootIds.findIndex((id) => id === over.id);
         model.rootIds = arrayMove(model.rootIds, oldIndex, newIndex);
       });
     }
@@ -262,7 +300,23 @@ export const Edge = (props: EdgeProps) => {
     setSelected(() => id);
   };
 
+  const handleItemClose = (id: string) => {
+    props.onItemClose?.(id);
+  };
+
   const handleGroupClick = (id: string) => {
+    const group = model.byId[id] as EdgeTabGroup;
+
+    props.onEmitUpdate?.({
+      type: 'expand',
+      active: id,
+      moveFrom: null,
+      moveTo: null,
+      moveFromIndex: -1,
+      moveToIndex: -1,
+      expand: !group.expanded,
+    });
+
     setModel((model) => {
       const group = model.byId[id] as Draft<EdgeTabGroup>;
       group.expanded = !group.expanded;
@@ -284,9 +338,11 @@ export const Edge = (props: EdgeProps) => {
           invisible={false}
           selected={selected}
           dragging={dragging}
+          animated={false}
           model={model}
           onRenderItem={props.onRenderItem}
           onItemClick={handleItemClick}
+          onItemClose={handleItemClose}
           onGroupClick={handleGroupClick}
           {...groupProps}
         />
@@ -303,6 +359,7 @@ export const Edge = (props: EdgeProps) => {
           selected={selected}
           dragging={dragging}
           onClick={handleItemClick}
+          onCloseClick={handleItemClose}
           {...itemProps}
         />
       );
@@ -347,9 +404,11 @@ export const Edge = (props: EdgeProps) => {
                       invisible={dragging === node.id}
                       selected={selected}
                       dragging={dragging}
+                      animated={true}
                       model={model}
                       onRenderItem={props.onRenderItem}
                       onItemClick={handleItemClick}
+                      onItemClose={handleItemClose}
                       onGroupClick={handleGroupClick}
                       {...groupProps}
                     />
@@ -369,6 +428,7 @@ export const Edge = (props: EdgeProps) => {
                       selected={selected}
                       dragging={dragging}
                       onClick={handleItemClick}
+                      onCloseClick={handleItemClose}
                       {...itemProps}
                     />
                   </Sortable>

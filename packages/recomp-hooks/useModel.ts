@@ -28,7 +28,7 @@ export const useModel = <S>(
   const updateValue = (recipe: Recipe<S>) => {
     const result = produce<S>(recipe);
     if (useProps) {
-      propCallback(result);
+      propCallback?.(result);
     } else {
       setState(result);
     }

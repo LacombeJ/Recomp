@@ -28,7 +28,9 @@ interface EdgeGroupProps extends GroupProps {
   selected: string;
   expanded: boolean;
   invisible: boolean;
+  animated: boolean;
   onItemClick: (id: string) => any;
+  onItemClose: (id: string) => any;
   onGroupClick: (id: string) => any;
   onRenderItem: (id: string) => TabProps;
   model: EdgeModel;
@@ -58,9 +60,10 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
 
   const [bodyRef, { contentRect }] = useMeasure();
   const { height } = contentRect;
-  const actualHeight = height + 6 + 4 + 6;
-  const expand = useSpring({
-    height: props.expanded ? `${actualHeight}px` : '0px',
+  const actualHeight = height + 6 + 6;
+
+  let expand: any = useSpring({
+    height: props.expanded || !props.animated ? `${actualHeight}px` : '0px',
     onRest: () => {
       // If rested, is visible, and no longer expanded, make invisible
       if (bodyVisible && !props.expanded) {
@@ -68,6 +71,10 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
       }
     },
   });
+
+  if (!props.animated) {
+    expand = {};
+  }
 
   const items = (props.model.byId[props.id] as EdgeTabGroup).items;
 
@@ -90,6 +97,36 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
     props.onItemClick?.(id);
   };
 
+  const handleItemCloseClick = (id: string) => {
+    props.onItemClose?.(id);
+  };
+
+  const group = () => {
+    return (
+      <SortableContext items={items} strategy={verticalListSortingStrategy}>
+        {items.map((id) => {
+          const itemProps = util.structureUnion(
+            tabDefaultProps,
+            props.onRenderItem(id)
+          );
+          return (
+            <Sortable className={'sortable'} key={id} id={id}>
+              <EdgeItem
+                id={id}
+                dragging={props.dragging}
+                selected={props.selected}
+                invisible={props.dragging === id}
+                onClick={handleItemClick}
+                onCloseClick={handleItemCloseClick}
+                {...itemProps}
+              />
+            </Sortable>
+          );
+        })}
+      </SortableContext>
+    );
+  };
+
   return (
     <div className={className} style={style} ref={props.divRef}>
       <div
@@ -104,33 +141,19 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
       </div>
       <div className="body" style={bodyStyle}>
         {bodyVisible ? (
-          <animated.div style={{ ...expand, overflow: 'hidden' }}>
-            <div className="inner" ref={bodyRef}>
-              <SortableContext
-                items={items}
-                strategy={verticalListSortingStrategy}
-              >
-                {items.map((id) => {
-                  const itemProps = util.structureUnion(
-                    tabDefaultProps,
-                    props.onRenderItem(id)
-                  );
-                  return (
-                    <Sortable className={'sortable'} key={id} id={id}>
-                      <EdgeItem
-                        id={id}
-                        dragging={props.dragging}
-                        selected={props.selected}
-                        invisible={props.dragging === id}
-                        onClick={handleItemClick}
-                        {...itemProps}
-                      />
-                    </Sortable>
-                  );
-                })}
-              </SortableContext>
+          animated ? (
+            <animated.div style={{ ...expand, overflow: 'hidden' }}>
+              <div className="inner" ref={bodyRef}>
+                {group()}
+              </div>
+            </animated.div>
+          ) : (
+            <div>
+              <div className="inner" ref={bodyRef}>
+                {group()}
+              </div>
             </div>
-          </animated.div>
+          )
         ) : null}
       </div>
     </div>
