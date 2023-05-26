@@ -22,13 +22,14 @@ export interface TabTree {
 
 export interface TreeState {
   byId: { [key: string]: TabNode };
-    allIds: string[];
-    rootIds: string[];
+  allIds: string[];
+  rootIds: string[];
 }
 
 export interface TabNode {
   id: string;
   type: TabItemType;
+  expanded: boolean;
   children: string[];
 }
 
@@ -76,7 +77,7 @@ const mapTabItem = (props: TabProps): { id: string; item: TabItem } => {
 const mapTabGroup = (
   props: GroupProps,
   tree: TabTree
-): { id: string; group: TabGroup; children: string[] } => {
+): { id: string; group: TabGroup; expanded: boolean; children: string[] } => {
   props = util.structureUnion(groupDefaultProps, props);
   return {
     id: props.id,
@@ -88,6 +89,7 @@ const mapTabGroup = (
       color: props.color,
       icon: props.icon,
     },
+    expanded: props.expanded,
     children: mapTabItems(props.children, tree),
   };
 };
@@ -103,11 +105,12 @@ const mapTabItems = (children: any, tree: TabTree) => {
           const item = mapTabItem(c.props);
           tree.static[item.id] = item.item;
           tree.state.allIds.push(item.id);
-          tree.state.byId[item.id] = ({
+          tree.state.byId[item.id] = {
             id: item.id,
             type: item.item.type,
+            expanded: false,
             children: [],
-          });
+          };
           items.push(item.id);
           return;
         }
@@ -139,22 +142,24 @@ export const createTabTree = (children: any): TabTree => {
           tree.static[item.id] = item.item;
           tree.state.allIds.push(item.id);
           tree.state.rootIds.push(item.id);
-          tree.state.byId[item.id] = ({
+          tree.state.byId[item.id] = {
             id: item.id,
             type: item.item.type,
+            expanded: false,
             children: [],
-          });
+          };
           return;
         } else if (c.type.identifier === Edge.Group.identifier) {
           const item = mapTabGroup(c.props, tree);
           tree.static[item.id] = item.group;
           tree.state.allIds.push(item.id);
           tree.state.rootIds.push(item.id);
-          tree.state.byId[item.id] = ({
+          tree.state.byId[item.id] = {
             id: item.id,
             type: item.group.type,
+            expanded: item.expanded,
             children: item.children,
-          });
+          };
           return;
         }
       }

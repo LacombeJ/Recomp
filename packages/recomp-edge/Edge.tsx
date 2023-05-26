@@ -37,11 +37,13 @@ import {
   TabTree,
   TreeState,
   TabNode,
+  isGroup,
 } from './common';
 import { EdgeItem } from './Item';
 import { EdgeGroup } from './Group';
 import { Sortable } from './Sortable';
 import { closestAdjustedCenter } from './collision';
+import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 
 // ----------------------------------------------------------------------------
 
@@ -243,7 +245,7 @@ const Edge = (props: EdgeProps) => {
     const { active, over } = event;
 
     setDragging(null);
-    if (items.byId[active.id].type === 'group') {
+    if (items.rootIds.includes(active.id as string)) {
       setItems((items: TreeState) => {
         const oldIndex = items.rootIds.findIndex((id) => id === active.id);
         const newIndex = items.rootIds.findIndex((id) => id === over.id);
@@ -256,7 +258,22 @@ const Edge = (props: EdgeProps) => {
   };
 
   const handleItemClick = (id: string) => {
-    setSelected(id);
+    if (items.byId[id].type === 'group') {
+      setItems((items: TreeState) => {
+        return {
+          ...items,
+          byId: {
+            ...items.byId,
+            [id]: {
+              ...items.byId[id],
+              expanded: !items.byId[id].expanded,
+            },
+          },
+        };
+      });
+    } else {
+      setSelected(id);
+    }
   };
 
   const renderElement = (
@@ -273,6 +290,7 @@ const Edge = (props: EdgeProps) => {
         type={element.type}
         dragging={dragging}
         selected={selected}
+        expanded={node.expanded}
         invisible={!visible}
         icon={element.icon}
         color={element.color}
@@ -305,8 +323,14 @@ const Edge = (props: EdgeProps) => {
             {items.rootIds.map((id) => {
               const node = items.byId[id];
               const element = treeStatic[id];
+              const handle = isGroup(element);
               return (
-                <Sortable className={'sortable'} key={node.id} id={node.id}>
+                <Sortable
+                  className={'sortable'}
+                  key={node.id}
+                  id={node.id}
+                  handle={handle}
+                >
                   {renderElement(node, element, dragging !== node.id)}
                 </Sortable>
               );
@@ -375,6 +399,7 @@ export interface GroupProps {
   style?: React.CSSProperties;
   id: string;
   icon?: React.ReactNode;
+  expanded?: boolean;
   children?: React.ReactNode;
   color?: string;
 }
@@ -414,6 +439,7 @@ export interface EdgeElementProps {
   type?: TabItemType;
   dragging?: string;
   selected?: string;
+  expanded: boolean;
   invisible: boolean;
   icon?: React.ReactNode;
   color?: string;
@@ -421,6 +447,8 @@ export interface EdgeElementProps {
   children?: React.ReactNode;
   tabItems?: string[];
   tree?: TabTree;
+  handleRef?: React.LegacyRef<HTMLDivElement>;
+  handleListeners?: SyntheticListenerMap;
 }
 
 export const EdgeElement = (props: EdgeElementProps) => {
@@ -430,5 +458,6 @@ export const EdgeElement = (props: EdgeElementProps) => {
     return <EdgeGroup {...props} />;
   }
 };
+EdgeElement.identifier = 'recomp-edge-element';
 
 export default Edge;

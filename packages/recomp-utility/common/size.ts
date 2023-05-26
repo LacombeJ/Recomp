@@ -240,7 +240,6 @@ export const adjustDimension = (
 
   // Span is greater than zero, return 0 (top)
   if (width > container) {
-    console.log('default 0');
     return 0;
   }
 
@@ -261,8 +260,6 @@ export const adjustDimension = (
   if (isClamped(x3, 0, container) && isClamped(x3 + width, 0, container)) {
     return x3;
   }
-
-  console.log('unmatched 0');
 
   return 0;
 };

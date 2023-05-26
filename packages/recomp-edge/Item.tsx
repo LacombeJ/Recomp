@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
+import { Close } from '@recomp/icons';
 
 interface EdgeItemProps {
   className?: string;
@@ -27,15 +28,28 @@ export const EdgeItem = (props: EdgeItemProps) => {
     [props.classNames.dragging]: props.dragging === props.id,
     [props.classNames.selected]: props.selected === props.id,
   });
+
   const style: React.CSSProperties = {
     ...props.style,
-  }
+  };
+
   if (props.invisible) {
     style.visibility = 'hidden';
   }
+
   const handleClick = () => {
     props.onClick?.(props.id);
   };
+
+  const handleEventStop = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleClose = (e: any) => {
+    e.stopPropagation();
+  };
+
   return (
     <div
       className={className}
@@ -45,6 +59,16 @@ export const EdgeItem = (props: EdgeItemProps) => {
     >
       <div className={props.classNames.icon}>{props.icon}</div>
       <div className={props.classNames.label}>{props.children}</div>
+      <div className="close-container">
+        <div
+          className={'close'}
+          onPointerDown={handleEventStop}
+          onMouseDown={handleEventStop}
+          onClick={handleClose}
+        >
+          <Close></Close>
+        </div>
+      </div>
     </div>
   );
 };
