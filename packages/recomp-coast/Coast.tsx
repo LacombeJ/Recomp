@@ -333,6 +333,7 @@ interface ControlsProps {
   style?: React.CSSProperties;
   position?: Position;
   children?: React.ReactNode;
+  onItemClick?: (id: string) => any;
 }
 
 const Controls = (props: ControlsProps) => {
@@ -347,6 +348,11 @@ const Controls = (props: ControlsProps) => {
     parentMeasure.clientRect.x,
     parentMeasure.clientRect.width
   );
+
+  const handleItemClick = (id: string, rect: Rect) => {
+    tooltipCalc.handleItemClick(id, rect);
+    props.onItemClick?.(id);
+  };
 
   const [replace] = useReplaceChildren<ControlProps>((child, childProps) => {
     if (
@@ -363,7 +369,7 @@ const Controls = (props: ControlsProps) => {
           id={childProps.id}
           tooltip={childProps.tooltip}
           active={false}
-          onClick={tooltipCalc.handleItemClick}
+          onClick={handleItemClick}
           onMouseEnter={tooltipCalc.handleItemMouseEnter}
           onMouseLeave={tooltipCalc.handleItemMouseLeave}
         >
