@@ -11,7 +11,7 @@ interface PageProps {
 }
 
 export const Page = (props: PageProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const ActivePage = props.pages[props.page];
 

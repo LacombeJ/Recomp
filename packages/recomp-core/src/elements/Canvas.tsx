@@ -11,7 +11,7 @@ interface CanvasProps
 }
 
 export const Canvas = (props: CanvasProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const {
     render,
     ref: _0,

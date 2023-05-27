@@ -13,7 +13,7 @@ type Editor = monaco.editor.IStandaloneCodeEditor;
  * @param {MonacoArea.defaultProps} props
  */
 const MonacoArea = (props: MonacoEditorProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const editorRef: React.MutableRefObject<Editor> = React.useRef(null);
 

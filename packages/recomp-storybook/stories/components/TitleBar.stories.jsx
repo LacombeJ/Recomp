@@ -20,7 +20,7 @@ export default {
 };
 
 const Template = (args) => (
-  <div class="titlebar-container">
+  <div className="titlebar-container">
     <TitleBar {...args} />
   </div>
 );

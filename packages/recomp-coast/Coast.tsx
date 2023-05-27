@@ -37,7 +37,7 @@ interface CoastProps {
 }
 
 const Coast = (props: CoastProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const className = util.classnames({
     [props.className]: true,
     [props.position]: true,
@@ -189,7 +189,7 @@ interface TabsProps {
 }
 
 const Tabs = (props: TabsProps) => {
-  props = util.structureUnion(tabsDefaultProps, props);
+  props = util.propUnion(tabsDefaultProps, props);
   const { className, style } = props;
 
   const [parentRef, parentMeasure] = useMeasure();
@@ -212,7 +212,7 @@ const Tabs = (props: TabsProps) => {
 
   const [replace] = useReplaceChildren<TabProps>((child, childProps) => {
     if (child && child.type && child.type.identifier === Coast.Tab.identifier) {
-      childProps = util.structureUnion(tabDefaultProps, childProps);
+      childProps = util.propUnion(tabDefaultProps, childProps);
       return (
         <CoastItem
           className={childProps.className}
@@ -303,7 +303,7 @@ interface TabProps {
 }
 
 const Tab = (props: TabProps) => {
-  props = util.structureUnion(tabDefaultProps, props);
+  props = util.propUnion(tabDefaultProps, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -337,7 +337,7 @@ interface ControlsProps {
 }
 
 const Controls = (props: ControlsProps) => {
-  props = util.structureUnion(controlsDefaultProps, props);
+  props = util.propUnion(controlsDefaultProps, props);
   const { className, style } = props;
 
   const [parentRef, parentMeasure] = useMeasure();
@@ -360,7 +360,7 @@ const Controls = (props: ControlsProps) => {
       child.type &&
       child.type.identifier === Coast.Control.identifier
     ) {
-      childProps = util.structureUnion(controlDefaultProps, childProps);
+      childProps = util.propUnion(controlDefaultProps, childProps);
       return (
         <CoastItem
           className={childProps.className}
@@ -437,7 +437,7 @@ interface ControlProps {
 }
 
 const Control = (props: ControlProps) => {
-  props = util.structureUnion(controlDefaultProps, props);
+  props = util.propUnion(controlDefaultProps, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}

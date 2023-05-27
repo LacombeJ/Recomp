@@ -66,7 +66,7 @@ export interface MonacoEditorProps {
 }
 
 const MonacoEditor = (props: MonacoEditorProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   // State
   // Assuming that this component can unmount and remount at any time, and

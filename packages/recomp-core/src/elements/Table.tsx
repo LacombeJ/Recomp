@@ -81,7 +81,7 @@ interface TableData {
 }
 
 export const Table = (props: TableProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   return (
     <props.root className={props.className} style={props.style}>

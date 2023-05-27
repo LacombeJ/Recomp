@@ -18,7 +18,7 @@ interface ListProps {
 }
 
 export const List = (props: ListProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const { className } = props;
 
   const bulletList = bulletsMap[props.type];
@@ -149,7 +149,7 @@ interface ItemProps {
 }
 
 const Item = (props: ItemProps) => {
-  props = util.structureUnion(itemDefaultProps, props);
+  props = util.propUnion(itemDefaultProps, props);
   // const { className } = props;
 
   const className = util.classnames({

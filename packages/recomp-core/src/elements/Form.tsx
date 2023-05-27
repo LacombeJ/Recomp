@@ -12,7 +12,7 @@ interface FormProps
   > {}
 
 export const Form = (props: FormProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const { dangerouslySetInnerHTML: _0, ...formProps } = props;
   return <form {...formProps} />;
 };
@@ -24,7 +24,7 @@ const defaultProps: FormProps = {
 // ----------------------------------------------------------------------------
 
 Form.Row = (props: RowProps) => {
-  props = util.structureUnion(rowDefaultProps, props);
+  props = util.propUnion(rowDefaultProps, props);
   const { style } = props;
 
   const className = util.classnames({
@@ -73,7 +73,7 @@ interface FieldProps
 }
 
 Form.Field = (props: FieldProps) => {
-  props = util.structureUnion(fieldDefaultProps, props);
+  props = util.propUnion(fieldDefaultProps, props);
 
   const {
     classNames,

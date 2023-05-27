@@ -20,7 +20,7 @@ interface KatexProps {
 }
 
 const Katex = (props: KatexProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   // const {children, display, size, margin, nlbreak} = props;
   let text = props.children;

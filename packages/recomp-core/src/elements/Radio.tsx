@@ -20,7 +20,7 @@ interface RadioProps {
 }
 
 export const Radio = (props: RadioProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { className, classNames, style } = props;
 
@@ -65,7 +65,7 @@ interface GroupProps {
 }
 
 const Group = (props: GroupProps) => {
-  props = util.structureUnion(groupDefaultProps, props);
+  props = util.propUnion(groupDefaultProps, props);
 
   const { className, style } = props;
 

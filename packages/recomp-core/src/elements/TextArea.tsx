@@ -9,7 +9,7 @@ interface TextAreaProps
   > {}
 
 export const TextArea = (props: TextAreaProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { dangerouslySetInnerHTML: _0, ...textAreaProps } = props;
 

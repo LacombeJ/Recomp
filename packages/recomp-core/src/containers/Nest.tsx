@@ -13,7 +13,7 @@ interface NestProps {
 }
 
 export const Nest = (props: NestProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const { className, style } = props;
 
   const handleClick = (e: React.MouseEvent) => {

@@ -12,7 +12,7 @@ interface AudioProps
 }
 
 export const Audio = (props: AudioProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { className, style, src, ...audioProps } = props;
 

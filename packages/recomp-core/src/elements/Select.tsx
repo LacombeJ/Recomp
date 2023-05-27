@@ -13,7 +13,7 @@ interface SelectProps {
 }
 
 export const Select = (props: SelectProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { className, style } = props;
 

@@ -18,7 +18,7 @@ interface TitleBarProps {
 }
 
 export const TitleBar = (props: TitleBarProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   return (
     <div className={props.className} style={props.style} {...props.ext}>
@@ -42,7 +42,7 @@ interface IconProps {
 }
 
 const Icon = (props: IconProps) => {
-  props = util.structureUnion(IconDefaultProps, props);
+  props = util.propUnion(IconDefaultProps, props);
   return (
     <div className={props.className} style={props.style} {...props.ext}>
       {props.children}
@@ -74,7 +74,7 @@ interface MenuBarProps {
 }
 
 const MenuBar = (props: MenuBarProps) => {
-  props = util.structureUnion(menuDefaultProps, props);
+  props = util.propUnion(menuDefaultProps, props);
   if (props.model) {
     props.model = normalizeMenuElements(props.model) as MenuGroup[];
   }
@@ -219,7 +219,7 @@ interface HeaderProps {
 }
 
 const Header = (props: HeaderProps) => {
-  props = util.structureUnion(headerDefaultProps, props);
+  props = util.propUnion(headerDefaultProps, props);
   return (
     <div className={props.className} style={props.style} {...props.ext}>
       {props.children}
@@ -243,7 +243,7 @@ interface ControlBarProps {
 }
 
 const ControlBar = (props: ControlBarProps) => {
-  props = util.structureUnion(controlBarDefaultProps, props);
+  props = util.propUnion(controlBarDefaultProps, props);
   return (
     <div className={props.className} style={props.style} {...props.ext}>
       {props.children}
@@ -268,7 +268,7 @@ interface ControlButtonProps {
 }
 
 const ControlButton = (props: ControlButtonProps) => {
-  props = util.structureUnion(controlButtonDefaultProps, props);
+  props = util.propUnion(controlButtonDefaultProps, props);
 
   let className = props.className;
 

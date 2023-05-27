@@ -10,7 +10,7 @@ interface EmojiProps {
 }
 
 const Emoji = (props: EmojiProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const { className, style } = props;
 
   if (props.animated) {

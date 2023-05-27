@@ -27,7 +27,7 @@ interface SplitProps {
 }
 
 export const Split = (props: SplitProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const nodeRef: React.Ref<HTMLDivElement> = React.useRef();
 
@@ -310,7 +310,7 @@ interface SplitItemProps {
 }
 
 const Item = (props: SplitItemProps) => {
-  props = util.structureUnion(itemDefaultProps, props);
+  props = util.propUnion(itemDefaultProps, props);
 
   const className = props.className;
 
@@ -372,7 +372,7 @@ interface ResizerProps {
 }
 
 const Resizer = (props: ResizerProps) => {
-  props = util.structureUnion(resizerDefaultProps, props);
+  props = util.propUnion(resizerDefaultProps, props);
 
   if (props.classNames) {
     props.classNames = {

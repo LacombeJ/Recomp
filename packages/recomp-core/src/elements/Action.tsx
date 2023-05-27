@@ -15,7 +15,7 @@ interface ActionProps
 }
 
 export const Action = (props: ActionProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const {
     className: _0,

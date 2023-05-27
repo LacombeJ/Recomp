@@ -23,7 +23,7 @@ interface OverlayProps {
 }
 
 export const Overlay = (props: OverlayProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   // Visibility set for animation
   const [visible, setVisible] = React.useState(props.enabled);

@@ -10,7 +10,7 @@ interface HeadingProps {
 }
 
 export const Heading = (props: HeadingProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   if (!props.level) {
     props.level = 1;

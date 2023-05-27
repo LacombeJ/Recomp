@@ -9,7 +9,7 @@ interface ParagraphProps
   > {}
 
 export const Paragraph = (props: ParagraphProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { dangerouslySetInnerHTML: _0, ...paragraphProps } = props;
 

@@ -23,7 +23,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   }
 
   constructor(props: ErrorBoundaryProps) {
-    props = util.structureUnion(defaultProps, props);
+    props = util.propUnion(defaultProps, props);
 
     super(props);
 

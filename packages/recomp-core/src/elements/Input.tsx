@@ -13,7 +13,7 @@ interface InputProps
 }
 
 export const Input = (props: InputProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const {
     className: _0,

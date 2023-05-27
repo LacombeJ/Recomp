@@ -9,7 +9,7 @@ interface VideoProps
   > {}
 
 export const Video = (props: VideoProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   return <iframe {...props} />;
 };

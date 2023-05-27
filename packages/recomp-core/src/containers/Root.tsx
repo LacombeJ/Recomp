@@ -16,7 +16,7 @@ interface RootProps {
 }
 
 export const Root = (props: RootProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   useEventListener(document, 'resize', props.onResize);
 

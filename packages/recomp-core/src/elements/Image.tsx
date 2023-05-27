@@ -9,7 +9,7 @@ interface ImageProps
   > {}
 
 export const Image = (props: ImageProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   return <img {...props} />;
 };
 

@@ -56,7 +56,7 @@ interface MenuProps {
 }
 
 export const Menu = (props: MenuProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   if (props.model) {
     props.model = normalizeMenuElements(props.model);
   }
@@ -250,7 +250,7 @@ interface SeparatorProps {
 }
 
 const Separator = (props: SeparatorProps) => {
-  props = util.structureUnion(separatorDefaultProps, props);
+  props = util.propUnion(separatorDefaultProps, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -377,14 +377,14 @@ export const normalizeMenuElements = (items: any[]): MenuElement[] => {
     if (item === 'separator' || item.type === 'separator') {
       model.push({ type: 'separator' });
     } else if (item.children) {
-      const props = util.structureUnion(groupDefaultProps, item);
+      const props = util.propUnion(groupDefaultProps, item);
       model.push({
         ...props,
         type: 'group',
         children: normalizeMenuElements(props.children),
       });
     } else {
-      const props = util.structureUnion(itemDefaultProps, item);
+      const props = util.propUnion(itemDefaultProps, item);
       model.push({
         ...props,
         type: 'item',

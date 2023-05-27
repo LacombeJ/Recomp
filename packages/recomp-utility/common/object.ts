@@ -1,4 +1,51 @@
 /**
+ * Joins recomp props shallow except for a classNames object if it exist, in
+ * which will be joined recursively.
+ */
+export const propUnion = (left: any, right: any) => {
+  const leftObj = propValue(left);
+  const rightObj = propValue(right);
+
+  if (rightObj === undefined) {
+    return leftObj;
+  }
+  if (leftObj === undefined) {
+    return rightObj;
+  }
+
+  let result: any = {};
+
+  if (typeof leftObj === 'object' && leftObj !== null) {
+    // Add all left values
+    const leftKeys = Object.keys(leftObj);
+    for (const lk of leftKeys) {
+      const lvalue = propValue(leftObj[lk]);
+      result[lk] = lvalue;
+    }
+  } else {
+    result = leftObj;
+  }
+
+  // Add all right values, will override values
+  if (typeof rightObj === 'object' && rightObj !== null) {
+    const rightKeys = Object.keys(rightObj);
+    for (const rk of rightKeys) {
+      const lvalue = result[rk];
+      const rvalue = propValue(rightObj[rk]);
+      if (rk === 'classNames') {
+        result[rk] = structureUnion(lvalue, rvalue);
+      } else if (rvalue !== undefined) {
+        result[rk] = rvalue;
+      }
+    }
+  } else {
+    result = rightObj;
+  }
+
+  return result;
+};
+
+/**
  * Joins two (possibly) nested objects, preferring values of the second argument.
  * It is similar to using `{..left, ...right}` but does it recursively. Also, values
  * of undefined values that are undefined do not have preference

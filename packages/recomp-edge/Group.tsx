@@ -105,7 +105,7 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
     return (
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         {items.map((id) => {
-          const itemProps = util.structureUnion(
+          const itemProps = util.propUnion(
             tabDefaultProps,
             props.onRenderItem(id)
           );

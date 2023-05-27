@@ -32,7 +32,7 @@ const FolderContext: React.Context<FolderContextState> =
   React.createContext(null);
 
 const Folder = (props: FolderProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { className, classNames, style } = props;
 
@@ -466,7 +466,7 @@ interface ShellProps {
 };
 
 const Shell = (props: ShellProps) => {
-  props = util.structureUnion(shellDefaultProps, props);
+  props = util.propUnion(shellDefaultProps, props);
   const { className, style } = props;
 
   return (

@@ -20,7 +20,7 @@ interface BlockProps {
 }
 
 export const Block = (props: BlockProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { setRef: _0, style } = props;
   const className = util.classnames({

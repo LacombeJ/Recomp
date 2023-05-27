@@ -84,7 +84,7 @@ export interface EdgeModelUpdateEvent {
 }
 
 export const Edge = (props: EdgeProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const [selected, setSelected] = useModel(
     props.defaultSelected,
@@ -327,7 +327,7 @@ export const Edge = (props: EdgeProps) => {
     const node = model.byId[dragging];
 
     if (isGroup(node)) {
-      const groupProps: GroupProps = util.structureUnion(
+      const groupProps: GroupProps = util.propUnion(
         groupDefaultProps,
         props.onRenderGroup(dragging)
       );
@@ -348,7 +348,7 @@ export const Edge = (props: EdgeProps) => {
         />
       );
     } else {
-      const itemProps: TabProps = util.structureUnion(
+      const itemProps: TabProps = util.propUnion(
         tabDefaultProps,
         props.onRenderItem(dragging)
       );
@@ -387,7 +387,7 @@ export const Edge = (props: EdgeProps) => {
             {model.rootIds.map((id) => {
               const node = model.byId[id];
               if (isGroup(node)) {
-                const groupProps: GroupProps = util.structureUnion(
+                const groupProps: GroupProps = util.propUnion(
                   groupDefaultProps,
                   props.onRenderGroup(id)
                 );
@@ -415,7 +415,7 @@ export const Edge = (props: EdgeProps) => {
                   </Sortable>
                 );
               } else {
-                const itemProps: TabProps = util.structureUnion(
+                const itemProps: TabProps = util.propUnion(
                   tabDefaultProps,
                   props.onRenderItem(id)
                 );

@@ -19,7 +19,7 @@ interface SwitchProps {
 }
 
 export const Switch = (props: SwitchProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   return <Checkbox {...props}></Checkbox>;
 };

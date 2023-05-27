@@ -24,7 +24,7 @@ interface TooltipProps {
 }
 
 const TooltipGeneric = (props: TooltipProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const { className, style } = props;
 
   return (
@@ -45,7 +45,7 @@ const TooltipGeneric = (props: TooltipProps) => {
 };
 
 export const Tooltip = (props: TooltipProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const { children, ...genericProps } = props;
 
   return (
@@ -76,7 +76,7 @@ interface TooltipAnimatedProps extends TooltipProps {
 }
 
 Tooltip.Animated = (props: TooltipAnimatedProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const bodyRef = useSize(({ width, height }) => {
     props.onResize(width, height);
@@ -110,7 +110,7 @@ interface TriangleProps {
 }
 
 const Triangle = (props: TriangleProps) => {
-  props = util.structureUnion(triangleDefaultProps, props);
+  props = util.propUnion(triangleDefaultProps, props);
 
   const { tipSize, borderSize } = props;
 

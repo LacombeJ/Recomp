@@ -25,7 +25,7 @@ interface TextProps {
 }
 
 export const Text = (props: TextProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const style = {
     ...props.style,

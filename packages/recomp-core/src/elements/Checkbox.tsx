@@ -19,7 +19,7 @@ interface CheckboxProps {
 }
 
 export const Checkbox = (props: CheckboxProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const { className, classNames } = props;
   const style = {
     ...props.style,

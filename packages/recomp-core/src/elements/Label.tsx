@@ -9,7 +9,7 @@ interface LabelProps
   > {}
 
 export const Label = (props: LabelProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { dangerouslySetInnerHTML: _0, ...labelProps } = props;
 

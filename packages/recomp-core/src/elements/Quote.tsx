@@ -14,7 +14,7 @@ interface QuoteProps {
 }
 
 export const Quote = (props: QuoteProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   return (
     <div className={props.className} style={props.style}>

@@ -11,7 +11,7 @@ interface SpacerProps {
 }
 
 export const Spacer = (props: SpacerProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const { className } = props;
 
   const style = {

@@ -20,7 +20,7 @@ interface PrismProps {
 }
 
 const Prism = (props: PrismProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { style } = props;
 

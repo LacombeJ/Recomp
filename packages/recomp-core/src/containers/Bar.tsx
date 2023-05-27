@@ -15,7 +15,7 @@ interface BarProps {
 }
 
 export const Bar = (props: BarProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const { classNames, style } = props;
 
   const className = util.classnames({

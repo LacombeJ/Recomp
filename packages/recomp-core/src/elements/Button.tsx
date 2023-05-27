@@ -26,7 +26,7 @@ interface ButtonProps
 }
 
 export const Button = (props: ButtonProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const {
     className: _0,

@@ -31,7 +31,7 @@ interface CabinetProps {
 }
 
 export const Cabinet = (props: CabinetProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { style } = props;
 

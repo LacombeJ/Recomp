@@ -9,7 +9,7 @@ interface DialogProps {
 }
 
 export const Dialog = (props: DialogProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -28,7 +28,7 @@ Dialog.Header = (props: {
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }) => {
-  props = util.structureUnion({ className: 'header' }, props);
+  props = util.propUnion({ className: 'header' }, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -41,7 +41,7 @@ Dialog.Title = (props: {
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }) => {
-  props = util.structureUnion({ className: 'title' }, props);
+  props = util.propUnion({ className: 'title' }, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -54,7 +54,7 @@ Dialog.Control = (props: {
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }) => {
-  props = util.structureUnion({ className: 'control' }, props);
+  props = util.propUnion({ className: 'control' }, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -67,7 +67,7 @@ Dialog.Body = (props: {
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }) => {
-  props = util.structureUnion({ className: 'body' }, props);
+  props = util.propUnion({ className: 'body' }, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -80,7 +80,7 @@ Dialog.Footer = (props: {
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }) => {
-  props = util.structureUnion({ className: 'footer' }, props);
+  props = util.propUnion({ className: 'footer' }, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}

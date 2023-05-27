@@ -9,7 +9,7 @@ interface LinkProps
   > {}
 
 export const Link = (props: LinkProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { dangerouslySetInnerHTML: _0, ...linkProps } = props;
 

@@ -21,7 +21,7 @@ interface SketchPadProps {
 }
 
 const SketchPad = (props: SketchPadProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
   const { className, style } = props;
 
   const [sketching, setSketching] = React.useState(false);

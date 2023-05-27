@@ -18,7 +18,7 @@ type ScrollDirection = 'x' | 'y' | 'xy';
 type ScrollPolicy = 'scroll' | 'auto' | 'overlay' | 'none';
 
 export const Scroll = (props: ScrollProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = util.propUnion(defaultProps, props);
 
   const { className, style } = props;
 
