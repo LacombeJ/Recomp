@@ -59,7 +59,6 @@ interface EdgeProps {
     dragging?: string;
   };
   style?: React.CSSProperties;
-  debug?: boolean;
   model?: EdgeModel;
   defaultModel?: EdgeModel;
   selected?: string;
@@ -98,7 +97,7 @@ export const Edge = (props: EdgeProps) => {
     props.onUpdateModel
   );
 
-  const [dragging, setDragging] = React.useState<string | null>(null);
+  const [dragging, setDragging] = React.useState<string>(null);
 
   const lastOverId = React.useRef<UniqueIdentifier | null>(null);
   const recentlyMovedToNewContainer = React.useRef(false);
@@ -145,6 +144,7 @@ export const Edge = (props: EdgeProps) => {
         if (isGroup(overNode)) {
           // If over a group, but possibly inbetween items, find closest
           const containerItems = overNode.items;
+
           const closestId = closestAdjustedCenter({
             ...args,
             droppableContainers: args.droppableContainers.filter(
@@ -177,11 +177,16 @@ export const Edge = (props: EdgeProps) => {
     [dragging, model]
   );
 
-  const findContainer = (id: UniqueIdentifier) => {
+  const determineDroppableContainer = (id: UniqueIdentifier) => {
     const node = model.byId[id];
 
     if (isGroup(node)) {
-      return id;
+      // If container is not expanded, cannot drop inside, return null
+      if (node.expanded) {
+        return id;
+      } else {
+        return null;
+      }
     }
 
     for (const rootId of model.rootIds) {
@@ -192,6 +197,21 @@ export const Edge = (props: EdgeProps) => {
     }
 
     return null;
+  };
+
+  const findParentContainer = (id: UniqueIdentifier) => {
+    if (model.rootIds.includes(id as string)) {
+      return null;
+    }
+
+    for (const rootId of model.rootIds) {
+      const element = model.byId[rootId];
+      if (isGroup(element) && element.items.includes(id as string)) {
+        return element.id;
+      }
+    }
+
+    throw new Error('Could not find parent container');
   };
 
   const handleDragStart = (event: DragMoveEvent) => {
@@ -209,19 +229,26 @@ export const Edge = (props: EdgeProps) => {
       return; // return if dragging group node or not over anything
     }
 
-    const overContainer = findContainer(overId);
-    const activeContainer = findContainer(active.id);
+    const overContainer = determineDroppableContainer(overId);
+    const activeContainer = findParentContainer(active.id);
 
     if (!overContainer && !activeContainer) {
       return; // if not over a container, just return
     }
 
-    const overItems = overContainer
-      ? (model.byId[overContainer] as EdgeTabGroup).items
-      : model.rootIds;
+    const overTabGroup = model.byId[overContainer] as EdgeTabGroup;
+    const overItems = overContainer ? overTabGroup.items : model.rootIds;
     const overIndex = overItems.indexOf(overId as string);
 
     let newIndex = 0;
+    const isBelowOverItem =
+      over &&
+      active.rect.current.translated &&
+      active.rect.current.translated.top > over.rect.top + over.rect.height;
+
+    const modifier = isBelowOverItem ? 1 : 0;
+    newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+
     if (isGroup(model.byId[overId])) {
       // overId is just the container, push to last item
       newIndex = overItems.length + 1;
@@ -249,7 +276,6 @@ export const Edge = (props: EdgeProps) => {
 
     setModel((model) => {
       if (!activeContainer) {
-        // If not in container remove from root
         model.rootIds = model.rootIds.filter((item) => item !== active.id);
       } else if (activeContainer) {
         // If in old container, remove from container

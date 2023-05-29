@@ -24,6 +24,7 @@ export const Sortable = (props: SortableProps) => {
   } = useSortable({ id: props.id });
 
   const style = {
+    ...props.style,
     transform: CSS.Transform.toString(transform),
     transition,
   };

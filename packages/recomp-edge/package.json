@@ -15,8 +15,7 @@
     "@recomp/core": "link:../recomp-core",
     "@recomp/hooks": "link:../recomp-hooks",
     "@recomp/icons": "link:../recomp-icons",
-    "@recomp/utility": "link:../recomp-utility",
-    "@recomp/vogue": "link:../recomp-vogue"
+    "@recomp/utility": "link:../recomp-utility"
   },
   "devDependencies": {
     "react": "^18.2.0",

@@ -4,13 +4,15 @@ import {
   closestCenter,
   UniqueIdentifier,
 } from '@dnd-kit/core';
-import { Active, DroppableContainer, RectMap } from '@dnd-kit/core/dist/store';
-import { Coordinates } from '@dnd-kit/utilities';
+import { DroppableContainer, RectMap } from '@dnd-kit/core/dist/store';
+
+export type CDParameters = Parameters<CollisionDetection>[0];
+export type CDReturn = ReturnType<CollisionDetection>;
 
 /**
  * Calls closestCenter with calculations after adjusting each
  * droppable container size to the size of the active dragging
- * collision rect. This is "expands" the size of droppable slots
+ * collision rect. This "expands" the size of droppable slots
  * to fit the current active container and does the math for this.
  * (currently only works for vertical sortable lists)
  */
@@ -19,9 +21,6 @@ export const closestAdjustedCenter: CollisionDetection = (args) => {
   return closestCenter({
     ...args,
     droppableRects,
-    collisionRect: {
-      ...args.collisionRect,
-    },
   });
 };
 
@@ -31,31 +30,22 @@ export const closestAdjustedCenter: CollisionDetection = (args) => {
  * collision rect. This calculation does this by calculating how
  * every droppable container will change after sorting.
  */
-export const closestAdjustedCenterRects = (args: {
-  active: Active;
-  collisionRect: ClientRect;
-  droppableRects: RectMap;
-  droppableContainers: DroppableContainer[];
-  pointerCoordinates: Coordinates;
-}): RectMap => {
+export const closestAdjustedCenterRects = (args: CDParameters): RectMap => {
   const droppableRects: RectMap = new Map();
 
   const collisionRect = args.collisionRect;
-  let accumulatedSpace = 0; // adding droppable space, ignoring active item
+
+  // adding droppable space, ignoring active item
+  let accumulatedSpace = 0;
 
   let lastBottom = 0;
   let activeFound = false;
 
   // Creating a sorted droppable container array
-  const droppableContainers: { id: UniqueIdentifier; rect: ClientRect }[] = [];
-  for (const droppableContainer of args.droppableContainers) {
-    const droppableRect = args.droppableRects.get(droppableContainer.id);
-    droppableContainers.push({
-      id: droppableContainer.id,
-      rect: { ...droppableRect },
-    });
-  }
-  droppableContainers.sort(topPositionComparator);
+  const droppableContainers = getSortedDroppableList(
+    args.droppableContainers,
+    args.droppableRects
+  );
 
   // Now perform calculations in sorted order from top -> down
   for (const droppableContainer of droppableContainers) {
@@ -70,21 +60,24 @@ export const closestAdjustedCenterRects = (args: {
     // Now we will adjust the current droppable container to be the size
     // of the active dragging collision rect. But to position it correctly,
     // we will use the accumulated space substituting the active rect
-    // (if already found before this item) with the position of the
+    // (if already found before this item) with the size of the
     // current droppable container rect
+    //
+    // If active hasn't been found yet, the accumulatedSpace would already
+    // contain that height
     let top = accumulatedSpace;
     if (activeFound) {
-      // instead of using size of active dragging, use size of current
-      //
-      // even though we are moving elements one by one instead
-      // of swapping, because all other sizes of items before this one
-      // has already been added, we can simply just adjust the top like this
+      // Basically, while iterating list from top to bottom we added
+      // heights of all items that were NOT the active item. If the active
+      // item is to be dropped where the current droppable is now, the current
+      // droppable would have been "swapped" or just moved up, so add that
+      // value to the top
+
       top += droppableHeight;
     }
 
     const adjustedRect: ClientRect = {
       ...droppableRect,
-
       top: top,
       height: collisionRect.height,
       bottom: top + collisionRect.height,
@@ -103,9 +96,31 @@ export const closestAdjustedCenterRects = (args: {
   return droppableRects;
 };
 
-const topPositionComparator = (
-  a: { id: UniqueIdentifier; rect: ClientRect },
-  b: { id: UniqueIdentifier; rect: ClientRect }
-) => {
+// ----------------------------------------------------------------------------
+
+const topPositionComparator = (a: Droppable, b: Droppable) => {
   return a.rect.top - b.rect.top;
 };
+
+const getSortedDroppableList = (
+  containers: DroppableContainer[],
+  map: RectMap
+) => {
+  const droppableContainers: Droppable[] = [];
+  for (const droppableContainer of containers) {
+    const droppableRect = map.get(droppableContainer.id);
+    droppableContainers.push({
+      id: droppableContainer.id,
+      rect: { ...droppableRect },
+    });
+  }
+  droppableContainers.sort(topPositionComparator);
+  return droppableContainers;
+};
+
+// ----------------------------------------------------------------------------
+
+interface Droppable {
+  id: UniqueIdentifier;
+  rect: ClientRect;
+}
