@@ -103,3 +103,10 @@
   height: 30px;
   background-color: rgb(30, 30, 30);
 }
+
+.folder-wrapper {
+  background-color: rgba(10, 10, 10, 0.5);
+  padding: 8px;
+  border-radius: 4px;
+  @include core.shadow();
+}

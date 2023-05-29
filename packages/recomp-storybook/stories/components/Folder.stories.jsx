@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Folder } from '@recomp/folder';
+import { Folder, createModel } from '@recomp/folder';
 import '../stories.scss';
 
 export default {
@@ -9,77 +9,37 @@ export default {
   argTypes: {},
 };
 
-const Template = (args) => <Folder {...args} />;
-
-const ShellTemplate = (args) => (
-  <Folder.Shell>
+const Template = (args) => (
+  <div className="folder-wrapper">
     <Folder {...args} />
-  </Folder.Shell>
+  </div>
 );
 
-const exampleTreeBuilder = {
-  workspace: [
-    { '.git': [] },
-    { node_modules: [] },
-    { src: [{ 'index.js': [] }] },
-    { test: [{ 'spec.js': [] }] },
-    { 'package.json': [] },
-  ],
-};
-
-const buildTree = (builder) => {
-  const exampleTree = {
-    paths: {
-      byId: {},
-      allIds: [],
-      rootId: null,
-    },
-    selected: [],
-    editing: {
-      id: '',
-      type: '',
-      text: '',
-      selection: {},
-    },
-  };
-
-  const root = buildTreeRecurse(exampleTree, builder);
-  exampleTree.paths.rootId = root;
-  return exampleTree;
-};
-
-const buildTreeRecurse = (tree, current) => {
-  const name = Object.keys(current)[0];
-
-  const children = current[name];
-  const item = {
-    id: name,
-    basename: name,
-    ext: '.txt',
-    filepath: name,
-    isDirectory: children.length !== 0,
-    collapsed: true,
-    children: [],
-  };
-  tree.paths.byId[name] = item;
-  tree.paths.allIds.push(name);
-
-  for (const child of children) {
-    const childName = buildTreeRecurse(tree, child);
-    item.children.push(childName);
-  }
-
-  return name;
-};
-
-const exampleTree = buildTree(exampleTreeBuilder);
+const edgeModel = [
+  {
+    id: '.git',
+    items: [],
+  },
+  {
+    id: 'node_modules',
+    items: [],
+  },
+  {
+    id: 'src',
+    items: [
+      {
+        id: 'app',
+        items: ['App.tsx', 'App.scss'],
+      },
+      'index.ts',
+      'index.html',
+    ],
+  },
+  'package.json',
+  'README.md',
+];
 
 export const Basic = Template.bind({});
 Basic.args = {
-  tree: exampleTree,
-};
-
-export const Shell = ShellTemplate.bind({});
-Shell.args = {
-  tree: exampleTree,
+  defaultModel: createModel(edgeModel),
 };
