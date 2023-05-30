@@ -4,46 +4,67 @@ import { useInteract } from '@recomp/hooks';
 import * as util from '@recomp/utility/common';
 import { isElement } from '../utility/util';
 
-interface SplitProps {
+export interface SplitProps {
+  className?: string;
   classNames?: {
-    split?: string;
-    resizer?: {
-      resizer?: string;
-      vertical?: string;
-      horizontal?: string;
-      center?: string;
-      resizing?: string;
-    };
+    resizer?: string;
+    vertical?: string;
+    horizontal?: string;
+    resizing?: string;
   };
   style?: React.CSSProperties;
-  split?: 'vertical' | 'horizontal';
+
+  split?: Direction;
   size?: string | number;
-  view?: 'both' | 'left' | 'right' | 'top' | 'bottom';
-  resizeEnabled?: boolean;
+  view?: View;
+  resizable?: boolean;
   onResizeStart?: () => any;
   onResize?: (event: { size: string }) => any;
   onResizeEnd?: () => any;
   children?: React.ReactNode;
 }
 
+/**
+ * In a Vertical split, components are positioned top/bottom,
+ * in a Horizontal split components are positioned left/right
+ */
+export type Direction = 'vertical' | 'horizontal';
+
+/**
+ * If view is 'split', both items are shown and can be resized via resizer/splitter.
+ * Otherwise, components take up a whole page and is not resizable.
+ * If view is 'first', then only the top or left component is shown.
+ * If view is 'second', then only the bottom or right component is shown.
+ */
+export type View = 'split' | 'first' | 'second';
+
 export const Split = (props: SplitProps) => {
   props = util.propUnion(defaultProps, props);
 
   const nodeRef: React.Ref<HTMLDivElement> = React.useRef();
 
-  const contents = getSplitContents(props.children);
+  const [first, second] = React.useMemo(
+    () => getSplit(props.children),
+    [props.children]
+  );
+
   const label = util.boundaryLabel(util.flipDirection(props.split));
 
-  const className = props.classNames.split;
   const style: React.CSSProperties = {
     ...props.style,
+    flexDirection: label.stack,
   };
-  (style as any).flexDirection = label.stack;
 
-  const view = getViewIndex(props.view);
-
-  const [size, setSize] = React.useState(null);
+  const [size, setSize] = React.useState<string | number>(null);
+  const [sizeFocus, setSizeFocus] = React.useState<'first' | 'second'>('first');
   const [resizing, setResizing] = React.useState(false);
+
+  const className = util.classnames({
+    [props.className]: true,
+    [props.classNames.resizing]: resizing,
+    [props.classNames.vertical]: props.split === 'vertical',
+    [props.classNames.horizontal]: props.split === 'horizontal',
+  });
 
   const handleMouseUp = () => {
     unsubscribeMouseUp();
@@ -76,7 +97,7 @@ export const Split = (props: SplitProps) => {
   };
 
   const performOnResizeStart = () => {
-    if (!props.resizeEnabled) {
+    if (!props.resizable) {
       return;
     }
 
@@ -88,38 +109,48 @@ export const Split = (props: SplitProps) => {
   };
 
   const performOnResize = (clientX: number, clientY: number) => {
-    const rect: any = nodeRef.current.getBoundingClientRect();
-    const offsets: any = util.offsets(clientX, clientY, rect);
+    const rect = nodeRef.current.getBoundingClientRect();
+    const offsets = util.offsets(clientX, clientY, rect);
 
-    const minSnap = !!contents.items[0].props.minSnap;
-    const maxSnap = !!contents.items[1].props.maxSnap;
+    const minSnapLeft = !!first.props.minSnap;
+    const minSnapRight = !!second.props.minSnap;
+    const maxSnapLeft = !!first.props.maxSnap;
+    const maxSnapRight = !!second.props.maxSnap;
+
+    const minSnap = minSnapLeft || maxSnapRight; // first-side snapping
+    const maxSnap = maxSnapLeft || minSnapRight; // second-side snapping
+
+    const containerSize = rect[label.size];
+    const cursorOffset = offsets[label.pos];
 
     const rbound = util.resizeBoundary(
-      rect[label.size],
-      contents.items[0].props.minSize,
-      contents.items[0].props.maxSize,
-      contents.items[1].props.minSize,
-      contents.items[1].props.maxSize
+      containerSize,
+      first.props.minSize,
+      first.props.maxSize,
+      second.props.minSize,
+      second.props.maxSize
     );
 
     const snapbound = util.resizeBoundary(
-      rect[label.size],
-      contents.items[0].props.minSnap,
-      contents.items[0].props.maxSnap,
-      contents.items[1].props.minSnap,
-      contents.items[1].props.maxSnap
+      containerSize,
+      first.props.minSnap,
+      first.props.maxSnap,
+      second.props.minSnap,
+      second.props.maxSnap
     );
 
+    // position of mouse clipped to size bounds
     const target = util.targetSize(
-      rect[label.size],
-      offsets[label.pos],
+      containerSize,
+      cursorOffset,
       rbound.min,
       rbound.max
     );
 
+    // position of mouse clipped to snap bounds
     const snaptarget = util.targetSize(
-      rect[label.size],
-      offsets[label.pos],
+      containerSize,
+      cursorOffset,
       snapbound.min,
       snapbound.max
     );
@@ -127,31 +158,25 @@ export const Split = (props: SplitProps) => {
     let actualTarget = target;
 
     if (minSnap || maxSnap) {
-      const tpx = Number(util.convertSizeToPixels(target, rect[label.size]));
-      const spx = Number(
-        util.convertSizeToPixels(snaptarget, rect[label.size])
-      );
-
-      if (minSnap && tpx < rbound.max) {
-        if (tpx < spx) {
-          if (tpx < spx * 0.45) {
-            actualTarget = '0%';
-          } else if (tpx > spx * 0.55) {
-            actualTarget = snaptarget;
-          } else {
-            return;
-          }
+      if (minSnap && cursorOffset < snapbound.min) {
+        // Left snapping around midway point between (0) and snapbound.min
+        if (cursorOffset < snapbound.min * 0.45) {
+          actualTarget = '0%';
+        } else if (cursorOffset > snapbound.min * 0.55) {
+          actualTarget = snaptarget;
+        } else {
+          return;
         }
       }
-      if (maxSnap && tpx > rbound.min) {
-        if (tpx > spx) {
-          if (tpx > spx * 0.55) {
-            actualTarget = '100%';
-          } else if (tpx < spx * 0.45) {
-            actualTarget = snaptarget;
-          } else {
-            return;
-          }
+
+      if (maxSnap && cursorOffset > snapbound.max) {
+        // Right snapping around midway point between snapbound.max and container
+        if (cursorOffset > 0.45 * containerSize + 0.55 * snapbound.max) {
+          actualTarget = '100%';
+        } else if (cursorOffset < 0.55 * containerSize + 0.55 * snapbound.max) {
+          actualTarget = snaptarget;
+        } else {
+          return;
         }
       }
     }
@@ -162,31 +187,41 @@ export const Split = (props: SplitProps) => {
 
     if (props.size === null) {
       setSize(actualTarget);
+      setSizeFocus('first');
     }
   };
 
   const renderItem = (
     item: React.ReactElement,
     index: number,
-    actualSize: any,
-    view: number
+    actualSize: string | number,
+    view: View,
+    sizeFocus: 'first' | 'second'
   ) => {
     if (index === 0) {
-      const itemProps: any = {
+      const itemProps: SplitItemProps = {
         direction: props.split,
-        size: actualSize,
       };
-      if (view === 1) {
+      if (view === 'second') {
         itemProps.minSize = 0;
+      }
+      if (sizeFocus === 'first') {
+        itemProps.size = actualSize;
+      } else {
+        itemProps.fill = true;
       }
       return React.cloneElement(item, itemProps);
     } else {
-      const itemProps: any = {
+      const itemProps: SplitItemProps = {
         direction: props.split,
-        fill: true,
       };
-      if (view === 0) {
+      if (view === 'first') {
         itemProps.minSize = 0;
+      }
+      if (sizeFocus === 'second') {
+        itemProps.size = actualSize;
+      } else {
+        itemProps.fill = true;
       }
       return React.cloneElement(item, itemProps);
     }
@@ -195,7 +230,9 @@ export const Split = (props: SplitProps) => {
   if (!size) {
     // TODO fix this. We should be able to get the size inverse of item(1)
     // has the property default size
-    setSize(getDefaultSize(contents.items));
+    const defaultSize = getDefaultSize(first, second);
+    setSize(defaultSize.size);
+    setSizeFocus(defaultSize.position);
   }
 
   let fullSize = 0;
@@ -205,8 +242,8 @@ export const Split = (props: SplitProps) => {
   }
 
   let actualSize = props.size === null ? size : props.size;
-  if (fullSize > 0 && view !== -1) {
-    actualSize = view === 0 ? '100%' : 0;
+  if (fullSize > 0 && props.view !== 'split') {
+    actualSize = props.view === 'first' ? '100%' : 0;
   }
 
   return (
@@ -218,77 +255,70 @@ export const Split = (props: SplitProps) => {
       }}
     >
       <div className={className} style={style} ref={nodeRef}>
-        {renderItem(contents.items[0], 0, actualSize, view)}
-        {view === -1 ? (
+        {renderItem(first, 0, actualSize, props.view, sizeFocus)}
+        {props.view === 'split' ? (
           <Resizer
-            classNames={props.classNames.resizer}
-            split={props.split}
+            className={props.classNames.resizer}
             onMouseDown={handleResizerDown}
-            resizing={resizing}
           ></Resizer>
         ) : null}
-        {renderItem(contents.items[1], 1, actualSize, view)}
-        {contents.rest}
+        {renderItem(second, 1, actualSize, props.view, sizeFocus)}
       </div>
     </div>
   );
 };
 
 const defaultProps: SplitProps = {
+  className: 'recomp-split',
   classNames: {
-    split: 'recomp-split',
+    resizer: 'resizer',
+    horizontal: 'horizontal',
+    vertical: 'vertical',
+    resizing: 'resizing',
   },
   split: 'vertical',
   size: null,
-  resizeEnabled: true,
-  view: 'both',
+  resizable: true,
+  view: 'split',
   onResizeStart: () => {},
   onResize: () => {},
   onResizeEnd: () => {},
 };
 
-const getViewIndex = (view: string) => {
-  if (view === 'left' || view === 'top') {
-    return 0;
-  }
-  if (view === 'right' || view === 'bottom') {
-    return 1;
-  }
-  return -1;
-};
-
-const getSplitContents = (children: React.ReactNode) => {
-  const res: {
-    items: [React.ReactElement, React.ReactElement];
-    rest: React.ReactElement[];
-  } = {
-    items: [undefined, undefined],
-    rest: [],
-  };
-  let index = 0;
-  React.Children.toArray(children).forEach((child) => {
-    if (isElement(child)) {
-      if (child.type === Split.Item) {
-        res.items[index] = child;
-        index += 1;
-      } else {
-        res.rest.push(child);
-      }
-    }
-  });
-  if (res.items.length !== 2) {
+const getSplit = (
+  children: React.ReactNode
+): [React.ReactElement<SplitItemProps>, React.ReactElement<SplitItemProps>] => {
+  const items: [React.ReactElement, React.ReactElement] = [
+    undefined,
+    undefined,
+  ];
+  const childrenArray = React.Children.toArray(children);
+  if (childrenArray.length !== 2) {
     throw new Error('Number of split items is not equal to 2');
   }
-  return res;
+  const item0 = childrenArray[0];
+  const item1 = childrenArray[1];
+  if (!isElement(item0)) {
+    throw new Error('First split item is not a react element');
+  }
+  if (!isElement(item1)) {
+    throw new Error('Second split item is not a react element');
+  }
+  items[0] = item0;
+  items[1] = item1;
+  return items;
 };
 
-const getDefaultSize = (items: [React.ReactElement, React.ReactElement]) => {
-  if (items[1].props.defaultSize) {
-    return items[1].props.defaultSize;
-  } else if (items[0].props.defaultSize) {
-    return items[0].props.defaultSize;
+const getDefaultSize = (
+  first: React.ReactElement<SplitItemProps>,
+  second: React.ReactElement<SplitItemProps>
+): { size: string | number; position: 'first' | 'second' } => {
+  if (first.props.defaultSize) {
+    return { size: first.props.defaultSize, position: 'first' };
+  } else if (second.props.defaultSize) {
+    return { size: second.props.defaultSize, position: 'second' };
   } else {
-    return '50%';
+    return { size: '50%', position: 'first' };
   }
 };
 
@@ -356,64 +386,16 @@ const itemDefaultProps: SplitItemProps = {
 // ----------------------------------------------------------------------------
 
 interface ResizerProps {
-  classNames?: {
-    resizer?: string;
-    vertical?: string;
-    horizontal?: string;
-    center?: string;
-    resizing?: string;
-  };
-  style?: React.CSSProperties;
-  split?: 'center' | 'vertical' | 'horizontal';
-  resizing?: boolean;
-  onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
-  onClick?: React.MouseEventHandler<HTMLDivElement>;
-  onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
+  className: string;
+  onMouseDown: React.MouseEventHandler<HTMLDivElement>;
 }
 
 const Resizer = (props: ResizerProps) => {
-  props = util.propUnion(resizerDefaultProps, props);
-
-  if (props.classNames) {
-    props.classNames = {
-      ...resizerDefaultProps.classNames,
-      ...props.classNames,
-    };
-  }
-  const classNames = { ...props.classNames };
-  const className = util.classnames({
-    [classNames.resizer]: true,
-    [classNames.vertical]: props.split === 'vertical',
-    [classNames.horizontal]: props.split === 'horizontal',
-    [classNames.center]: props.split === 'center',
-    [classNames.resizing]: props.resizing,
-  });
-  const style = {
-    ...props.style,
-  };
   return (
-    <div
-      className={className}
-      style={style}
-      onMouseDown={props.onMouseDown}
-      onClick={props.onClick}
-      onDoubleClick={props.onDoubleClick}
-    ></div>
+    <div className={props.className} onMouseDown={props.onMouseDown}></div>
   );
-};
-
-const resizerDefaultProps: ResizerProps = {
-  classNames: {
-    resizer: 'recomp-resizer',
-    vertical: 'vertical',
-    horizontal: 'horizontal',
-    center: 'center',
-    resizing: 'resizing',
-  },
-  resizing: false,
 };
 
 // ----------------------------------------------------------------------------
 
 Split.Item = Item;
-Split.Resizer = Resizer;

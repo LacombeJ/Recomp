@@ -91,10 +91,10 @@ export const offsets = (
  */
 export const resizeBoundary = (
   containerSize: number,
-  min1: number,
-  max1: number,
-  min2: number,
-  max2: number
+  min1: string | number,
+  max1: string | number,
+  min2: string | number,
+  max2: string | number
 ) => {
   const defaultMin = 0;
   const defaultMax = containerSize;
@@ -128,10 +128,17 @@ export const flipDirection = (direction: Direction) => {
   return direction;
 };
 
-/**
- * @param {'vertial'|'horizontal'} direction
- */
-export const boundaryLabel = (direction: Direction) => {
+interface Label {
+  min: 'minHeight' | 'minWidth';
+  max: 'maxHeight' | 'maxWidth';
+  size: 'height' | 'width';
+  pos: 'y' | 'x';
+  stack: 'column' | 'row';
+  front: 'top' | 'left';
+  back: 'bottom' | 'right';
+}
+
+export const boundaryLabel = (direction: Direction): Label => {
   const isVertical = direction === 'vertical';
   return {
     min: isVertical ? 'minHeight' : 'minWidth',
