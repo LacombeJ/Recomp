@@ -3,7 +3,18 @@ import * as React from 'react';
 import * as util from '@recomp/utility/common';
 
 import { Update, useModel } from '@recomp/hooks';
-import { Caret } from '@recomp/icons';
+import { Caret, File, Folder as FolderIcon } from '@recomp/icons';
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import { CSS } from '@dnd-kit/utilities';
 
 // ----------------------------------------------------------------------------
 
@@ -39,22 +50,14 @@ interface FolderProps {
   model?: FolderModel;
   defaultModel?: FolderModel;
   action?: 'item' | 'control';
+  expand?: 'single' | 'double';
+  moveable?: boolean;
   renderControl?: (id: string) => React.ReactNode;
   renderItem?: (item: FolderItem) => ItemProps;
   onItemClick?: (id: string) => any;
-  onItemDoubleClick?: () => any;
+  onItemDoubleClick?: (id: string) => any;
+  onItemMove?: (from: string, to: string) => any;
   onUpdateModel?: Update<FolderModel>;
-  onEmitUpdate?: (event: FolderModelUpdateEvent) => any;
-}
-
-export interface FolderModelUpdateEvent {
-  type: 'move' | 'swap' | 'expand';
-  active: string;
-  moveFrom: null | string;
-  moveTo: null | string;
-  moveFromIndex: number;
-  moveToIndex: number;
-  expand: boolean;
 }
 
 export const Folder = (props: FolderProps) => {
@@ -66,6 +69,18 @@ export const Folder = (props: FolderProps) => {
     props.onUpdateModel
   );
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  );
+
+  const parentMap = React.useMemo(() => {
+    return createParentMap(model);
+  }, [model]);
+
   const handleItemToggle = (id: string) => {
     setModel((model) => {
       const item = model.byId[id];
@@ -73,28 +88,68 @@ export const Folder = (props: FolderProps) => {
     });
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!active) {
+      return;
+    }
+
+    const from = active.id as string;
+    const to = over ? (over.id as string) : null;
+
+    // Calculate if item can be moved without recursing
+    if (!canMoveNonRecursively(parentMap, from, to)) {
+      return;
+    }
+
+    props.onItemMove?.(from, to);
+    setModel((model) => {
+      const fromParent = parentMap[from];
+      if (fromParent) {
+        const parentItem = model.byId[fromParent];
+        parentItem.items = parentItem.items.filter((id) => id !== from);
+      } else {
+        model.rootIds = model.rootIds.filter((id) => id !== from);
+      }
+
+      if (to) {
+        const parentItem = model.byId[to];
+        parentItem.items.push(from);
+      } else {
+        model.rootIds.push(from);
+      }
+    });
+  };
+
   return (
     <div className={props.className}>
       <div className={props.classNames.scrollable}>
-        {model.rootIds.map((id) => {
-          const item = model.byId[id];
-          const itemProps: ItemProps = util.propUnion(
-            itemDefaultProps,
-            props.renderItem(item)
-          );
-          return (
-            <FolderItem
-              id={id}
-              key={id}
-              expanded={item.expanded}
-              level={0}
-              model={model}
-              renderItem={props.renderItem}
-              onToggle={handleItemToggle}
-              {...itemProps}
-            ></FolderItem>
-          );
-        })}
+        <DndContext
+          sensors={sensors}
+          modifiers={[restrictToVerticalAxis]}
+          onDragEnd={handleDragEnd}
+        >
+          {model.rootIds.map((id) => {
+            const item = model.byId[id];
+            const itemProps: ItemProps = util.propUnion(
+              itemDefaultProps,
+              props.renderItem(item)
+            );
+            return (
+              <FolderItem
+                id={id}
+                key={id}
+                expanded={item.expanded}
+                level={0}
+                moveable={props.moveable}
+                model={model}
+                renderItem={props.renderItem}
+                onToggle={handleItemToggle}
+                {...itemProps}
+              ></FolderItem>
+            );
+          })}
+        </DndContext>
       </div>
     </div>
   );
@@ -107,7 +162,11 @@ const defaultProps: FolderProps = {
   },
   renderItem: (item) => {
     let controlIcon = null;
+    let fileIcon = <File filled></File>;
+    let fileClass = 'file';
     if (item.items.length > 0) {
+      fileIcon = <FolderIcon filled></FolderIcon>;
+      fileClass = 'folder';
       if (item.expanded) {
         controlIcon = <Caret rotation={135}></Caret>;
       } else {
@@ -118,7 +177,8 @@ const defaultProps: FolderProps = {
       children: (
         <div className="line-item">
           <div className="control">{controlIcon}</div>
-          <div className="label">{item.id}</div>
+          <div className={`icon ${fileClass}`}>{fileIcon}</div>
+          <div className={`label ${fileClass}`}>{item.id}</div>
         </div>
       ),
     };
@@ -152,20 +212,46 @@ interface FolderItemProps extends ItemProps {
   id: string;
   expanded: boolean;
   model: FolderModel;
+  moveable: boolean;
   level: number;
   onToggle?: (id: string) => any;
   renderItem: (item: FolderItem) => ItemProps;
 }
 
 const FolderItem = (props: FolderItemProps) => {
+  const {
+    setNodeRef: droppableRef,
+    attributes,
+    listeners,
+    transform,
+  } = useDraggable({ id: props.id });
+  const { setNodeRef: draggableRef } = useDroppable({ id: props.id });
+
   const handleClick = () => {
     props.onToggle(props.id);
   };
+
+  const handleRef = (element: HTMLDivElement) => {
+    if (props.moveable) {
+      draggableRef(element);
+      droppableRef(element);
+    }
+  };
+
+  let droppableProps: any = {};
+  if (props.moveable) {
+    droppableProps = {
+      ...droppableProps,
+      ...attributes,
+      ...listeners,
+    };
+  }
 
   const items = props.model.byId[props.id].items;
 
   const headStyle: React.CSSProperties = {
     paddingLeft: `${props.level * 10}px`,
+    transform: CSS.Transform.toString(transform),
   };
 
   const lineStyle: React.CSSProperties = {
@@ -174,7 +260,13 @@ const FolderItem = (props: FolderItemProps) => {
 
   return (
     <div className={props.className} style={props.style}>
-      <div className="head" style={headStyle} onClick={handleClick}>
+      <div
+        className="head"
+        style={headStyle}
+        onClick={handleClick}
+        ref={handleRef}
+        {...droppableProps}
+      >
         {props.children}
       </div>
       {props.expanded ? (
@@ -186,13 +278,13 @@ const FolderItem = (props: FolderItemProps) => {
               props.renderItem(item)
             );
             return (
-              <React.Fragment>
+              <React.Fragment key={id}>
                 <div className={props.classNames.line} style={lineStyle}></div>
                 <FolderItem
                   id={id}
-                  key={id}
                   level={props.level + 1}
                   expanded={item.expanded}
+                  moveable={props.moveable}
                   model={props.model}
                   renderItem={props.renderItem}
                   onToggle={props.onToggle}
@@ -249,4 +341,53 @@ export const createModel = (items: FolderObject[]): FolderModel => {
   }
 
   return model;
+};
+
+type ParentMap = { [id: string]: string };
+
+const createParentMap = (model: FolderModel) => {
+  const parentMap: ParentMap = {};
+  for (const id of model.rootIds) {
+    determineParentRecurse(model, parentMap, id, null);
+  }
+  return parentMap;
+};
+
+const determineParentRecurse = (
+  model: FolderModel,
+  parentMap: ParentMap,
+  id: string,
+  parent: string
+) => {
+  if (parentMap[id] !== undefined) return;
+  parentMap[id] = parent;
+
+  const item = model.byId[id];
+  for (const childId of item.items) {
+    determineParentRecurse(model, parentMap, childId, id);
+  }
+};
+
+const canMoveNonRecursively = (
+  parents: ParentMap,
+  from: string,
+  to: string
+) => {
+  // Determine this by calculating if self or any ancestor of "to" is equal to "from"
+  let covered: { [key: string]: boolean } = {};
+  let current = to;
+  while (current) {
+    if (covered[current]) {
+      // structure is already recursive if this occurs
+      return false;
+    }
+    covered[current] = true;
+
+    if (current === from) {
+      return false;
+    }
+
+    current = parents[current];
+  }
+  return true;
 };

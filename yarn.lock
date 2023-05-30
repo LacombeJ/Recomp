@@ -1757,6 +1757,8 @@
 
 "@recomp/hooks@link:packages/recomp-hooks":
   version "0.0.0"
+  dependencies:
+    immer "^10.0.2"
 
 "@recomp/icons@link:packages/recomp-icons":
   version "0.0.0"
@@ -1783,10 +1785,6 @@
 
 "@recomp/utility@link:packages/recomp-utils":
   version "0.0.0"
-
-"@recomp/vogue@link:packages/recomp-vogue":
-  version "0.0.0"
-  uid ""
 
 "@rollup/pluginutils@^4.2.1":
   version "4.2.1"
