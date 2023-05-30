@@ -21,7 +21,7 @@
 
   .recomp-resizer.horizontal {
     height: $RSH + $RSH + 1px;
-    margin: $RSH 0;
+    margin: -($RSH);
     border-top: $RSH solid rgba(255, 255, 255, 0);
     border-bottom: $RSH solid rgba(255, 255, 255, 0);
     cursor: ns-resize;
@@ -30,7 +30,6 @@
 
   .recomp-resizer.vertical {
     width: $RSH + $RSH;
-    // width: #{$RSH}px;
     margin: -($RSH);
     border-left: $RSH solid rgba(255, 255, 255, 0);
     border-right: $RSH solid rgba(255, 255, 255, 0);
