@@ -13,8 +13,15 @@ interface FormProps
 
 export const Form = (props: FormProps) => {
   props = util.propUnion(defaultProps, props);
-  const { dangerouslySetInnerHTML: _0, ...formProps } = props;
-  return <form {...formProps} />;
+
+  const { onSubmit, dangerouslySetInnerHTML: _0, ...formProps } = props;
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    onSubmit?.(event);
+  };
+
+  return <form {...formProps} onSubmit={handleSubmit} />;
 };
 
 const defaultProps: FormProps = {
