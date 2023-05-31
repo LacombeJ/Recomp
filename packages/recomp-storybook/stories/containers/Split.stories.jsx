@@ -11,8 +11,9 @@ export default {
 
 const Template = (args) => <Split {...args} />;
 
-export const Vertical = Template.bind({});
-Vertical.args = {
+export const Horizontal = Template.bind({});
+Horizontal.args = {
+  split: 'horizontal',
   children: [
     <Split.Item key="1">
       <div className="split-left">Left</div>
@@ -23,9 +24,9 @@ Vertical.args = {
   ],
 };
 
-export const Horizontal = Template.bind({});
-Horizontal.args = {
-  split: 'horizontal',
+export const Vertical = Template.bind({});
+Vertical.args = {
+  split: 'vertical',
   children: [
     <Split.Item key="1">
       <div className="split-top">Top</div>
@@ -87,35 +88,27 @@ Oriented.args = {
 };
 
 const QuadSplitTemplate = (args) => {
-  const [horizontalSize, setHorizontalSize] = React.useState(null);
-  const handleHorizontalResize = (size) => {
-    setHorizontalSize(size);
+  const [splitSize, setSplitSize] = React.useState(null);
+  const handleSplitResize = (size) => {
+    setSplitSize(size);
   };
 
   return (
     <Split {...args}>
       <Split.Item>
-        <Split
-          size={horizontalSize}
-          split="vertical"
-          onResize={handleHorizontalResize}
-        >
+        <Split size={splitSize} split="vertical" onResize={handleSplitResize}>
           <Split.Item minSize={'100px'}>
             <div className="top-left">Top Left</div>
           </Split.Item>
           <Split.Item minSize={'100px'}>
-            <div className="top-right">Top Right</div>
+            <div className="bottom-left">Bottom Left</div>
           </Split.Item>
         </Split>
       </Split.Item>
       <Split.Item>
-        <Split
-          size={horizontalSize}
-          split="vertical"
-          onResize={handleHorizontalResize}
-        >
+        <Split size={splitSize} split="vertical" onResize={handleSplitResize}>
           <Split.Item minSize={'100px'}>
-            <div className="bottom-left">Bottom Left</div>
+            <div className="top-right">Top Right</div>
           </Split.Item>
           <Split.Item minSize={'100px'}>
             <div className="bottom-right">Bottom Right</div>

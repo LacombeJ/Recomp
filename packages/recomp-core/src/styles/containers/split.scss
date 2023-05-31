@@ -21,7 +21,7 @@
       transition: all 0.3s, transform 0.1s;
     }
 
-    &.horizontal > .resizer {
+    &.vertical > .resizer {
       height: $RSH + $RSH + 1px;
       margin: -($RSH);
       border-top: $RSH solid rgba(255, 255, 255, 0);
@@ -30,7 +30,7 @@
       width: 100%;
     }
 
-    &.vertical > .resizer {
+    &.horizontal > .resizer {
       width: $RSH + $RSH;
       margin: -($RSH);
       border-left: $RSH solid rgba(255, 255, 255, 0);

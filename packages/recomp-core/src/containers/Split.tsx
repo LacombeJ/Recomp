@@ -54,7 +54,7 @@ export const Split = (props: SplitProps) => {
     [props.children]
   );
 
-  const label = util.boundaryLabel(util.flipDirection(props.split));
+  const label = util.boundaryLabel(props.split);
 
   const style: React.CSSProperties = {
     ...props.style,
@@ -283,7 +283,7 @@ const defaultProps: SplitProps = {
     vertical: 'vertical',
     resizing: 'resizing',
   },
-  split: 'vertical',
+  split: 'horizontal',
   size: null,
   resizable: true,
   orientation: 'first',
@@ -365,14 +365,11 @@ const Item = (props: SplitItemProps) => {
   const className = props.className;
 
   const boundaryStyle = util.boundarySizeStyle(
-    util.flipDirection(props.direction),
+    props.direction,
     props.minSize,
     props.maxSize
   );
-  const sizeStyle = util.sizeStyle(
-    util.flipDirection(props.direction),
-    props.size
-  );
+  const sizeStyle = util.sizeStyle(props.direction, props.size);
   const style = {
     ...itemDefaultStyle,
     ...boundaryStyle,
