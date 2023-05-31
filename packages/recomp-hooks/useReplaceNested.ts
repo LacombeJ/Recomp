@@ -1,11 +1,10 @@
 import * as React from 'react';
 
 /**
- * This is similar to useNestedProps and useReplaceChildren, it
- * only goes one level deep
+ * Like useReplaceChildren but is nested
  */
-const useChildrenProps = <P>(
-  cloner: (child: any, childProps: P) => any,
+export const useReplaceNested = <P>(
+  replacer: (child: any, childProps: P) => React.ReactNode | void,
   deps?: React.DependencyList
 ) => {
   const callback = React.useCallback((children: any): any => {
@@ -13,20 +12,17 @@ const useChildrenProps = <P>(
       if (!React.isValidElement(child)) return child;
 
       const props = (child as any).props;
-      const updatedProps = cloner(child, props);
-
-      if (updatedProps) {
+      const replacedChild = replacer(child, props);
+      if (replacedChild) {
+        return replacedChild;
+      } else {
         return React.cloneElement(child, {
           ...props,
-          ...updatedProps,
-        });
-      } else {
-        return child;
+          children: callback(props.children),
+        });;
       }
     });
   }, deps);
 
   return [callback];
 };
-
-export default useChildrenProps;

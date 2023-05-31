@@ -8,8 +8,9 @@ import {
   useMeasure,
   Rect,
   useTimeout,
-  useReplaceChildren,
   useChildrenProps,
+  useStateOrProps,
+  useReplaceNested,
 } from '@recomp/hooks';
 import { Spacer, Tooltip } from '@recomp/core';
 
@@ -184,8 +185,11 @@ interface TabsProps {
     bar?: string;
   };
   style?: React.CSSProperties;
+  selected?: string;
+  defaultSelected?: string;
   position?: Position;
   children?: React.ReactNode;
+  onItemClick?: (id: string) => any;
 }
 
 const Tabs = (props: TabsProps) => {
@@ -194,7 +198,11 @@ const Tabs = (props: TabsProps) => {
 
   const [parentRef, parentMeasure] = useMeasure();
 
-  const [selected, setSelected] = React.useState('');
+  const [selected, setSelected] = useStateOrProps(
+    props.defaultSelected,
+    props.selected
+  );
+
   const [selectedRect, setSelectedRect] = React.useState<Rect>();
 
   const tooltipCalc = useTooltipCalculations();
@@ -205,12 +213,13 @@ const Tabs = (props: TabsProps) => {
   );
 
   const handleItemClick = (id: string, rect: Rect) => {
-    setSelected(id);
+    setSelected?.(id);
     setSelectedRect(rect);
     tooltipCalc.handleItemClick(id, rect);
+    props.onItemClick?.(id);
   };
 
-  const [replace] = useReplaceChildren<TabProps>((child, childProps) => {
+  const [replace] = useReplaceNested<TabProps>((child, childProps) => {
     if (child && child.type && child.type.identifier === Coast.Tab.identifier) {
       childProps = util.propUnion(tabDefaultProps, childProps);
       return (
@@ -228,8 +237,6 @@ const Tabs = (props: TabsProps) => {
           {childProps.children}
         </CoastItem>
       );
-    } else {
-      console.error('Expected only Coast.Tab children of Coast.Tabs');
     }
   });
 
@@ -287,6 +294,7 @@ const tabsDefaultProps: TabsProps = {
     tooltipOverlay: 'tooltip-overlay',
     bar: 'bar',
   },
+  defaultSelected: '',
 };
 
 // ----------------------------------------------------------------------------
@@ -354,7 +362,7 @@ const Controls = (props: ControlsProps) => {
     props.onItemClick?.(id);
   };
 
-  const [replace] = useReplaceChildren<ControlProps>((child, childProps) => {
+  const [replace] = useReplaceNested<ControlProps>((child, childProps) => {
     if (
       child &&
       child.type &&
@@ -376,8 +384,6 @@ const Controls = (props: ControlsProps) => {
           {childProps.children}
         </CoastItem>
       );
-    } else {
-      console.error('Expected only Coast.Control children of Coast.Controls');
     }
   });
 
