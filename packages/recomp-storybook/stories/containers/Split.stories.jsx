@@ -60,10 +60,36 @@ RightSnap.args = {
   ],
 };
 
+const OrientedTemplate = (args) => {
+  const [horizontalSize, setHorizontalSize] = React.useState(null);
+  const handleHorizontalResize = (size) => {
+    setHorizontalSize(size);
+  };
+
+  return (
+    <React.Fragment>
+      <div style={{ fontSize: '32px' }}>Size: {horizontalSize}</div>
+      <Split size={horizontalSize} {...args} onResize={handleHorizontalResize}>
+        <Split.Item>
+          <div className="split-left">Left</div>
+        </Split.Item>
+        <Split.Item>
+          <div className="split-right">Right</div>
+        </Split.Item>
+      </Split>
+    </React.Fragment>
+  );
+};
+
+export const Oriented = OrientedTemplate.bind({});
+Oriented.args = {
+  orientation: 'second',
+};
+
 const QuadSplitTemplate = (args) => {
   const [horizontalSize, setHorizontalSize] = React.useState(null);
-  const handleHorizontalResize = (e) => {
-    setHorizontalSize(e.size);
+  const handleHorizontalResize = (size) => {
+    setHorizontalSize(size);
   };
 
   return (

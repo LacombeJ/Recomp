@@ -13,13 +13,13 @@ export interface SplitProps {
     resizing?: string;
   };
   style?: React.CSSProperties;
-
   split?: Direction;
+  orientation?: Orientation;
   size?: string | number;
   view?: View;
   resizable?: boolean;
   onResizeStart?: () => any;
-  onResize?: (event: { size: string }) => any;
+  onResize?: (size: string) => any;
   onResizeEnd?: () => any;
   children?: React.ReactNode;
 }
@@ -37,6 +37,12 @@ export type Direction = 'vertical' | 'horizontal';
  * If view is 'second', then only the bottom or right component is shown.
  */
 export type View = 'split' | 'first' | 'second';
+
+/**
+ * If Orientation is set to "first", then size set and onResize callback is set to the
+ * first item, otherwise it is set to the "second" item.
+ */
+export type Orientation = 'first' | 'second';
 
 export const Split = (props: SplitProps) => {
   props = util.propUnion(defaultProps, props);
@@ -56,7 +62,7 @@ export const Split = (props: SplitProps) => {
   };
 
   const [size, setSize] = React.useState<string | number>(null);
-  const [sizeFocus, setSizeFocus] = React.useState<'first' | 'second'>('first');
+  const [sizeFocus, setSizeFocus] = React.useState<Orientation>('first');
   const [resizing, setResizing] = React.useState(false);
 
   const className = util.classnames({
@@ -69,7 +75,7 @@ export const Split = (props: SplitProps) => {
   const handleMouseUp = () => {
     unsubscribeMouseUp();
     unsubscribeMouseMove();
-    props.onResizeEnd();
+    props.onResizeEnd?.();
     setResizing(false);
   };
 
@@ -104,7 +110,7 @@ export const Split = (props: SplitProps) => {
     subscribeMouseUp();
     subscribeMouseMove();
 
-    props.onResizeStart();
+    props.onResizeStart?.();
     setResizing(true);
   };
 
@@ -164,8 +170,6 @@ export const Split = (props: SplitProps) => {
           actualTarget = '0%';
         } else if (cursorOffset > snapbound.min * 0.55) {
           actualTarget = snaptarget;
-        } else {
-          return;
         }
       }
 
@@ -175,15 +179,13 @@ export const Split = (props: SplitProps) => {
           actualTarget = '100%';
         } else if (cursorOffset < 0.55 * containerSize + 0.55 * snapbound.max) {
           actualTarget = snaptarget;
-        } else {
-          return;
         }
       }
     }
 
-    props.onResize({
-      size: actualTarget,
-    });
+    props.onResize?.(
+      String(orientedSize(actualTarget, props.orientation, containerSize))
+    );
 
     if (props.size === null) {
       setSize(actualTarget);
@@ -196,7 +198,7 @@ export const Split = (props: SplitProps) => {
     index: number,
     actualSize: string | number,
     view: View,
-    sizeFocus: 'first' | 'second'
+    sizeFocus: Orientation
   ) => {
     if (index === 0) {
       const itemProps: SplitItemProps = {
@@ -241,7 +243,12 @@ export const Split = (props: SplitProps) => {
     fullSize = rect[label.size];
   }
 
-  let actualSize = props.size === null ? size : props.size;
+  const orientedPropSize = orientedSize(
+    props.size,
+    props.orientation,
+    fullSize
+  );
+  let actualSize = props.size === null ? size : orientedPropSize;
   if (fullSize > 0 && props.view !== 'split') {
     actualSize = props.view === 'first' ? '100%' : 0;
   }
@@ -279,10 +286,8 @@ const defaultProps: SplitProps = {
   split: 'vertical',
   size: null,
   resizable: true,
+  orientation: 'first',
   view: 'split',
-  onResizeStart: () => {},
-  onResize: () => {},
-  onResizeEnd: () => {},
 };
 
 const getSplit = (
@@ -312,13 +317,28 @@ const getSplit = (
 const getDefaultSize = (
   first: React.ReactElement<SplitItemProps>,
   second: React.ReactElement<SplitItemProps>
-): { size: string | number; position: 'first' | 'second' } => {
+): { size: string | number; position: Orientation } => {
   if (first.props.defaultSize) {
     return { size: first.props.defaultSize, position: 'first' };
   } else if (second.props.defaultSize) {
     return { size: second.props.defaultSize, position: 'second' };
   } else {
     return { size: '50%', position: 'first' };
+  }
+};
+
+const orientedSize = (
+  size: string | number,
+  orientation: Orientation,
+  container: number
+) => {
+  if (size === null) {
+    return null;
+  }
+  if (orientation === 'first') {
+    return size;
+  } else {
+    return util.sizeInverse(container, size);
   }
 };
 

@@ -186,7 +186,7 @@ export const sizeStyle = (direction: Direction, size: Size) => {
   };
 };
 
-export const sizeInverse = (containerSize: number, size: number) => {
+export const sizeInverse = (containerSize: number, size: Size) => {
   const res = parseSize(size);
   if (res.unit === '%') {
     return 100 - res.value + '%';
