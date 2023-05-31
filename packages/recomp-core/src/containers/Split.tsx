@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useInteract } from '@recomp/hooks';
+import { useInteract, useMeasure } from '@recomp/hooks';
 import * as util from '@recomp/utility/common';
 import { isElement } from '../utility/util';
 
@@ -47,7 +47,13 @@ export type Orientation = 'first' | 'second';
 export const Split = (props: SplitProps) => {
   props = util.propUnion(defaultProps, props);
 
-  const nodeRef: React.Ref<HTMLDivElement> = React.useRef();
+  const nodeRef: React.MutableRefObject<HTMLDivElement> = React.useRef();
+  const [setMeasureRef, measureResult] = useMeasure();
+
+  const handleRef = (element: HTMLDivElement) => {
+    nodeRef.current = element;
+    setMeasureRef(element);
+  };
 
   const [first, second] = React.useMemo(
     () => getSplit(props.children),
@@ -62,7 +68,6 @@ export const Split = (props: SplitProps) => {
   };
 
   const [size, setSize] = React.useState<string | number>(null);
-  const [sizeFocus, setSizeFocus] = React.useState<Orientation>('first');
   const [resizing, setResizing] = React.useState(false);
 
   const className = util.classnames({
@@ -115,7 +120,7 @@ export const Split = (props: SplitProps) => {
   };
 
   const performOnResize = (clientX: number, clientY: number) => {
-    const rect = nodeRef.current.getBoundingClientRect();
+    const rect = measureResult.clientRect;
     const offsets = util.offsets(clientX, clientY, rect);
 
     const minSnapLeft = !!first.props.minSnap;
@@ -189,7 +194,6 @@ export const Split = (props: SplitProps) => {
 
     if (props.size === null) {
       setSize(actualTarget);
-      setSizeFocus('first');
     }
   };
 
@@ -197,8 +201,7 @@ export const Split = (props: SplitProps) => {
     item: React.ReactElement,
     index: number,
     actualSize: string | number,
-    view: View,
-    sizeFocus: Orientation
+    view: View
   ) => {
     if (index === 0) {
       const itemProps: SplitItemProps = {
@@ -207,11 +210,7 @@ export const Split = (props: SplitProps) => {
       if (view === 'second') {
         itemProps.minSize = 0;
       }
-      if (sizeFocus === 'first') {
-        itemProps.size = actualSize;
-      } else {
-        itemProps.fill = true;
-      }
+      itemProps.size = actualSize;
       return React.cloneElement(item, itemProps);
     } else {
       const itemProps: SplitItemProps = {
@@ -220,11 +219,7 @@ export const Split = (props: SplitProps) => {
       if (view === 'first') {
         itemProps.minSize = 0;
       }
-      if (sizeFocus === 'second') {
-        itemProps.size = actualSize;
-      } else {
-        itemProps.fill = true;
-      }
+      itemProps.fill = true;
       return React.cloneElement(item, itemProps);
     }
   };
@@ -234,12 +229,11 @@ export const Split = (props: SplitProps) => {
     // has the property default size
     const defaultSize = getDefaultSize(first, second);
     setSize(defaultSize.size);
-    setSizeFocus(defaultSize.position);
   }
 
   let fullSize = 0;
   if (nodeRef.current) {
-    const rect: any = nodeRef.current.getBoundingClientRect();
+    const rect = measureResult.clientRect;
     fullSize = rect[label.size];
   }
 
@@ -261,15 +255,15 @@ export const Split = (props: SplitProps) => {
         overflow: 'hidden',
       }}
     >
-      <div className={className} style={style} ref={nodeRef}>
-        {renderItem(first, 0, actualSize, props.view, sizeFocus)}
+      <div className={className} style={style} ref={handleRef}>
+        {renderItem(first, 0, actualSize, props.view)}
         {props.view === 'split' ? (
           <Resizer
             className={props.classNames.resizer}
             onMouseDown={handleResizerDown}
           ></Resizer>
         ) : null}
-        {renderItem(second, 1, actualSize, props.view, sizeFocus)}
+        {renderItem(second, 1, actualSize, props.view)}
       </div>
     </div>
   );

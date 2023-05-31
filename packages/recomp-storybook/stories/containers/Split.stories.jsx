@@ -87,6 +87,33 @@ Oriented.args = {
   orientation: 'second',
 };
 
+const PropsSizeTemplate = (args) => {
+  const [size, setHorizontalSize] = React.useState('200px');
+  const handleHorizontalResize = (size) => {
+    setHorizontalSize(size);
+  };
+
+  return (
+    <React.Fragment>
+      <div style={{ fontSize: '32px' }}>Size: {size}</div>
+      <Split size={size} {...args} onResize={handleHorizontalResize}>
+        <Split.Item minSize={'150px'}>
+          <div className="split-left">Left</div>
+        </Split.Item>
+        <Split.Item minSnap={'150px'} maxSize={'400px'} defaultSize={'200px'}>
+          <div className="split-right">Right</div>
+        </Split.Item>
+      </Split>
+    </React.Fragment>
+  );
+};
+
+export const PropsSize = PropsSizeTemplate.bind({});
+PropsSize.args = {
+  split: 'horizontal',
+  orientation: 'second',
+};
+
 const QuadSplitTemplate = (args) => {
   const [splitSize, setSplitSize] = React.useState(null);
   const handleSplitResize = (size) => {

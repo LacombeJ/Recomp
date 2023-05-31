@@ -19,7 +19,7 @@ export const useReplaceNested = <P>(
         return React.cloneElement(child, {
           ...props,
           children: callback(props.children),
-        });;
+        });
       }
     });
   }, deps);

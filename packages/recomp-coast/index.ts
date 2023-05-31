@@ -1,1 +1,1 @@
-export { default as Coast } from './Coast';
+export * from './Coast';
