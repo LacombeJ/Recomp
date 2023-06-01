@@ -8,6 +8,7 @@
 // Elements:
 @use 'src/styles/elements/action.scss';
 @use 'src/styles/elements/block.scss';
+@use 'src/styles/elements/board.scss';
 @use 'src/styles/elements/button.scss';
 @use 'src/styles/elements/cabinet.scss';
 @use 'src/styles/elements/checkbox.scss';
@@ -37,6 +38,7 @@
   // Elements
   @include action.init();
   @include block.init();
+  @include board.init();
   @include button.init();
   @include cabinet.init();
   @include checkbox.init();

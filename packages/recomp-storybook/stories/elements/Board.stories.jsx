@@ -1,31 +1,27 @@
 import React from 'react';
 
-import { useDialog, Dialog, Board, Button, Action } from '@recomp/core';
+import { Board, Button, Action } from '@recomp/core';
 import { IconX } from '@tabler/icons-react';
 import '../stories.scss';
 
 export default {
-  title: 'Elements/Dialog',
-  component: Dialog,
+  title: 'Elements/Board',
+  component: Board,
   argTypes: {},
 };
 
-const Template = (args) => {
-  const { setDialogRef, open, close } = useDialog();
-  return (
-    <div style={{ width: 400, height: 250 }}>
-      <Dialog {...args} onClickBackdrop={close} setDialogRef={setDialogRef} />
-      <Button onClick={open}>Open Dialog</Button>
-    </div>
-  );
-};
+const Template = (args) => (
+  <div style={{ width: 400, height: 250 }}>
+    <Board {...args} />
+  </div>
+);
 
 export const Basic = Template.bind({});
 Basic.args = {
   children: (
-    <Board>
+    <React.Fragment>
       <Board.Header>
-        <Board.Title>Dialog</Board.Title>
+        <Board.Title>Board</Board.Title>
         <Board.Control>
           <Action>
             <IconX size={20} stroke="3"></IconX>
@@ -37,6 +33,6 @@ Basic.args = {
         <Button variant="warn">Decline</Button>
         <Button variant="primary">Confirm</Button>
       </Board.Footer>
-    </Board>
+    </React.Fragment>
   ),
 };
