@@ -5,9 +5,12 @@
     border: none;
     padding: 0;
 
-    &::backdrop {
-      background-color: rgba(20, 20, 20, 0.5);
-      backdrop-filter: blur(2px);
+    &.tint::backdrop {
+      background-color: rgba(black, 0.5);
+    }
+
+    &.blur::backdrop {
+      backdrop-filter: blur(4px);
     }
   }
 }

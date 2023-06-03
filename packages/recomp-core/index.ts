@@ -2,7 +2,7 @@
 export { ErrorBoundary } from './src/fragments/ErrorBoundary';
 export { NestBreak } from './src/fragments/NestBreak';
 export { Page } from './src/fragments/Page';
-export { ZeroWidth } from './src/fragments/ZeroWidth';
+export * from './src/fragments/ZeroWidth';
 
 // ----------------------------------------------------------------------------
 
@@ -27,6 +27,7 @@ export { Cabinet } from './src/elements/Cabinet';
 export { Canvas } from './src/elements/Canvas';
 export { Checkbox } from './src/elements/Checkbox';
 export * from './src/elements/Dialog';
+export * from './src/elements/Entry';
 export { Form } from './src/elements/Form';
 export { Heading } from './src/elements/Heading';
 export { Image } from './src/elements/Image';
@@ -35,6 +36,7 @@ export { Label } from './src/elements/Label';
 export { Link } from './src/elements/Link';
 export { List } from './src/elements/List';
 export { Paragraph } from './src/elements/Paragraph';
+export * from './src/elements/Popover';
 export { Quote } from './src/elements/Quote';
 export { Radio } from './src/elements/Radio';
 export { Select } from './src/elements/Select';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
-import { ZeroWidth } from '../fragments/ZeroWidth';
+import { nonempty } from '../fragments/ZeroWidth';
 import { useNestedProps } from '@recomp/hooks';
 import { NestBreak } from '../fragments/NestBreak';
 
@@ -162,24 +162,19 @@ const Item = (props: ItemProps) => {
     listStyleType: props.customBullet ? 'none' : undefined,
   };
 
-  let children = props.children;
-  if (util.isNullOrWhitespace(children)) {
-    children = <ZeroWidth />;
-  }
-
   if (props.customBullet) {
     return (
       <li className={className} style={style}>
         <span className={props.classNames.content} style={{}}>
           {props.customBullet}
         </span>
-        {children}
+        {nonempty(props.children)}
       </li>
     );
   } else {
     return (
       <li className={className} style={style}>
-        {children}
+        {nonempty(props.children)}
       </li>
     );
   }

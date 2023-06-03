@@ -1,0 +1,26 @@
+@mixin init() {
+
+  .recomp-popover {
+    pointer-events: none;
+    position: absolute;
+    overflow: hidden;
+
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+
+    z-index: 100;
+
+    >.container {
+      pointer-events: auto;
+      position: fixed;
+
+      border: 1px solid rgb(80, 80, 80);
+      border-radius: 6px;
+      background-color: rgb(30, 30, 30);
+    }
+
+  }
+
+}

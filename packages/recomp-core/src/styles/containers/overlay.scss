@@ -20,18 +20,18 @@
       backdrop-filter: blur(4px);
     }
 
-    .inner {
-      .container {
-        position: fixed;
-        top: 0px;
-        bottom: 0px;
-        left: 0px;
-        right: 0px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+
+    >.container {
+      position: fixed;
+      top: 0px;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
     }
   }
 

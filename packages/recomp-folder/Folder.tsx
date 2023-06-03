@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
-import { Update, useModel } from '@recomp/hooks';
+import { Update, useModel, useStateOrProps } from '@recomp/hooks';
 import { Caret, File, Folder as FolderIcon } from '@recomp/icons';
 import {
   DndContext,
@@ -47,15 +47,18 @@ interface FolderProps {
     scrollable?: string;
   };
   style?: React.CSSProperties;
+  selected?: string;
   model?: FolderModel;
   defaultModel?: FolderModel;
   action?: 'item' | 'control';
   expand?: 'single' | 'double';
+  select?: 'head' | 'all';
   moveable?: boolean;
+  selectable?: boolean;
   renderControl?: (id: string) => React.ReactNode;
   renderItem?: (item: FolderItem) => ItemProps;
+  onSelect?: (id: string) => any;
   onItemClick?: (id: string) => any;
-  onItemDoubleClick?: (id: string) => any;
   onItemMove?: (from: string, to: string) => any;
   onUpdateModel?: Update<FolderModel>;
 }
@@ -67,6 +70,12 @@ export const Folder = (props: FolderProps) => {
     props.defaultModel,
     props.model,
     props.onUpdateModel
+  );
+
+  const [selected, setSelected] = useStateOrProps(
+    null,
+    props.selected,
+    props.onSelect
   );
 
   const sensors = useSensors(
@@ -82,6 +91,7 @@ export const Folder = (props: FolderProps) => {
   }, [model]);
 
   const handleItemToggle = (id: string) => {
+    setSelected(id);
     setModel((model) => {
       const item = model.byId[id];
       item.expanded = !item.expanded;
@@ -143,6 +153,8 @@ export const Folder = (props: FolderProps) => {
                 level={0}
                 moveable={props.moveable}
                 model={model}
+                selected={selected}
+                select={props.select}
                 renderItem={props.renderItem}
                 onToggle={handleItemToggle}
                 {...itemProps}
@@ -184,6 +196,7 @@ const defaultProps: FolderProps = {
     };
   },
   action: 'item',
+  select: 'head',
 };
 
 interface ItemProps {
@@ -192,6 +205,10 @@ interface ItemProps {
     head?: string;
     body?: string;
     line?: string;
+    select?: {
+      head?: string;
+      all?: string;
+    };
   };
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -203,6 +220,10 @@ const itemDefaultProps: ItemProps = {
     head: 'head',
     body: 'body',
     line: 'line',
+    select: {
+      head: 'selected-head',
+      all: 'selected-all',
+    },
   },
 };
 
@@ -213,6 +234,8 @@ interface FolderItemProps extends ItemProps {
   expanded: boolean;
   model: FolderModel;
   moveable: boolean;
+  selected: string;
+  select: 'head' | 'all';
   level: number;
   onToggle?: (id: string) => any;
   renderItem: (item: FolderItem) => ItemProps;
@@ -238,6 +261,15 @@ const FolderItem = (props: FolderItemProps) => {
     }
   };
 
+  const selected = props.selected === props.id;
+
+  const className = util.classnames({
+    [props.className]: true,
+    ...(selected
+      ? util.selectClassName(props.classNames.select, props.select)
+      : {}),
+  });
+
   let droppableProps: any = {};
   if (props.moveable) {
     droppableProps = {
@@ -259,7 +291,7 @@ const FolderItem = (props: FolderItemProps) => {
   };
 
   return (
-    <div className={props.className} style={props.style}>
+    <div className={className} style={props.style}>
       <div
         className="head"
         style={headStyle}
@@ -286,6 +318,8 @@ const FolderItem = (props: FolderItemProps) => {
                   expanded={item.expanded}
                   moveable={props.moveable}
                   model={props.model}
+                  selected={props.selected}
+                  select={props.select}
                   renderItem={props.renderItem}
                   onToggle={props.onToggle}
                   {...itemProps}

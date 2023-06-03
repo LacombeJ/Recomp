@@ -2,7 +2,8 @@
 
 @mixin init() {
 
-  .recomp-input {
+  .recomp-entry {
+    display: inline-block;
     background-color: rgb(40, 40, 40);
     color: rgba(white, 0.75);
     border-width: 0px;
@@ -10,6 +11,7 @@
     min-width: 200px;
     transition: outline 0.3s;
     outline: 1px solid transparent;
+    line-height: normal;
 
     &:focus {
       outline: 1px solid recomp.$primary;

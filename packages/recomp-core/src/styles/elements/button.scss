@@ -29,7 +29,7 @@
     user-select: none;
     touch-action: manipulation;
 
-    &:hover {
+    &:hover:not(:disabled) {
       box-shadow: inset rgba(0, 0, 0, 0.0) 0 4px 8px, rgba(0, 0, 0, 0.9) 0px 4px 8px;
       background-color: rgba($default_background, 0.2);
       border: 1px solid rgba(lighten($default_border, 20%), 0.6);
@@ -40,7 +40,7 @@
       background-color: rgba($primary_background, 0.3);
       border: 1px solid $primary_border;
 
-      &:hover {
+      &:hover:not(:disabled) {
         background-color: rgba($primary_background, 0.6);
         border: 1px solid lighten($primary_border, 20%);
       }
@@ -51,7 +51,7 @@
       background-color: rgba($warn_background, 0.7);
       border: 1px solid $warn_border;
 
-      &:hover {
+      &:hover:not(:disabled) {
         background-color: rgba($warn_background, 0.8);
         border: 1px solid lighten($warn_border, 10%);
       }
@@ -65,10 +65,6 @@
     &:disabled {
       cursor: not-allowed;
       opacity: .6;
-
-      &:active {
-        pointer-events: none;
-      }
 
       &:hover {
         box-shadow: none;

@@ -1,15 +1,28 @@
 @use '@recomp/core' as recomp;
 
-@mixin init() {
+$hover: rgba(recomp.$primary, 0.5);
 
-  $hover: rgba(recomp.$primary, 0.5);
+@mixin select() {
+  margin: -1px;
+  border: 1px solid lighten(recomp.$primary, 30%);
+  background-color: $hover;
+}
+
+@mixin init() {
 
   .recomp-folder {
     user-select: none;
-    padding-bottom: 22px;
 
     .body {
       position: relative;
+    }
+
+    .item.selected-all {
+      @include select();
+    }
+
+    .item.selected-head>.head {
+      @include select();
     }
 
     .line-item {

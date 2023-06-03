@@ -6,7 +6,6 @@ import { usePress, useTimeout } from '@recomp/hooks';
 interface OverlayProps {
   className?: string;
   classNames?: {
-    inner?: string;
     container?: string;
     tint?: string;
     blur?: string;
@@ -65,15 +64,13 @@ export const Overlay = (props: OverlayProps) => {
 
   return (
     <div className={className} style={props.style}>
-      <div className={props.classNames.inner}>
-        <div
-          className={props.classNames.container}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          onMouseOut={handleLeave}
-        >
-          {props.enabled ? props.children : null}
-        </div>
+      <div
+        className={props.classNames.container}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseOut={handleLeave}
+      >
+        {props.enabled ? props.children : null}
       </div>
     </div>
   );
@@ -82,7 +79,6 @@ export const Overlay = (props: OverlayProps) => {
 const defaultProps: OverlayProps = {
   className: 'recomp-overlay',
   classNames: {
-    inner: 'inner',
     container: 'container',
     tint: 'tint',
     blur: 'blur',

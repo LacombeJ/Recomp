@@ -10,15 +10,17 @@ interface InputProps
   classNames?: {
     disabled?: string;
   };
+  setRef?: React.LegacyRef<HTMLInputElement>;
 }
 
 export const Input = (props: InputProps) => {
   props = util.propUnion(defaultProps, props);
 
   const {
+    classNames,
+    setRef,
     className: _0,
     dangerouslySetInnerHTML: _1,
-    classNames,
     ...inputProps
   } = props;
 
@@ -27,7 +29,7 @@ export const Input = (props: InputProps) => {
     [classNames.disabled]: props.disabled,
   });
 
-  return <input className={className} {...inputProps} />;
+  return <input className={className} ref={setRef} {...inputProps} />;
 };
 
 const defaultProps: InputProps = {

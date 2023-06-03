@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
-import { ZeroWidth } from '../fragments/ZeroWidth';
+import { nonempty } from '../fragments/ZeroWidth';
 
 interface ButtonProps
   extends React.DetailedHTMLProps<
@@ -60,10 +60,6 @@ export const Button = (props: ButtonProps) => {
     children = props.loadingIcon;
   }
 
-  if (util.isNullOrWhitespace(children)) {
-    children = <ZeroWidth />;
-  }
-
   return (
     <button
       className={className}
@@ -71,7 +67,7 @@ export const Button = (props: ButtonProps) => {
       ref={props.setRef}
       {...buttonProps}
     >
-      {children}
+      {nonempty(children)}
     </button>
   );
 };

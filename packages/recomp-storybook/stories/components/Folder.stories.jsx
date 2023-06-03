@@ -90,3 +90,9 @@ Moveable.args = {
     };
   },
 };
+
+export const Selectable = Template.bind({});
+Selectable.args = {
+  selectable: true,
+  defaultModel: createModel(edgeModel),
+};
