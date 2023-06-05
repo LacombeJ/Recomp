@@ -1,1 +1,1 @@
-export { Folder, createModel } from './Folder';
+export * from './Folder';

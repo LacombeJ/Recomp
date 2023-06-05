@@ -1,0 +1,24 @@
+@function sc($amount) {
+  @return hsl(0deg 0% 5% / $amount);
+}
+
+@mixin init() {
+
+  .recomp-alert {
+    $shadow_color: 0deg 0% 5%;
+
+    max-height: 30vh;
+    width: 300px;
+    display: inline-block;
+    background-color: rgb(40, 40, 40);
+    padding: 16px;
+    border: 1px solid rgb(70, 70, 70);
+    border-radius: 4px;
+
+    box-shadow: rgba(30, 30, 30, 0.3) 0 8px 16px,
+      rgba(30, 30, 30, 0.7) 8px 16px 32px;
+
+    border-left-width: 8px;
+  }
+
+}

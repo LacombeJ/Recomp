@@ -6,6 +6,7 @@
 @use 'src/styles/containers/split.scss';
 
 // Elements:
+@use 'src/styles/elements/alert.scss';
 @use 'src/styles/elements/action.scss';
 @use 'src/styles/elements/block.scss';
 @use 'src/styles/elements/board.scss';
@@ -38,6 +39,7 @@
   @include split.init();
 
   // Elements
+  @include alert.init();
   @include action.init();
   @include block.init();
   @include board.init();
@@ -67,10 +69,14 @@
 
 // Mixins:
 @mixin global() {
-  font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  @include font-family();
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   font-size: 14px;
+}
+
+@mixin font-family() {
+  font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 }
 
 @mixin root() {

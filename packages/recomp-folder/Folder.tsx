@@ -59,6 +59,7 @@ interface FolderProps {
   renderItem?: (item: FolderItem) => ItemProps;
   onSelect?: (id: string) => any;
   onItemClick?: (id: string) => any;
+  onItemDoubleClick?: (id: string) => any;
   onItemMove?: (from: string, to: string) => any;
   onUpdateModel?: Update<FolderModel>;
 }
@@ -90,12 +91,19 @@ export const Folder = (props: FolderProps) => {
     return createParentMap(model);
   }, [model]);
 
-  const handleItemToggle = (id: string) => {
-    setSelected(id);
+  const handleItemClick = (id: string) => {
+    props.onItemClick?.(id);
+    if (props.selectable) {
+      setSelected(id);
+    }
     setModel((model) => {
       const item = model.byId[id];
       item.expanded = !item.expanded;
     });
+  };
+
+  const handleItemDoubleClick = (id: string) => {
+    props.onItemDoubleClick?.(id);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -156,7 +164,8 @@ export const Folder = (props: FolderProps) => {
                 selected={selected}
                 select={props.select}
                 renderItem={props.renderItem}
-                onToggle={handleItemToggle}
+                onClick={handleItemClick}
+                onDoubleClick={handleItemDoubleClick}
                 {...itemProps}
               ></FolderItem>
             );
@@ -237,7 +246,8 @@ interface FolderItemProps extends ItemProps {
   selected: string;
   select: 'head' | 'all';
   level: number;
-  onToggle?: (id: string) => any;
+  onClick?: (id: string) => any;
+  onDoubleClick?: (id: string) => any;
   renderItem: (item: FolderItem) => ItemProps;
 }
 
@@ -251,7 +261,11 @@ const FolderItem = (props: FolderItemProps) => {
   const { setNodeRef: draggableRef } = useDroppable({ id: props.id });
 
   const handleClick = () => {
-    props.onToggle(props.id);
+    props.onClick?.(props.id);
+  };
+
+  const handleDoubleClick = () => {
+    props.onDoubleClick?.(props.id);
   };
 
   const handleRef = (element: HTMLDivElement) => {
@@ -296,6 +310,7 @@ const FolderItem = (props: FolderItemProps) => {
         className="head"
         style={headStyle}
         onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
         ref={handleRef}
         {...droppableProps}
       >
@@ -321,7 +336,8 @@ const FolderItem = (props: FolderItemProps) => {
                   selected={props.selected}
                   select={props.select}
                   renderItem={props.renderItem}
-                  onToggle={props.onToggle}
+                  onClick={props.onClick}
+                  onDoubleClick={props.onDoubleClick}
                   {...itemProps}
                 ></FolderItem>
               </React.Fragment>

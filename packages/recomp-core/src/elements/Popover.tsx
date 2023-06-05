@@ -101,14 +101,12 @@ export const usePopover = () => {
       const handleMouseDown: EventListener = (event: MouseEvent) => {
         if (event.target !== focusableRef.current) {
           if (containerRef.current) {
-            const rect = containerRef.current.getBoundingClientRect();
-            const downInsidePopover =
-              rect.top <= event.clientY &&
-              event.clientY <= rect.top + rect.height &&
-              rect.left <= event.clientX &&
-              event.clientX <= rect.left + rect.width;
-
-            if (!downInsidePopover) {
+            if (!mouseInsideElement(event, containerRef.current)) {
+              if (focusableRef.current) {
+                if (mouseInsideElement(event, focusableRef.current)) {
+                  return;
+                }
+              }
               setVisible(false);
             }
           }
@@ -131,4 +129,14 @@ export const usePopover = () => {
     position,
     dimensions,
   };
+};
+
+const mouseInsideElement = (event: MouseEvent, element: HTMLElement) => {
+  const rect = element.getBoundingClientRect();
+  const insidePopover =
+    rect.top <= event.clientY &&
+    event.clientY <= rect.top + rect.height &&
+    rect.left <= event.clientX &&
+    event.clientX <= rect.left + rect.width;
+  return insidePopover;
 };

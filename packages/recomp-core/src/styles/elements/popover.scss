@@ -1,3 +1,5 @@
+@use '../common/colors.scss' as recomp;
+
 @mixin init() {
 
   .recomp-popover {
@@ -16,9 +18,11 @@
       pointer-events: auto;
       position: fixed;
 
-      border: 1px solid rgb(80, 80, 80);
+      border: 1px solid rgb(100, 100, 100);
       border-radius: 6px;
       background-color: rgb(30, 30, 30);
+
+      box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.5);
     }
 
   }

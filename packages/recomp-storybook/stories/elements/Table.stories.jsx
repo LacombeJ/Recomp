@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Table } from '@recomp/core';
+import { Table, Button, Checkbox, List } from '@recomp/core';
 import '../stories.scss';
 
 export default {
@@ -12,27 +12,22 @@ export default {
 const Template = (args) => <Table {...args} />;
 
 const tableData = {
-  headers: ['Content', 'Value', 'Description', <input type="checkbox"></input>],
+  headers: ['Content', 'Value', 'Description', <Checkbox />],
   rows: [
-    [
-      'First row',
-      'String',
-      'Description text',
-      <input type="checkbox"></input>,
-    ],
+    ['First row', 'String', 'Description text', <Checkbox />],
     [
       'Nothing',
       null,
       <div>
         This description spans multiple lines and has bullets:
-        <ul>
-          <li>Item 1</li>
-          <li>Item 2</li>
-        </ul>
+        <List>
+          <List.Item>Item 1</List.Item>
+          <List.Item>Item 2</List.Item>
+        </List>
       </div>,
-      <input type="checkbox"></input>,
+      <Checkbox />,
     ],
-    [<button>3rd Row</button>, 'Button', '', <input type="checkbox"></input>],
+    [<Button>3rd Row</Button>, 'Button', '', <Checkbox />],
   ],
 };
 

@@ -2,12 +2,14 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 import { useModel, Update } from '@recomp/hooks';
+import { nonempty } from '../fragments/ZeroWidth';
 
 interface CheckboxProps {
   className?: string;
   classNames?: {
     mark?: string;
     label?: string;
+    margin?: string;
   };
   style?: React.CSSProperties;
   size?: string;
@@ -36,11 +38,16 @@ export const Checkbox = (props: CheckboxProps) => {
     setChecked(() => e.target.checked);
   };
 
+  const labelClassName = util.classnames({
+    [classNames.label]: true,
+    [classNames.margin]: !util.isNullOrWhitespace(props.children),
+  });
+
   return (
     <label className={className} style={style}>
       <input type="checkbox" checked={checked} onChange={handleChange}></input>
       <span className={classNames.mark}></span>
-      <span className={classNames.label}>{props.children}</span>
+      <span className={labelClassName}>{nonempty(props.children)}</span>
     </label>
   );
 };
@@ -50,6 +57,7 @@ const defaultProps: CheckboxProps = {
   classNames: {
     mark: 'mark',
     label: 'label',
+    margin: 'margin',
   },
   defaultChecked: false,
   block: false,

@@ -10,6 +10,7 @@ interface InputProps
   classNames?: {
     disabled?: string;
   };
+  onComplete?: (string: any) => any;
   setRef?: React.LegacyRef<HTMLInputElement>;
 }
 
@@ -20,16 +21,29 @@ export const Input = (props: InputProps) => {
     classNames,
     setRef,
     className: _0,
-    dangerouslySetInnerHTML: _1,
+    onComplete: _1,
+    dangerouslySetInnerHTML: _2,
     ...inputProps
   } = props;
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
+    props.onBlur?.(e);
+    props.onComplete?.(e.target.value);
+  };
 
   const className = util.classnames({
     [props.className]: true,
     [classNames.disabled]: props.disabled,
   });
 
-  return <input className={className} ref={setRef} {...inputProps} />;
+  return (
+    <input
+      className={className}
+      ref={setRef}
+      onBlur={handleBlur}
+      {...inputProps}
+    />
+  );
 };
 
 const defaultProps: InputProps = {

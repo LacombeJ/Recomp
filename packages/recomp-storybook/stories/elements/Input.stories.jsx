@@ -9,7 +9,7 @@ export default {
   argTypes: {},
 };
 
-const Template = (args) => <Input type="date" {...args} />;
+const Template = (args) => <Input {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {

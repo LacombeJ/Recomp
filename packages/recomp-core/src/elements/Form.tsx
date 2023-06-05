@@ -94,11 +94,10 @@ Form.Field = (props: FieldProps) => {
     ...inputProps
   } = props;
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
-    props.onBlur?.(e);
+  const handleComplete = (value: string) => {
     props.onComplete?.({
       id: props.id,
-      value: e.target.value,
+      value: value,
     });
   };
 
@@ -108,7 +107,7 @@ Form.Field = (props: FieldProps) => {
         <Label htmlFor={id} className={classNames.label}>
           {children}
           <span className={classNames.field}>
-            <Input {...inputProps} onBlur={handleBlur}></Input>
+            <Input {...inputProps} onComplete={handleComplete}></Input>
             {button ? (
               <Button disabled={props.disabled} onClick={props.onButtonClick}>
                 {button}
@@ -125,7 +124,7 @@ Form.Field = (props: FieldProps) => {
           {children}
         </Label>
         <span className={classNames.field}>
-          <Input {...inputProps} onBlur={handleBlur}></Input>
+          <Input {...inputProps} onComplete={handleComplete}></Input>
           {button ? (
             <Button disabled={props.disabled} onClick={onButtonClick}>
               {button}
