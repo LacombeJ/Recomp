@@ -1,5 +1,17 @@
+@use "sass:color" as color;
+@use '../common/colors.scss' as recomp;
+
 @function sc($amount) {
   @return hsl(0deg 0% 5% / $amount);
+}
+
+@mixin variant($color) {
+  background-color: color.scale($color, $lightness: -50%, $saturation: -70%);
+  border-color: rgba(color.scale($color, $lightness: 10%), 0.8);
+
+  &:hover {
+    background-color: color.scale($color, $lightness: -40%, $saturation: -60%);
+  }
 }
 
 @mixin init() {
@@ -10,15 +22,77 @@
     max-height: 30vh;
     width: 300px;
     display: inline-block;
-    background-color: rgb(40, 40, 40);
-    padding: 16px;
-    border: 1px solid rgb(70, 70, 70);
-    border-radius: 4px;
+
+    padding: 16px 8px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 8px;
 
     box-shadow: rgba(30, 30, 30, 0.3) 0 8px 16px,
       rgba(30, 30, 30, 0.7) 8px 16px 32px;
 
-    border-left-width: 8px;
+    border-left-width: 4px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    transition: background-color 0.3s, border-color 0.3s;
+
+    @include variant(rgb(82, 82, 82));
+
+    &.primary {
+      @include variant(recomp.$primary);
+    }
+
+    &.success {
+      @include variant(rgb(43, 124, 43));
+    }
+
+    &.warn {
+      @include variant(rgb(124, 98, 43));
+    }
+
+    &.danger {
+      @include variant(rgb(124, 43, 50));
+    }
+
+    >.icon {
+      display: flex;
+      color: rgba(white, 0.6);
+    }
+
+    .content {
+      flex-grow: 1;
+      margin-left: 8px;
+
+      .body {
+        color: rgba(white, 0.6);
+      }
+    }
+
+    .close {
+      color: rgba(white, 0.6);
+      display: flex;
+      justify-content: center;
+      flex-direction: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      transition: color 0.3s, background-color 0.3s;
+
+      &:hover {
+        color: white;
+        background-color: rgba(white, 0.05);
+      }
+
+      svg {
+        width: 20px;
+      }
+    }
+
+
   }
 
 }

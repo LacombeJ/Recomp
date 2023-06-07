@@ -1,0 +1,27 @@
+@use '@recomp/core' as recomp;
+
+@mixin init() {
+
+  .recomp-herald {
+    position: absolute;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    position: fixed;
+    
+    pointer-events: none;
+
+    top: 0;
+    left: 0;
+    bottom: 32px;
+    right: 32px;
+
+    .notification {
+      pointer-events: auto;
+      position: relative;
+    }
+  }
+
+}

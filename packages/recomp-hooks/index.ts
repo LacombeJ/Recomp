@@ -5,6 +5,7 @@ export { default as useEffectOnReady } from './useEffectOnReady';
 export { default as useEventListener } from './useEventListener';
 export * from './useHandle';
 export { default as useHover } from './useHover';
+export * from './useImmer';
 export { default as useInteract } from './useInteract';
 export { useMeasure } from './useMeasure';
 export { useModel } from './useModel';

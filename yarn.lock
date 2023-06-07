@@ -1747,6 +1747,9 @@
     "@react-spring/shared" "~9.7.2"
     "@react-spring/types" "~9.7.2"
 
+"@recomp/animate@link:packages/recomp-animate":
+  version "0.0.0"
+
 "@recomp/core@link:packages/recomp-core":
   version "0.0.0"
   dependencies:

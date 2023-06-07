@@ -2,6 +2,7 @@
 @use '@recomp/coast';
 @use '@recomp/edge';
 @use '@recomp/folder';
+@use '@recomp/herald';
 @use '@recomp/katex';
 @use '@recomp/menu';
 @use '@recomp/monaco';
@@ -12,6 +13,7 @@
 @include coast.init();
 @include edge.init();
 @include folder.init();
+@include herald.init();
 @include katex.init();
 @include menu.init();
 @include monaco.init();
