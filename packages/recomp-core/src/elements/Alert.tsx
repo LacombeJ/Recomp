@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as util from '@recomp/utility/common';
 import { X } from '@recomp/icons';
 
-interface AlertProps {
+export interface AlertProps {
   className?: string;
   classNames?: {
     content?: string;

@@ -4,18 +4,20 @@ import loader from '@monaco-editor/loader';
 
 import { useMount } from '@recomp/hooks';
 
-import * as monaco from 'monaco-editor';
+import { Monaco } from './MonacoEditor';
 
-type Monaco = typeof monaco;
+// from loader
+interface CancelablePromise<T> extends Promise<T> {
+  cancel: () => void;
+}
 
-const useMonaco = (
+export const useMonaco = (
   monacoRef: React.MutableRefObject<Monaco>,
   callback: (monaco?: Monaco) => void
 ) => {
   // Holding of a cancellable promise. This is so we do not call the loader
   // multiple times
-  /** @type {React.MutableRefObject<Promise<Monaco>>} */
-  const cancellableRef = React.useRef(null);
+  const cancellableRef = React.useRef<CancelablePromise<Monaco>>(null);
 
   // Initialize/load monaco on mount if monaco has not been loaded
   useMount(() => {
@@ -47,5 +49,3 @@ const useMonaco = (
     }
   });
 };
-
-export default useMonaco;

@@ -12,6 +12,14 @@ $hover: rgba(recomp.$primary, 0.5);
 
   .recomp-folder {
     user-select: none;
+    // display: inline-flex;
+
+    @include recomp.scrollbar($width: 4px);
+    .scrollable {
+      // display: block;
+      overflow-y: scroll;
+      @include recomp.scrollbar($width: 4px);
+    }
 
     .body {
       position: relative;

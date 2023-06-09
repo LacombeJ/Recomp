@@ -18,7 +18,7 @@ export { Stack } from './src/containers/Stack';
 // ----------------------------------------------------------------------------
 
 // Elements
-export { Alert } from './src/elements/Alert';
+export * from './src/elements/Alert';
 export { Action } from './src/elements/Action';
 export { Audio } from './src/elements/Audio';
 export { Block } from './src/elements/Block';

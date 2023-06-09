@@ -17,19 +17,20 @@ import {
   useEffectOnReady,
 } from '@recomp/hooks';
 
-import useMonaco from './useMonaco';
+import { useMonaco } from './useMonaco';
 
 import * as monaco from 'monaco-editor';
 
-type Monaco = typeof monaco;
-type Disposable = monaco.IDisposable;
-type Editor = monaco.editor.IStandaloneCodeEditor;
-type ViewState = monaco.editor.ICodeEditorViewState;
-type EditorAction = monaco.editor.IActionDescriptor;
-type Options = monaco.editor.IStandaloneEditorConstructionOptions;
-type OverrideServices = monaco.editor.IEditorOverrideServices;
-type ModelChangedEvent = monaco.editor.IModelChangedEvent;
-type CursorChangedEvent = monaco.editor.ICursorPositionChangedEvent;
+export type Monaco = typeof monaco;
+export type Disposable = monaco.IDisposable;
+export type Editor = monaco.editor.IStandaloneCodeEditor;
+export type ViewState = monaco.editor.ICodeEditorViewState;
+export type EditorAction = monaco.editor.IActionDescriptor;
+export type Options = monaco.editor.IStandaloneEditorConstructionOptions;
+export type OverrideServices = monaco.editor.IEditorOverrideServices;
+export type ModelChangedEvent = monaco.editor.IModelChangedEvent;
+export type CursorChangedEvent = monaco.editor.ICursorPositionChangedEvent;
+export type ModelDecorationOptions = monaco.editor.IModelDecorationOptions;
 
 export interface MonacoEditorProps {
   className?: string;
@@ -51,7 +52,11 @@ export interface MonacoEditorProps {
   viewStates?: { [key: string]: ViewState };
   saveViewState?: boolean;
   onInitialize?: (editor: Editor, monaco: Monaco, element: HTMLElement) => any;
-  onChange?: (event: ModelChangedEvent) => any;
+  onChange?: (
+    text: string,
+    event: ModelChangedEvent,
+    position: Position
+  ) => any;
   onCursorPositionChange?: (
     text: string,
     event: CursorChangedEvent,
@@ -65,7 +70,7 @@ export interface MonacoEditorProps {
   children?: React.ReactNode;
 }
 
-const MonacoEditor = (props: MonacoEditorProps) => {
+export const MonacoEditor = (props: MonacoEditorProps) => {
   props = util.propUnion(defaultProps, props);
 
   // State
@@ -614,12 +619,12 @@ const defaultProps: MonacoEditorProps = {
   onSetViewStates: () => {},
 };
 
-interface Position {
+export interface Position {
   line: number;
   column: number;
 }
 
-interface EditOperation {
+export interface EditOperation {
   range: {
     start: Position;
     end: Position;
@@ -627,12 +632,10 @@ interface EditOperation {
   text: string;
 }
 
-interface StateDecoration {
+export interface StateDecoration {
   range: {
     start: Position;
     end: Position;
   };
-  options: monaco.editor.IModelDecorationOptions;
+  options: ModelDecorationOptions;
 }
-
-export default MonacoEditor;

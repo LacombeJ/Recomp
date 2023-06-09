@@ -1,7 +1,5 @@
-import MonacoArea from './src/MonacoArea';
-import MonacoEditor from './src/MonacoEditor';
-import useMonaco from './src/useMonaco';
-
-export { MonacoEditor, MonacoArea, useMonaco };
+export * from './src/MonacoArea';
+export * from './src/MonacoEditor';
+export * from './src/useMonaco';
 
 declare module '@recomp/monaco';

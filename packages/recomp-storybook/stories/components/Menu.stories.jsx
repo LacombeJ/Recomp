@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Menu } from '@recomp/menu';
+import { Button } from '@recomp/core';
+import { Menu, useContextMenu } from '@recomp/menu';
 import '../stories.scss';
 
 export default {
@@ -70,5 +71,25 @@ const menuModel = [
 
 export const Basic = Template.bind({});
 Basic.args = {
+  model: menuModel,
+};
+
+const TemplateContext = (args) => {
+  const context = useContextMenu((id) => {
+    return menuModel;
+  });
+
+  return (
+    <div>
+      <Button onContextMenu={context.override()}>
+        Right-click for context
+      </Button>
+      <Menu.Context {...args} {...context.contextProps} />
+    </div>
+  );
+};
+
+export const Context = TemplateContext.bind({});
+Context.args = {
   model: menuModel,
 };

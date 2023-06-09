@@ -2,7 +2,14 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 import { Chevron } from '@recomp/icons';
-import { Rect, useMeasure, useSize, useTimeout } from '@recomp/hooks';
+import {
+  Rect,
+  useEventListener,
+  useMeasure,
+  useSize,
+  useTimeout,
+} from '@recomp/hooks';
+import { Overlay } from '@recomp/core';
 
 export type MenuElement = MenuItem | MenuGroup | MenuSeparator;
 
@@ -53,6 +60,8 @@ interface MenuProps {
   };
   style?: React.CSSProperties;
   model: MenuElement[];
+  setMenuRef?: (element: HTMLDivElement) => any;
+  onResize?: (width: number, height: number) => any;
 }
 
 export const Menu = (props: MenuProps) => {
@@ -63,6 +72,7 @@ export const Menu = (props: MenuProps) => {
 
   const { className, style, ...restProps } = props;
 
+  // The below div element is of size (0), so instead use ref of first submenu
   return (
     <div className={props.className} style={props.style}>
       <SubMenu {...restProps}></SubMenu>
@@ -266,6 +276,98 @@ const separatorDefaultProps: SeparatorProps = {
 
 // ----------------------------------------------------------------------------
 
+interface MenuContextProps {
+  className?: string;
+  opened: boolean;
+  position: {
+    x: number;
+    y: number;
+  };
+  model: MenuElement[];
+  onClickOutside: () => any;
+}
+
+const Context = (props: MenuContextProps) => {
+  props = util.propUnion(contextDefaultProps, props);
+
+  const [adjusted, setAdjusted] = React.useState({
+    x: 0,
+    y: 0,
+    calculated: false,
+  });
+  const [size, setSize] = React.useState({ width: 0, height: 0 });
+
+  const menuContainerRef = React.useRef<HTMLDivElement>();
+
+  const handleMenuSize = (width: number, height: number) => {
+    setSize({ width, height });
+  };
+
+  useEventListener(document, 'mousedown', (e: MouseEvent) => {
+    // This is added to ensure that mousedown triggers closes context menu. With this, a
+    // new context menu can be opened with a right-click even if one is alread opened. In
+    // that scenario, first this will close the current context menu, then after the click,
+    // the new menu will be opened
+    if (menuContainerRef.current) {
+      if (!menuContainerRef.current.contains(e.target as Node)) {
+        props.onClickOutside?.();
+      }
+    }
+  });
+
+  const handleOverlayClick = () => {
+    props.onClickOutside?.();
+  };
+
+  React.useEffect(() => {
+    if (!props.opened) {
+      // When menu disappears, unset calculated state
+      // Doing this fixes flickering when opening/closing menus
+      setAdjusted({
+        ...adjusted,
+        calculated: false,
+      });
+    }
+  }, [props.opened]);
+
+  React.useEffect(() => {
+    setAdjusted({
+      calculated: true,
+      ...util.adjust({
+        x: props.position.x,
+        y: props.position.y,
+        width: size.width,
+        height: size.height,
+      }),
+    });
+  }, [props.position, size]);
+
+  const menuOffset: React.CSSProperties = {
+    left: `${adjusted.x}px`,
+    top: `${adjusted.y}px`,
+    visibility: adjusted.calculated ? 'visible' : 'hidden',
+  };
+
+  return (
+    <Overlay enabled={props.opened} onClick={handleOverlayClick}>
+      <div
+        className={props.className}
+        style={menuOffset}
+        ref={menuContainerRef}
+      >
+        <Menu model={props.model} onResize={handleMenuSize}></Menu>
+      </div>
+    </Overlay>
+  );
+};
+Menu.Context = Context;
+
+const contextDefaultProps = {
+  className: 'recomp-menu-context',
+};
+
+// ----------------------------------------------------------------------------
+
 const useMenuHoverCalculations = () => {
   const [active, setActive] = React.useState<string | null>(null);
   const [recentHover, setRecentHover] = React.useState(false);
@@ -404,4 +506,28 @@ export const menuChildren = (model: MenuElement[], id: string) => {
   } else {
     return [];
   }
+};
+
+/** Hook for implementing a context menu by overriding default context menu */
+export const useContextMenu = (modelContext: (id: string) => MenuElement[]) => {
+  const [model, setModel] = React.useState<MenuElement[]>(null);
+  const [opened, setOpened] = React.useState(false);
+  const [position, setPosition] = React.useState({ x: 0, y: 0 });
+
+  const override = (id?: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    setPosition({ x: e.clientX, y: e.clientY });
+    setModel(modelContext(id));
+    setOpened(true);
+  };
+
+  const contextProps = {
+    opened,
+    model,
+    position,
+    onClickOutside: () => setOpened(false),
+  };
+
+  return { opened, setOpened, override, model, position, contextProps };
 };

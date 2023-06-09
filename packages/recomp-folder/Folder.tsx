@@ -60,6 +60,7 @@ interface FolderProps {
   onSelect?: (id: string) => any;
   onItemClick?: (id: string) => any;
   onItemDoubleClick?: (id: string) => any;
+  onItemContextMenu?: (e: React.MouseEvent, id: string) => any;
   onItemMove?: (from: string, to: string) => any;
   onUpdateModel?: Update<FolderModel>;
 }
@@ -100,10 +101,6 @@ export const Folder = (props: FolderProps) => {
       const item = model.byId[id];
       item.expanded = !item.expanded;
     });
-  };
-
-  const handleItemDoubleClick = (id: string) => {
-    props.onItemDoubleClick?.(id);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -165,7 +162,8 @@ export const Folder = (props: FolderProps) => {
                 select={props.select}
                 renderItem={props.renderItem}
                 onClick={handleItemClick}
-                onDoubleClick={handleItemDoubleClick}
+                onDoubleClick={props.onItemDoubleClick}
+                onContextMenu={props.onItemContextMenu}
                 {...itemProps}
               ></FolderItem>
             );
@@ -248,6 +246,7 @@ interface FolderItemProps extends ItemProps {
   level: number;
   onClick?: (id: string) => any;
   onDoubleClick?: (id: string) => any;
+  onContextMenu?: (e: React.MouseEvent, id: string) => any;
   renderItem: (item: FolderItem) => ItemProps;
 }
 
@@ -266,6 +265,10 @@ const FolderItem = (props: FolderItemProps) => {
 
   const handleDoubleClick = () => {
     props.onDoubleClick?.(props.id);
+  };
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    props.onContextMenu?.(e, props.id);
   };
 
   const handleRef = (element: HTMLDivElement) => {
@@ -311,6 +314,7 @@ const FolderItem = (props: FolderItemProps) => {
         style={headStyle}
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
+        onContextMenu={handleContextMenu}
         ref={handleRef}
         {...droppableProps}
       >

@@ -2,17 +2,17 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
-import MonacoEditor, { MonacoEditorProps } from './MonacoEditor';
-
-import * as monaco from 'monaco-editor';
-
-type Monaco = typeof monaco;
-type Editor = monaco.editor.IStandaloneCodeEditor;
+import {
+  Monaco,
+  Editor,
+  MonacoEditor,
+  MonacoEditorProps,
+} from './MonacoEditor';
 
 /**
  * @param {MonacoArea.defaultProps} props
  */
-const MonacoArea = (props: MonacoEditorProps) => {
+export const MonacoArea = (props: MonacoEditorProps) => {
   props = util.propUnion(defaultProps, props);
 
   const editorRef: React.MutableRefObject<Editor> = React.useRef(null);
@@ -59,5 +59,3 @@ const defaultProps = {
   className: 'react-monaco-editor-area',
   theme: 'vs-dark',
 };
-
-export default MonacoArea;

@@ -14,10 +14,10 @@ interface OverlayProps {
   style?: React.CSSProperties;
   enabled?: boolean;
   animated?: boolean;
-
   tint?: boolean;
   blur?: boolean;
   onClick?: (e: React.MouseEvent) => any;
+  onContextMenu?: (e: React.MouseEvent) => any;
   children?: React.ReactNode;
 }
 
@@ -69,6 +69,7 @@ export const Overlay = (props: OverlayProps) => {
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseOut={handleLeave}
+        onContextMenu={props.onContextMenu}
       >
         {props.enabled ? props.children : null}
       </div>
