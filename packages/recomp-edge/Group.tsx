@@ -32,6 +32,8 @@ interface EdgeGroupProps extends GroupProps {
   onItemClick: (id: string) => any;
   onItemClose: (id: string) => any;
   onGroupClick: (id: string) => any;
+  onItemContextMenu: (e: React.MouseEvent, id: string) => any;
+  onGroupContextMenu: (e: React.MouseEvent, id: string) => any;
   onRenderItem: (id: string) => TabProps;
   model: EdgeModel;
   divRef?: React.LegacyRef<HTMLDivElement>;
@@ -101,6 +103,14 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
     props.onItemClose?.(id);
   };
 
+  const handleItemContextMenu = (e: React.MouseEvent, id: string) => {
+    props.onItemContextMenu?.(e, id);
+  };
+
+  const handleGroupContextMenu = (e: React.MouseEvent) => {
+    props.onGroupContextMenu?.(e, props.id);
+  };
+
   const group = () => {
     return (
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
@@ -118,6 +128,7 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
                 invisible={props.dragging === id}
                 onClick={handleItemClick}
                 onCloseClick={handleItemCloseClick}
+                onContextMenu={handleItemContextMenu}
                 {...itemProps}
               />
             </Sortable>
@@ -133,11 +144,12 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
         className="head"
         style={headStyle}
         onClick={handeHeadClick}
+        onContextMenu={handleGroupContextMenu}
         ref={props.handleRef}
         {...props.handleListeners}
       >
         <div className={props.classNames.icon}>{props.icon}</div>
-        <div className={props.classNames.label}>{props.id}</div>
+        <div className={props.classNames.label}>{props.children}</div>
       </div>
       <div className="body" style={bodyStyle}>
         {bodyVisible ? (

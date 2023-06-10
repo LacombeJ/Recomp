@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
-import { useMeasure } from '@recomp/hooks';
+import { Rect, useMeasure } from '@recomp/hooks';
 
 interface PopoverProps {
   className?: string;
@@ -78,12 +78,12 @@ export const usePopover = () => {
   /** Set this so that popover does not disappear if this element retains focus */
   const focusableRef = React.useRef<HTMLElement>();
 
-  const setContainerRef = (element: HTMLElement) => {
+  const setContainerRef = React.useCallback((element: HTMLElement) => {
     containerRef.current = element;
-  };
-  const setFocusableRef = (element: HTMLElement) => {
+  }, []);
+  const setFocusableRef = React.useCallback((element: HTMLElement) => {
     focusableRef.current = element;
-  };
+  }, []);
 
   React.useEffect(() => {
     setPosition({
@@ -94,7 +94,7 @@ export const usePopover = () => {
       width: anchorMeasure.clientRect.width,
       height: anchorMeasure.clientRect.height,
     });
-  }, [anchorMeasure.clientRect]);
+  }, clientRectDepArray(anchorMeasure.clientRect));
 
   React.useEffect(() => {
     if (visible) {
@@ -139,4 +139,17 @@ const mouseInsideElement = (event: MouseEvent, element: HTMLElement) => {
     rect.left <= event.clientX &&
     event.clientX <= rect.left + rect.width;
   return insidePopover;
+};
+
+const clientRectDepArray = (rect: Rect) => {
+  return [
+    rect.x,
+    rect.y,
+    rect.width,
+    rect.height,
+    rect.left,
+    rect.right,
+    rect.bottom,
+    rect.top,
+  ];
 };

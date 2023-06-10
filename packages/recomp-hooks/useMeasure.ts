@@ -24,26 +24,37 @@ export const useMeasure = <E extends Element>(): [
   (element: E) => void,
   MeasureResult
 ] => {
-  const [element, ref] = React.useState<Element>(null);
+  const elementRef = React.useRef<Element>(null);
+  // const [element, ref] = React.useState<Element>(null);
   const [rect, setRect] = React.useState<MeasureResult>({
     clientRect: defaultRect(),
     contentRect: defaultRect(),
   });
 
-  const updateWidthAndHeight = () => {
-    if (element) {
+  const handleSetRef = React.useCallback((element: Element) => {
+    if (element && elementRef.current !== element) {
+      elementRef.current = element;
       setRect({
         ...rect,
-        clientRect: getRect(element.getBoundingClientRect()),
+        clientRect: getRect(elementRef.current.getBoundingClientRect()),
       });
     }
-  };
+  }, []);
 
   React.useEffect(() => {
+    const updateWidthAndHeight = () => {
+      if (elementRef.current) {
+        setRect({
+          ...rect,
+          clientRect: getRect(elementRef.current.getBoundingClientRect()),
+        });
+      }
+    };
+
     window.addEventListener('resize', updateWidthAndHeight);
 
     return () => window.removeEventListener('resize', updateWidthAndHeight);
-  });
+  }, [elementRef.current]);
 
   const observer = React.useMemo(() => {
     return new window.ResizeObserver((entries) => {
@@ -58,17 +69,17 @@ export const useMeasure = <E extends Element>(): [
   }, []);
 
   React.useLayoutEffect(() => {
-    if (!element) {
+    if (!elementRef.current) {
       return;
     }
 
-    observer.observe(element);
+    observer.observe(elementRef.current);
     return () => {
       observer.disconnect();
     };
-  }, [element]);
+  }, [elementRef.current]);
 
-  return [ref, rect];
+  return [handleSetRef, rect];
 };
 
 const getRect = (from: Rect): Rect => {
@@ -88,4 +99,3 @@ const defaultRect = (): Rect => {
     right: 0,
   };
 };
-

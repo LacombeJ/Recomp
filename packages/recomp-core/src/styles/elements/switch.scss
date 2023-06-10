@@ -8,6 +8,7 @@
     user-select: none;
     cursor: pointer;
     position: relative;
+    display: flex;
     font-size: 1em;
 
     $checkbox_color: color.scale(recomp.$primary, $lightness: 10%);

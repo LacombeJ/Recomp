@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button } from '@recomp/core';
+import { Button, Heading, List, Switch, Block, Checkbox } from '@recomp/core';
 import { Menu, useContextMenu } from '@recomp/menu';
 import '../stories.scss';
 
@@ -75,8 +75,13 @@ Basic.args = {
 };
 
 const TemplateContext = (args) => {
-  const context = useContextMenu((id) => {
-    return menuModel;
+  const context = useContextMenu({
+    model: (id) => {
+      return menuModel;
+    },
+    onClick: (id) => {
+      console.log('clicked menu id: ', id);
+    },
   });
 
   return (
@@ -92,4 +97,40 @@ const TemplateContext = (args) => {
 export const Context = TemplateContext.bind({});
 Context.args = {
   model: menuModel,
+};
+
+const customModel = [
+  {
+    component: (
+      <div>
+        <Heading level={5}>Custom Menu</Heading>
+        <Block>
+          <Button>Button</Button>
+          <List>
+            <List.Item>Item 1</List.Item>
+            <List.Item>Item 2</List.Item>
+            <List.Item>Item 3</List.Item>
+          </List>
+        </Block>
+      </div>
+    ),
+  },
+  {
+    id: 'group',
+    label: 'Group tab',
+  },
+  { type: 'separator' },
+  {
+    id: 'open',
+    label: 'Open Tab',
+  },
+  {
+    id: 'close',
+    label: 'Close Tab',
+  },
+];
+
+export const Custom = Template.bind({});
+Custom.args = {
+  model: customModel,
 };

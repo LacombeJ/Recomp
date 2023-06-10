@@ -141,7 +141,11 @@ Basic.args = {
     <TitleBar.Icon key="icon">
       <IconLayoutNavbar size="20" stroke="1"></IconLayoutNavbar>
     </TitleBar.Icon>,
-    <TitleBar.MenuBar key="menu" model={menuModel}></TitleBar.MenuBar>,
+    <TitleBar.MenuBar
+      key="menu"
+      model={menuModel}
+      onClick={(id) => console.log('menu clicked: ' + id)}
+    ></TitleBar.MenuBar>,
     <TitleBar.Header key="header">TitleBar</TitleBar.Header>,
     <TitleBar.ControlBar key="controlbar">
       <TitleBar.ControlButton type="minimize"></TitleBar.ControlButton>

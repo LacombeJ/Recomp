@@ -22,7 +22,8 @@ const edgeRenderMap = {
 };
 
 const renderGroup = (id) => {
-  return edgeRenderMap[id];
+  const props = edgeRenderMap[id];
+  return { ...props, children: id };
 };
 
 const edgeModel = [

@@ -19,6 +19,7 @@ interface EdgeItemProps {
   icon?: React.ReactNode;
   onClick: (id: string) => any;
   onCloseClick: (id: string) => any;
+  onContextMenu: (e: React.MouseEvent, id: string) => any;
   children?: React.ReactNode;
   divRef?: React.LegacyRef<HTMLDivElement>;
 }
@@ -41,6 +42,10 @@ export const EdgeItem = (props: EdgeItemProps) => {
   const handleClick = () => {
     props.onClick(props.id);
   };
+  
+  const handleContextMenu = (e: React.MouseEvent) => {
+    props.onContextMenu(e, props.id);
+  }
 
   const handleEventStop = (e: any) => {
     e.preventDefault();
@@ -58,6 +63,7 @@ export const EdgeItem = (props: EdgeItemProps) => {
       style={style}
       ref={props.divRef}
       onClick={handleClick}
+      onContextMenu={handleContextMenu}
     >
       <div className={props.classNames.icon}>{props.icon}</div>
       <div className={props.classNames.label}>{props.children}</div>

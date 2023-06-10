@@ -71,6 +71,7 @@ interface MenuBarProps {
   style?: React.CSSProperties;
   model?: MenuGroup[];
   ext?: any;
+  onClick?: (id: string) => any;
 }
 
 const MenuBar = (props: MenuBarProps) => {
@@ -139,6 +140,7 @@ const MenuBar = (props: MenuBarProps) => {
             <Menu
               key={selected}
               model={menuChildren(props.model, selected)}
+              onClick={props.onClick}
             ></Menu>
           </div>
         </Overlay>

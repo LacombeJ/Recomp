@@ -11,7 +11,7 @@ import {
 } from '@recomp/hooks';
 import { Overlay } from '@recomp/core';
 
-export type MenuElement = MenuItem | MenuGroup | MenuSeparator;
+export type MenuElement = MenuItem | MenuGroup | MenuComponent | MenuSeparator;
 
 export type MenuSeparator = {
   type?: 'separator';
@@ -49,6 +49,12 @@ export interface MenuGroup {
   children?: MenuElement[];
 }
 
+export interface MenuComponent {
+  type?: 'component';
+  component: React.ReactNode;
+  id: string;
+}
+
 // ----------------------------------------------------------------------------
 
 interface MenuProps {
@@ -62,6 +68,7 @@ interface MenuProps {
   model: MenuElement[];
   setMenuRef?: (element: HTMLDivElement) => any;
   onResize?: (width: number, height: number) => any;
+  onClick?: (id: string) => any;
 }
 
 export const Menu = (props: MenuProps) => {
@@ -96,6 +103,7 @@ interface SubMenuProps extends MenuProps {
   onMouseEnter?: () => any;
   onMouseLeave?: () => any;
   onResize?: (width: number, height: number) => any;
+  onClick?: (id: string) => any;
 }
 
 export const SubMenu = (props: SubMenuProps) => {
@@ -156,11 +164,18 @@ export const SubMenu = (props: SubMenuProps) => {
           ? props.model.map((element, index) => {
               if (element.type === 'separator') {
                 return <Separator key={`_separator-${index}`}></Separator>;
+              } else if (element.type === 'component') {
+                return (
+                  <Component key={(element as MenuComponent).id}>
+                    {(element as MenuComponent).component}
+                  </Component>
+                );
               } else if (element.type === 'item') {
                 return (
                   <Item
                     key={(element as MenuItem).id}
                     item={element as MenuItem}
+                    onClick={props.onClick}
                   ></Item>
                 );
               } else if (element.type === 'group') {
@@ -199,9 +214,18 @@ export const SubMenu = (props: SubMenuProps) => {
 
 // ----------------------------------------------------------------------------
 
-const Item = ({ item }: { item: MenuItem }) => {
+interface ItemProps {
+  item: MenuItem;
+  onClick: (id: string) => any;
+}
+
+const Item = (props: ItemProps) => {
+  const { item } = props;
+  const handleClick = () => {
+    props.onClick?.(item.id);
+  };
   return (
-    <div className={item.className} style={item.style}>
+    <div className={item.className} style={item.style} onClick={handleClick}>
       <div className={item.classNames.highlight}></div>
       <div className={item.classNames.icon}>{item.icon}</div>
       <div className={item.classNames.label}>{item.label}</div>
@@ -267,11 +291,30 @@ const Separator = (props: SeparatorProps) => {
     </div>
   );
 };
-Separator.identifier = 'recomp-menu-separator';
 Menu.Separator = Separator;
 
 const separatorDefaultProps: SeparatorProps = {
   className: 'separator',
+};
+
+// ----------------------------------------------------------------------------
+
+interface ComponentProps {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+}
+
+const Component = (props: ComponentProps) => {
+  props = util.propUnion(componentDefaultProps, props);
+  return (
+    <div className={props.className} style={props.style}>
+      {props.children}
+    </div>
+  );
+};
+const componentDefaultProps: ComponentProps = {
+  className: 'component',
 };
 
 // ----------------------------------------------------------------------------
@@ -285,6 +328,7 @@ interface MenuContextProps {
   };
   model: MenuElement[];
   onClickOutside: () => any;
+  onClick?: (id: string) => any;
 }
 
 const Context = (props: MenuContextProps) => {
@@ -355,7 +399,11 @@ const Context = (props: MenuContextProps) => {
         style={menuOffset}
         ref={menuContainerRef}
       >
-        <Menu model={props.model} onResize={handleMenuSize}></Menu>
+        <Menu
+          model={props.model}
+          onResize={handleMenuSize}
+          onClick={props.onClick}
+        ></Menu>
       </div>
     </Overlay>
   );
@@ -478,6 +526,8 @@ export const normalizeMenuElements = (items: any[]): MenuElement[] => {
   for (const item of items) {
     if (item === 'separator' || item.type === 'separator') {
       model.push({ type: 'separator' });
+    } else if (item.type === 'component' || item.component) {
+      model.push({ type: 'component', id: item.id, component: item.component });
     } else if (item.children) {
       const props = util.propUnion(groupDefaultProps, item);
       model.push({
@@ -509,8 +559,11 @@ export const menuChildren = (model: MenuElement[], id: string) => {
 };
 
 /** Hook for implementing a context menu by overriding default context menu */
-export const useContextMenu = (modelContext: (id: string) => MenuElement[]) => {
-  const [model, setModel] = React.useState<MenuElement[]>(null);
+export const useContextMenu = (context: {
+  model: (id: string) => MenuElement[];
+  onClick?: (id: string) => any;
+}) => {
+  const model = React.useRef<MenuElement[]>(null);
   const [opened, setOpened] = React.useState(false);
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
 
@@ -518,16 +571,24 @@ export const useContextMenu = (modelContext: (id: string) => MenuElement[]) => {
     e.preventDefault();
 
     setPosition({ x: e.clientX, y: e.clientY });
-    setModel(modelContext(id));
+    model.current = context.model(id);
     setOpened(true);
   };
 
   const contextProps = {
     opened,
-    model,
+    model: model.current,
     position,
     onClickOutside: () => setOpened(false),
+    onClick: context.onClick,
   };
 
-  return { opened, setOpened, override, model, position, contextProps };
+  return {
+    opened,
+    setOpened,
+    override,
+    model: model.current,
+    position,
+    contextProps,
+  };
 };

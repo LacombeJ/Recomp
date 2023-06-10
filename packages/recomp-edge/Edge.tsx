@@ -67,6 +67,8 @@ interface EdgeProps {
   onRenderItem?: (id: string) => TabProps;
   onRenderGroup?: (id: string) => GroupProps;
   onItemClose?: (id: string) => any;
+  onItemContextMenu?: (e: React.MouseEvent, id: string) => any;
+  onGroupContextMenu?: (e: React.MouseEvent, id: string) => any;
   onUpdateModel?: Update<EdgeModel>;
   onEmitUpdate?: (event: EdgeModelUpdateEvent) => any;
   onSelected?: Update<string>;
@@ -330,6 +332,14 @@ export const Edge = (props: EdgeProps) => {
     props.onItemClose?.(id);
   };
 
+  const handleItemContextMneu = (e: React.MouseEvent, id: string) => {
+    props.onItemContextMenu?.(e, id);
+  };
+
+  const handleGroupContextMneu = (e: React.MouseEvent, id: string) => {
+    props.onGroupContextMenu?.(e, id);
+  };
+
   const handleGroupClick = (id: string) => {
     const group = model.byId[id] as EdgeTabGroup;
 
@@ -370,6 +380,8 @@ export const Edge = (props: EdgeProps) => {
           onItemClick={handleItemClick}
           onItemClose={handleItemClose}
           onGroupClick={handleGroupClick}
+          onItemContextMenu={handleItemContextMneu}
+          onGroupContextMenu={handleGroupContextMneu}
           {...groupProps}
         />
       );
@@ -386,6 +398,7 @@ export const Edge = (props: EdgeProps) => {
           dragging={dragging}
           onClick={handleItemClick}
           onCloseClick={handleItemClose}
+          onContextMenu={handleItemContextMneu}
           {...itemProps}
         />
       );
@@ -436,6 +449,8 @@ export const Edge = (props: EdgeProps) => {
                       onItemClick={handleItemClick}
                       onItemClose={handleItemClose}
                       onGroupClick={handleGroupClick}
+                      onItemContextMenu={handleItemContextMneu}
+                      onGroupContextMenu={handleGroupContextMneu}
                       {...groupProps}
                     />
                   </Sortable>
@@ -455,6 +470,7 @@ export const Edge = (props: EdgeProps) => {
                       dragging={dragging}
                       onClick={handleItemClick}
                       onCloseClick={handleItemClose}
+                      onContextMenu={handleItemContextMneu}
                       {...itemProps}
                     />
                   </Sortable>
