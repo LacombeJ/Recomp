@@ -30,6 +30,7 @@ interface EdgeGroupProps extends GroupProps {
   invisible: boolean;
   animated: boolean;
   onItemClick: (id: string) => any;
+  onItemDoubleClick: (id: string) => any;
   onItemClose: (id: string) => any;
   onGroupClick: (id: string) => any;
   onItemContextMenu: (e: React.MouseEvent, id: string) => any;
@@ -127,6 +128,7 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
                 selected={props.selected}
                 invisible={props.dragging === id}
                 onClick={handleItemClick}
+                onDoubleClick={props.onItemDoubleClick}
                 onCloseClick={handleItemCloseClick}
                 onContextMenu={handleItemContextMenu}
                 {...itemProps}

@@ -19,7 +19,6 @@
   .recomp-alert {
     $shadow_color: 0deg 0% 5%;
 
-    max-height: 30vh;
     width: 300px;
     display: inline-block;
 
@@ -39,6 +38,8 @@
     align-items: center;
 
     transition: background-color 0.3s, border-color 0.3s;
+
+    overflow: hidden;
 
     @include variant(rgb(82, 82, 82));
 
@@ -66,10 +67,20 @@
     .content {
       flex-grow: 1;
       margin-left: 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
 
       .body {
         color: rgba(white, 0.6);
       }
+    }
+
+    // scrollable body
+    .body {
+      max-height: 30vh;
+      overflow: auto;
+      text-overflow: ellipsis;
     }
 
     .close {

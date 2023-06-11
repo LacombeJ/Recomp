@@ -18,6 +18,7 @@ interface EdgeItemProps {
   invisible: boolean;
   icon?: React.ReactNode;
   onClick: (id: string) => any;
+  onDoubleClick: (id: string) => any;
   onCloseClick: (id: string) => any;
   onContextMenu: (e: React.MouseEvent, id: string) => any;
   children?: React.ReactNode;
@@ -63,6 +64,7 @@ export const EdgeItem = (props: EdgeItemProps) => {
       style={style}
       ref={props.divRef}
       onClick={handleClick}
+      onDoubleClick={() => props.onDoubleClick?.(props.id)}
       onContextMenu={handleContextMenu}
     >
       <div className={props.classNames.icon}>{props.icon}</div>

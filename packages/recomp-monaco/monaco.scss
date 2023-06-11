@@ -2,23 +2,28 @@
 
   $background: transparent;
 
-  .react-monaco-editor-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-  }
+  .recomp-monaco {
 
-  .react-monaco-editor-area {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    height: 200px;
+    &.container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+
+    }
+
+    &.area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      height: 200px;
+    }
+
   }
 
   .scroll-decoration {

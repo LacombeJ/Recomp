@@ -72,6 +72,7 @@ interface EdgeProps {
   onUpdateModel?: Update<EdgeModel>;
   onEmitUpdate?: (event: EdgeModelUpdateEvent) => any;
   onSelected?: Update<string>;
+  onItemDoubleClick?: (id: string) => any;
 }
 
 export interface EdgeModelUpdateEvent {
@@ -378,6 +379,7 @@ export const Edge = (props: EdgeProps) => {
           model={model}
           onRenderItem={props.onRenderItem}
           onItemClick={handleItemClick}
+          onItemDoubleClick={props.onItemDoubleClick}
           onItemClose={handleItemClose}
           onGroupClick={handleGroupClick}
           onItemContextMenu={handleItemContextMneu}
@@ -397,6 +399,7 @@ export const Edge = (props: EdgeProps) => {
           selected={selected}
           dragging={dragging}
           onClick={handleItemClick}
+          onDoubleClick={props.onItemDoubleClick}
           onCloseClick={handleItemClose}
           onContextMenu={handleItemContextMneu}
           {...itemProps}
@@ -447,6 +450,7 @@ export const Edge = (props: EdgeProps) => {
                       model={model}
                       onRenderItem={props.onRenderItem}
                       onItemClick={handleItemClick}
+                      onItemDoubleClick={props.onItemDoubleClick}
                       onItemClose={handleItemClose}
                       onGroupClick={handleGroupClick}
                       onItemContextMenu={handleItemContextMneu}
@@ -469,6 +473,7 @@ export const Edge = (props: EdgeProps) => {
                       selected={selected}
                       dragging={dragging}
                       onClick={handleItemClick}
+                      onDoubleClick={props.onItemDoubleClick}
                       onCloseClick={handleItemClose}
                       onContextMenu={handleItemContextMneu}
                       {...itemProps}

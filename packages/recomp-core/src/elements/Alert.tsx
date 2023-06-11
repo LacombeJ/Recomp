@@ -6,6 +6,7 @@ import { X } from '@recomp/icons';
 export interface AlertProps {
   className?: string;
   classNames?: {
+    scrollable?: string;
     content?: string;
     title?: string;
     body?: string;
@@ -41,10 +42,12 @@ export const Alert = (props: AlertProps) => {
       {props.icon ? (
         <div className={props.classNames.icon}>{props.icon}</div>
       ) : null}
+
       <div className={props.classNames.content}>
         <div className={props.classNames.title}>{props.title}</div>
         <div className={props.classNames.body}>{props.children}</div>
       </div>
+
       {props.closeable ? (
         <div
           className={props.classNames.close}
@@ -60,6 +63,7 @@ export const Alert = (props: AlertProps) => {
 const defaultProps: AlertProps = {
   className: 'recomp-alert',
   classNames: {
+    scrollable: 'scrollable',
     content: 'content',
     title: 'title',
     body: 'body',

@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { MonacoEditor } from '@recomp/monaco';
+import { Button } from '@recomp/core';
+import { MonacoArea, MonacoEditor } from '@recomp/monaco';
 import '../stories.scss';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
@@ -29,14 +30,46 @@ Light.args = {
   value: 'const component = "Monaco";',
 };
 
-// export const Large = Template.bind({});
-// Large.args = {
-//   size: 'large',
-//   label: 'Button',
-// };
+// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
+const TemplateArea = (args) => <MonacoArea {...args} />;
 
-// export const Small = Template.bind({});
-// Small.args = {
-//   size: 'small',
-//   label: 'Button',
-// };
+export const Area = TemplateArea.bind({});
+Area.args = {
+  theme: 'vs-dark',
+  value: 'const component = "Monaco Area";',
+};
+
+// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
+const TemplateContext = (args) => {
+  const [index, setIndex] = React.useState(0);
+  const [text, setText] = React.useState({
+    0: 'const component = "Monaco Area Context #0";',
+    1: 'const component = "Monaco Area Context #1";',
+  });
+
+  const editorText = text[index];
+  return (
+    <div>
+      <Button onClick={() => setIndex(0)}>State 0</Button>
+      <Button onClick={() => setIndex(1)}>State 1</Button>
+      <MonacoArea
+        {...args}
+        key={index}
+        value={editorText}
+        onChange={(updatedText) => {
+          setText((state) => {
+            return {
+              ...state,
+              [index]: updatedText,
+            };
+          });
+        }}
+      />
+    </div>
+  );
+};
+
+export const SwitchingContext = TemplateContext.bind({});
+SwitchingContext.args = {
+  theme: 'vs-dark',
+};

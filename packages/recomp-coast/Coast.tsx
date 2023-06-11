@@ -70,12 +70,14 @@ const defaultProps: CoastProps = {
 
 export interface CoastItemHandler {
   handleItemClick?: (id: string, rect: Rect) => any;
+  handleItemDoubleClick?: (id: string) => any;
   handleItemMouseEnter?: (id: string, tooltip: string, rect: Rect) => any;
   handleItemMouseLeave?: (id: string) => any;
 }
 
 export interface CoastItemEvents {
   onClick: (id: string, rect: Rect) => any;
+  onDoubleClick: (id: string) => any;
   onMouseEnter: (id: string, tooltip: string, rect: Rect) => any;
   onMouseLeave: (id: string) => any;
 }
@@ -93,6 +95,9 @@ export const useCoastHandler = (): [
   const handleItemClick = (id: string, rect: Rect) => {
     handler.current?.handleItemClick(id, rect);
   };
+  const handleItemDoubleClick = (id: string) => {
+    handler.current?.handleItemDoubleClick(id);
+  };
   const handleItemMouseEnter = (id: string, tooltip: string, rect: Rect) => {
     handler.current?.handleItemMouseEnter(id, tooltip, rect);
   };
@@ -102,13 +107,19 @@ export const useCoastHandler = (): [
 
   return [
     setHandler,
-    { handleItemClick, handleItemMouseEnter, handleItemMouseLeave },
+    {
+      handleItemClick,
+      handleItemDoubleClick,
+      handleItemMouseEnter,
+      handleItemMouseLeave,
+    },
   ];
 };
 
 export const useCoastEvents = (controls: CoastItemHandler): CoastItemEvents => {
   return {
     onClick: controls.handleItemClick,
+    onDoubleClick: controls.handleItemDoubleClick,
     onMouseEnter: controls.handleItemMouseEnter,
     onMouseLeave: controls.handleItemMouseLeave,
   };
@@ -131,6 +142,8 @@ interface TabsProps {
   position?: Position;
   children?: React.ReactNode;
   onItemClick?: (id: string) => any;
+  onDoubleItemClick?: (id: string) => any;
+  onItemDoubleClick?: (id: string) => any;
   setHandler?: (handlers: CoastItemHandler) => any;
 }
 
@@ -160,6 +173,9 @@ const Tabs = (props: TabsProps) => {
     tooltipCalc.handleItemClick(id, rect);
     props.onItemClick?.(id);
   };
+  const handleItemDoubleClick = (id: string) => {
+    props.onItemDoubleClick(id);
+  };
   const handleItemMouseEnter = (id: string, tooltip: string, rect: Rect) => {
     tooltipCalc.handleItemMouseEnter(id, tooltip, rect);
   };
@@ -169,6 +185,7 @@ const Tabs = (props: TabsProps) => {
 
   props.setHandler?.({
     handleItemClick,
+    handleItemDoubleClick,
     handleItemMouseEnter,
     handleItemMouseLeave,
   });
@@ -178,6 +195,7 @@ const Tabs = (props: TabsProps) => {
     CoastItemPassProps
   >(Coast.Tab.identifier, (props) => ({
     onClick: handleItemClick,
+    onDoubleClick: handleItemDoubleClick,
     onMouseEnter: handleItemMouseEnter,
     onMouseLeave: handleItemMouseLeave,
     active: props.id === selected,
@@ -256,6 +274,7 @@ interface ControlsProps {
   position?: Position;
   children?: React.ReactNode;
   onItemClick?: (id: string) => any;
+  onItemDoubleClick?: (id: string) => any;
   setHandler?: (handlers: CoastItemHandler) => any;
 }
 
@@ -276,6 +295,9 @@ const Controls = (props: ControlsProps) => {
     tooltipCalc.handleItemClick(id, rect);
     props.onItemClick?.(id);
   };
+  const handleItemDoubleClick = (id: string) => {
+    props.onItemDoubleClick?.(id);
+  };
   const handleItemMouseEnter = (id: string, tooltip: string, rect: Rect) => {
     tooltipCalc.handleItemMouseEnter(id, tooltip, rect);
   };
@@ -285,6 +307,7 @@ const Controls = (props: ControlsProps) => {
 
   props.setHandler?.({
     handleItemClick,
+    handleItemDoubleClick,
     handleItemMouseEnter,
     handleItemMouseLeave,
   });
@@ -294,6 +317,7 @@ const Controls = (props: ControlsProps) => {
     CoastItemPassProps
   >(Coast.Control.identifier, () => ({
     onClick: handleItemClick,
+    onDoubleClick: handleItemDoubleClick,
     onMouseEnter: handleItemMouseEnter,
     onMouseLeave: handleItemMouseLeave,
     active: false,
@@ -355,6 +379,7 @@ interface CoastItemProps {
   tooltip?: string;
   active?: boolean;
   onClick?: (id: string, rect: Rect) => any;
+  onDoubleClick?: (id: string) => any;
   onMouseEnter?: (id: string, tooltip: string, rect: Rect) => any;
   onMouseLeave?: (id: string) => any;
   children?: React.ReactNode;
@@ -372,6 +397,10 @@ const CoastItem = (props: CoastItemProps) => {
     props.onClick?.(props.id, measureResult.clientRect);
   };
 
+  const handleDoubleClick = () => {
+    props.onDoubleClick?.(props.id);
+  };
+
   const handleMouseEnter = () => {
     props.onMouseEnter?.(props.id, props.tooltip, measureResult.clientRect);
   };
@@ -386,6 +415,7 @@ const CoastItem = (props: CoastItemProps) => {
       style={props.style}
       ref={divRef}
       onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

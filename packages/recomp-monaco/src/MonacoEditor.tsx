@@ -33,6 +33,12 @@ export type CursorChangedEvent = monaco.editor.ICursorPositionChangedEvent;
 export type ModelDecorationOptions = monaco.editor.IModelDecorationOptions;
 
 export interface MonacoEditorProps {
+  /**
+   * Key is very critical here to create a separate monaco instance when
+   * context is switched. Without it, the onChange handler can be sent
+   * to the wrong context
+   */
+  key: React.Key;
   className?: string;
   classNames?: {
     transparent?: string;
@@ -185,6 +191,7 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
   }, [
     isMonacoMounted,
     isEditorReady,
+    props.key,
     props.value,
     props.language,
     props.path,
@@ -593,8 +600,8 @@ const getOrCreateModel = (
   return model;
 };
 
-const defaultProps: MonacoEditorProps = {
-  className: 'react-monaco-editor-container',
+const defaultProps: Omit<MonacoEditorProps, 'key'> = {
+  className: 'recomp-monaco container',
   classNames: {
     transparent: 'transparent',
   },

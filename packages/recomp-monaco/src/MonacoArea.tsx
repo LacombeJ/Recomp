@@ -9,9 +9,6 @@ import {
   MonacoEditorProps,
 } from './MonacoEditor';
 
-/**
- * @param {MonacoArea.defaultProps} props
- */
 export const MonacoArea = (props: MonacoEditorProps) => {
   props = util.propUnion(defaultProps, props);
 
@@ -26,11 +23,12 @@ export const MonacoArea = (props: MonacoEditorProps) => {
   ) => {
     editorRef.current = editor;
     editor.focus();
-    onInitialize(editor, monaco, element);
+    onInitialize?.(editor, monaco, element);
   };
 
   return (
     <MonacoEditor
+      key={props.key}
       className={props.className}
       value={props.value}
       options={{
@@ -56,6 +54,6 @@ export const MonacoArea = (props: MonacoEditorProps) => {
 };
 
 const defaultProps = {
-  className: 'react-monaco-editor-area',
+  className: 'recomp-monaco area',
   theme: 'vs-dark',
 };
