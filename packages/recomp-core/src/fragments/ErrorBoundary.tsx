@@ -15,6 +15,18 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
     error: null | any;
   };
 
+  static defaultProps = {
+    fallback: (props: { error: any }) => {
+      let message = null;
+      if (props.error) {
+        message = props.error.message;
+      }
+      return <div>Component Error: {message}</div>;
+    },
+    onCatch: () => {},
+    hasError: false,
+  };
+
   static getDerivedStateFromError(error: any) {
     return {
       hasError: true,
@@ -23,7 +35,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   }
 
   constructor(props: ErrorBoundaryProps) {
-    props = util.propUnion(defaultProps, props);
+    // props = util.propUnion(defaultProps, props);
 
     super(props);
 
@@ -60,20 +72,10 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
       return this.props.children;
     } else {
       return (
-        <this.props.fallback error={this.state.error}></this.props.fallback>
+        <this.props.fallback
+          error={this.state.error.toString()}
+        ></this.props.fallback>
       );
     }
   }
 }
-
-const defaultProps = {
-  fallback: (props: { error: any }) => {
-    let message = null;
-    if (props.error) {
-      message = props.error.message;
-    }
-    return <div>Component Error: {message}</div>;
-  },
-  onCatch: () => {},
-  hasError: false,
-};
