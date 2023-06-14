@@ -378,6 +378,36 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
     isEditorReady
   );
 
+  // onChange
+  // I moved this effect before the "edit text" effect below. This allows to set
+  // the change listener before content is modified. Which is very critical when
+  // modifying props in react component
+  useEffectOnReady(
+    () => {
+      if (subscriptions.current.modelContentChanged) {
+        subscriptions.current.modelContentChanged.dispose();
+        subscriptions.current.modelContentChanged = null;
+      }
+
+      subscriptions.current.modelContentChanged =
+        editorRef.current.onDidChangeModelContent((event) => {
+          if (!preventChange.current) {
+            const eventPosition = editorRef.current.getPosition();
+            const position = {
+              line: eventPosition.lineNumber,
+              column: eventPosition.column,
+            };
+            // Calls onChange if managing using props, otherwise updates internal state
+            // We do this because we need to keep track of editor text in case
+            // of an refresh (unmount/remount where state/refs are not reset)
+            setValue(editorRef.current.getValue(), event, position);
+          }
+        });
+    },
+    [props.onChange],
+    isEditorReady
+  );
+
   // Edit text
   usePostEffect(
     () => {
@@ -464,33 +494,6 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
       );
     },
     [],
-    isEditorReady
-  );
-
-  // onChange
-  useEffectOnReady(
-    () => {
-      if (subscriptions.current.modelContentChanged) {
-        subscriptions.current.modelContentChanged.dispose();
-        subscriptions.current.modelContentChanged = null;
-      }
-
-      subscriptions.current.modelContentChanged =
-        editorRef.current.onDidChangeModelContent((event) => {
-          if (!preventChange.current) {
-            const eventPosition = editorRef.current.getPosition();
-            const position = {
-              line: eventPosition.lineNumber,
-              column: eventPosition.column,
-            };
-            // Calls onChange if managing using props, otherwise updates internal state
-            // We do this because we need to keep track of editor text in case
-            // of an refresh (unmount/remount where state/refs are not reset)
-            setValue(editorRef.current.getValue(), event, position);
-          }
-        });
-    },
-    [props.onChange],
     isEditorReady
   );
 

@@ -267,6 +267,10 @@ const FolderItem = (props: FolderItemProps) => {
     props.onDoubleClick?.(props.id);
   };
 
+  const handleContextmenu = (e: React.MouseEvent) => {
+    props.onContextMenu?.(e, props.id);
+  };
+
   const handleRef = (element: HTMLDivElement) => {
     if (props.moveable) {
       draggableRef(element);
@@ -310,7 +314,7 @@ const FolderItem = (props: FolderItemProps) => {
         style={headStyle}
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
-        onContextMenu={props.onContextMenu}
+        onContextMenu={handleContextmenu}
         ref={handleRef}
         {...droppableProps}
       >
