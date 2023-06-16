@@ -7,6 +7,7 @@
 @use '@recomp/menu';
 @use '@recomp/monaco';
 @use '@recomp/prism';
+@use '@recomp/seek';
 @use '@recomp/titlebar';
 
 @include core.init();
@@ -18,6 +19,7 @@
 @include menu.init();
 @include monaco.init();
 @include prism.init();
+@include seek.init();
 @include titlebar.init();
 
 #root {

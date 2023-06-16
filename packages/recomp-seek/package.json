@@ -1,10 +1,13 @@
 {
-  "name": "@recomp/hooks",
+  "name": "@recomp/seek",
   "private": true,
   "version": "0.0.0",
   "main": "index.ts",
   "scripts": {
     "build": "vite build"
+  },
+  "dependencies": {
+    "@recomp/core": "link:../recomp-core"
   },
   "devDependencies": {
     "react": "^18.2.0",
@@ -13,9 +16,5 @@
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
-  },
-  "dependencies": {
-    "fuse.js": "^6.6.2",
-    "immer": "^10.0.2"
   }
 }

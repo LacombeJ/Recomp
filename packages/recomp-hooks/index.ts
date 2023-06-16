@@ -3,6 +3,7 @@ export { default as usePress } from './usePress';
 export { default as useDelay } from './useDelay';
 export { default as useEffectOnReady } from './useEffectOnReady';
 export { default as useEventListener } from './useEventListener';
+export * from './useFuse';
 export * from './useHandle';
 export { default as useHover } from './useHover';
 export * from './useImmer';

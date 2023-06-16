@@ -10,7 +10,8 @@
     "@recomp/core": "link:../recomp-core",
     "@recomp/monaco": "link:../recomp-monaco",
     "@storybook/builder-vite": "^7.0.12",
-    "@tabler/icons-react": "^2.18.0"
+    "@tabler/icons-react": "^2.18.0",
+    "storybook-dark-mode": "^3.0.0"
   },
   "devDependencies": {
     "react": "^18.2.0",
