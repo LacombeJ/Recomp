@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
-
 interface ErrorBoundaryProps {
   children: React.ReactNode;
   fallback?: (props: { error: any }) => any;
@@ -71,11 +69,12 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
     if (!this.state.hasError) {
       return this.props.children;
     } else {
-      return (
-        <this.props.fallback
-          error={this.state.error.toString()}
-        ></this.props.fallback>
-      );
+      let error = 'Unknown error.';
+      if (this.state.error) {
+        error = this.state.error.toString();
+      }
+
+      return <this.props.fallback error={error}></this.props.fallback>;
     }
   }
 }
