@@ -62,6 +62,7 @@ interface FolderProps {
   onItemDoubleClick?: (id: string) => any;
   onItemContextMenu?: (e: React.MouseEvent, id: string) => any;
   onItemMove?: (from: string, to: string) => any;
+  onBaseContextMenu?: (e: React.MouseEvent) => any;
   onUpdateModel?: Update<FolderModel>;
 }
 
@@ -138,7 +139,10 @@ export const Folder = (props: FolderProps) => {
 
   return (
     <div className={props.className}>
-      <div className={props.classNames.scrollable}>
+      <div
+        className={props.classNames.scrollable}
+        onContextMenu={props.onBaseContextMenu}
+      >
         <DndContext
           sensors={sensors}
           modifiers={[restrictToVerticalAxis]}

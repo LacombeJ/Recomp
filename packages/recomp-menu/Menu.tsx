@@ -568,7 +568,8 @@ export const useContextMenu = (context: {
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
 
   const override = (id?: string) => (e: React.MouseEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // use this context menu instead of default
+    e.stopPropagation(); // so that a parent context menu doesn't appear
 
     setPosition({ x: e.clientX, y: e.clientY });
     model.current = context.model(id);

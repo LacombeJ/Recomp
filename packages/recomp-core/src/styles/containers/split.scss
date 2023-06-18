@@ -1,3 +1,5 @@
+@use '../common/colors.scss' as recomp;
+
 @mixin init() {
 
   $RSH: 2px; // recomp split half size
@@ -42,11 +44,11 @@
   // Not sure why these don't work when place under nested ".resizer" above?
 
   .recomp-split > .resizer:hover {
-    border-color: rgba(100, 170, 200, 0.5);
+    border-color: rgba(recomp.$primary, 0.5);
   }
 
   .recomp-split.resizing > .resizer {
-    border-color: rgba(100, 170, 200, 0.5);
+    border-color: rgba(recomp.$primary, 0.5);
   }
 
 }
