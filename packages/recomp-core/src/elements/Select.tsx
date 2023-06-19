@@ -2,48 +2,32 @@ import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
 
-interface SelectProps {
-  className?: string;
-  style?: React.CSSProperties;
-  options?: string[];
-  defaultValue?: string | number;
-  value?: string | number;
-  onChange?: () => any;
-  children?: React.ReactNode;
+interface SelectProps
+  extends React.DetailedHTMLProps<
+    React.SelectHTMLAttributes<HTMLSelectElement>,
+    HTMLSelectElement
+  > {
+  options: string[];
 }
 
 export const Select = (props: SelectProps) => {
   props = util.propUnion(defaultProps, props);
 
-  const { className, style } = props;
+  const { options, dangerouslySetInnerHTML: _0, ...selectProps } = props;
 
-  return (
-    <select
-      className={className}
-      style={style}
-      defaultValue={props.defaultValue}
-      value={props.value}
-      onChange={props.onChange}
-    >
-      {selectChildren(props)}
-    </select>
-  );
+  return <select {...selectProps}>{selectChildren(options)}</select>;
 };
 
-const defaultProps: SelectProps = {
+const defaultProps = {
   className: 'recomp-select',
-  onChange: () => {},
 };
 
-const selectChildren = (props: any) => {
-  if (props.options) {
-    return props.options.map((option: any) => {
-      return (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      );
-    });
-  }
-  return props.children;
+const selectChildren = (options: string[]) => {
+  return options.map((option) => {
+    return (
+      <option key={option} value={option}>
+        {option}
+      </option>
+    );
+  });
 };
