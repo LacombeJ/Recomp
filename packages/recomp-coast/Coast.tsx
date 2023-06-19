@@ -174,7 +174,7 @@ const Tabs = (props: TabsProps) => {
     props.onItemClick?.(id);
   };
   const handleItemDoubleClick = (id: string) => {
-    props.onItemDoubleClick(id);
+    props.onItemDoubleClick?.(id);
   };
   const handleItemMouseEnter = (id: string, tooltip: string, rect: Rect) => {
     tooltipCalc.handleItemMouseEnter(id, tooltip, rect);

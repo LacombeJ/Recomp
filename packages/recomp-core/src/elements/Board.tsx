@@ -6,12 +6,13 @@ interface BoardProps {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  setRef?: (element: HTMLDivElement) => void;
 }
 
 export const Board = (props: BoardProps) => {
   props = util.propUnion(defaultProps, props);
   return (
-    <div className={props.className} style={props.style}>
+    <div className={props.className} style={props.style} ref={props.setRef}>
       {props.children}
     </div>
   );

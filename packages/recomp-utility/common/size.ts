@@ -1,10 +1,12 @@
 const FRACTION = 8;
 
+// Value may be negative
 export const parseSize = (str: string | number) => {
   str = String(str);
-  const matches = str.match(/^([0-9]+(?:\.[0-9]+)?)((px|%)?)$/);
-  const value = Number(matches[1]);
-  const unit = matches[2];
+  const matches = str.match(/^(-?)([0-9]+(?:\.[0-9]+)?)((px|%)?)$/);
+  const sign = matches[1] === '-' ? -1 : 1;
+  const value = Number(matches[2]) * sign;
+  const unit = matches[3];
   return { value, unit };
 };
 

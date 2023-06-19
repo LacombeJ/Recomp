@@ -201,6 +201,7 @@ export const Split = (props: SplitProps) => {
     item: React.ReactElement,
     index: number,
     actualSize: string | number,
+    fullSize: number,
     view: View
   ) => {
     if (index === 0) {
@@ -219,7 +220,14 @@ export const Split = (props: SplitProps) => {
       if (view === 'first') {
         itemProps.minSize = 0;
       }
-      itemProps.fill = true;
+      if (fullSize) {
+        // Sometimes fullSize is null, not sure why
+        // Set remaining size: 100% - actualSize
+        // If we only use percentages, we wouldn't need to use "fullSize"
+        itemProps.size = util.sizeInverse(fullSize, actualSize);
+      }
+
+      // itemProps.fill = true;
       return React.cloneElement(item, itemProps);
     }
   };
@@ -256,14 +264,14 @@ export const Split = (props: SplitProps) => {
       }}
     >
       <div className={className} style={style} ref={handleRef}>
-        {renderItem(first, 0, actualSize, props.view)}
+        {renderItem(first, 0, actualSize, fullSize, props.view)}
         {props.view === 'split' ? (
           <Resizer
             className={props.classNames.resizer}
             onMouseDown={handleResizerDown}
           ></Resizer>
         ) : null}
-        {renderItem(second, 1, actualSize, props.view)}
+        {renderItem(second, 1, actualSize, fullSize, props.view)}
       </div>
     </div>
   );
