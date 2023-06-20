@@ -1,86 +1,64 @@
-// https://github.com/JedWatson/classnames/blob/master/index.js
-
-export const classes = (...args: any): any[] => {
-  const items = [];
-
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-
-    if (!arg) continue;
-
-    const argType = typeof arg;
-    if (argType === 'string' || argType === 'number') {
-      items.push(...arg.split(' '));
-    } else if (Array.isArray(arg)) {
-      if (arg.length) {
-        const inner = classes(...arg);
-        if (inner) {
-          items.push(...inner);
-        }
-      }
-    } else if (argType === 'object') {
-      if (arg.toString === Object.prototype.toString) {
-        for (let key in arg) {
-          if (arg.hasOwnProperty(key) && arg[key]) {
-            items.push(key);
-          }
-        }
-      } else {
-        items.push(arg.toString());
-      }
-    }
-  }
-
-  return items;
+/**
+ * This function parses html text and finds the first image in the DOM. It will
+ * look at the src attribute and return a URI or base64 type
+ */
+export const firstImageFromHTML = (htmlText: string) => {
+  const domParser = new DOMParser();
+  const doc = domParser.parseFromString(htmlText, 'text/html');
+  const image = doc.images[0];
+  return imageInfo(image);
 };
 
-export const classnames = (...args: any) => {
-  return classes(...args).join(' ');
+export type ImageInfo = {
+  source: SourceBase64 | SourceValue;
+  alt: string;
+};
+export type SourceBase64 = {
+  kind: 'base64';
+  type: string;
+  base64: string;
+};
+export type SourceValue = {
+  kind: 'value';
+  value: string;
 };
 
-export const defineStyle = (classNames: any, definition: any) => {
-  const classItems = classes(classNames);
-  const style: { [key: string]: any } = {};
-
-  const keys = Object.keys(definition);
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-    const value = definition[key];
-    if (typeof value === 'object') {
-      const selectors = splitClassSelectors(key);
-      if (selectorMatch(classItems, selectors)) {
-        Object.assign(style, value);
-      }
+export const imageInfo = (image: HTMLImageElement): ImageInfo | null => {
+  if (image) {
+    const alt = image.alt;
+    const src = image.src;
+    const parsed = parseImageBase64(src);
+    if (parsed) {
+      return {
+        source: {
+          kind: 'base64',
+          type: parsed.type,
+          base64: parsed.body,
+        },
+        alt,
+      };
     } else {
-      style[key] = value;
+      return {
+        source: {
+          kind: 'value',
+          value: src,
+        },
+        alt,
+      };
     }
   }
-
-  return style;
+  return null;
 };
 
-export const splitClassSelectors = (text: string) => {
-  const items = [];
-  const regex = /\.([^.]+)/g;
-  const results = text.matchAll(regex);
-  for (const result of results) {
-    items.push(result[1]);
+export const parseImageBase64 = (base64: string) => {
+  const regex = /^(data:image\/([^;]*);base64,)(.*)$/;
+  const matches = regex.exec(base64);
+  if (matches) {
+    return {
+      header: matches[1],
+      type: matches[2],
+      body: matches[3],
+    };
   }
-  return items;
-};
-
-export const selectorMatch = (classItems: string[], selectors: string[]) => {
-  for (let i = 0; i < selectors.length; i++) {
-    if (!classItems.includes(selectors[i])) {
-      return false;
-    }
-  }
-  return true;
-};
-
-export const selectClassName = (classNames: any, key: any) => {
-  if (classNames[key]) {
-    return { [classNames[key]]: true };
-  }
-  return {};
+  return null;
 };

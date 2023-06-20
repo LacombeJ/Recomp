@@ -1,0 +1,50 @@
+@use '@recomp/core' as recomp;
+
+@mixin init() {
+
+  .recomp-dropzone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed rgba(white, 0.3);
+    border-radius: 4px;
+    user-select: none;
+    cursor: pointer;
+    padding: 24px;
+    background-color: rgba(white, 0.03);
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: rgba(white, 0.07);
+    }
+
+    .placeholder {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .icon {
+        svg {
+          width: 48px;
+          height: 48px;
+        }
+      }
+
+      .title {
+        color: rgba(white, 0.8);
+        font-size: 20px;
+      }
+
+      .subtitle {
+        color: rgba(white, 0.6);
+        font-size: 16px;
+      }
+    }
+  }
+
+}

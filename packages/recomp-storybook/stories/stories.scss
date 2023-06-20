@@ -1,5 +1,6 @@
 @use '@recomp/core';
 @use '@recomp/coast';
+@use '@recomp/dropzone';
 @use '@recomp/edge';
 @use '@recomp/folder';
 @use '@recomp/herald';
@@ -12,6 +13,7 @@
 
 @include core.init();
 @include coast.init();
+@include dropzone.init();
 @include edge.init();
 @include folder.init();
 @include herald.init();
