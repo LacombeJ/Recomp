@@ -1,4 +1,5 @@
 export { default as useChildrenProps } from './useChildrenProps';
+export * from './useDebouncedMemo';
 export { default as usePress } from './usePress';
 export { default as useDelay } from './useDelay';
 export { default as useEffectOnReady } from './useEffectOnReady';

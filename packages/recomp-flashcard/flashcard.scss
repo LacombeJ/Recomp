@@ -1,0 +1,88 @@
+@use '@recomp/core' as recomp;
+
+@mixin standard-card() {
+  // position: relative;
+  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  // bottom: 0;
+}
+
+@mixin init() {
+
+  $highlight: lighten(recomp.$primary, 30%);
+  $margin: 7px;
+
+  .recomp-flashcard {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(40, 40, 40);
+    min-width: 200px;
+    min-height: 200px;
+    box-shadow:
+      rgba(0, 0, 0, 0.19) 0px 10px 20px,
+      rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    margin: $margin;
+
+    >.controls {
+      position: absolute;
+      right: 10px;
+      top: -$margin;
+
+      display: flex;
+
+      >.badge {
+        user-select: none;
+        color: rgba(white, 0.5);
+        font-size: 12px;
+        margin: 0 2px;
+        border: 1px solid rgba(white, 0.4);
+        background-color: rgba(black, 0.2);
+        padding: 0 2px;
+        transition: color 0.2s, border-color 0.2s;
+
+        &.active {
+          color: rgba($highlight, 0.9);
+          border-color: rgba($highlight, 0.9);
+        }
+
+        &:hover:not(.active) {
+          color: rgba(white, 0.7);
+          border-color: rgba(white, 0.7);
+        }
+
+        &.cycle {
+          margin-left: 14px;
+          display: flex;
+          align-items: center;
+
+          svg {
+            width: 14px;
+            height: 14px;
+          }
+        }
+      }
+    }
+  }
+
+  // Standard definitions
+
+  .recomp-flashcard {
+
+    .front {
+      @include standard-card();
+      font-size: 30px;
+    }
+
+    .back {
+      @include standard-card();
+      font-size: 18px;
+    }
+  }
+
+}

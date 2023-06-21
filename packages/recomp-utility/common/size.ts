@@ -1,3 +1,5 @@
+import { isClamped } from './math';
+
 const FRACTION = 8;
 
 // Value may be negative
@@ -214,14 +216,6 @@ type Size = string | number;
 type Direction = 'vertical' | 'horizontal';
 
 // ----------------------------------------------------------------------------
-
-export const clamp = (x: number, min = 0, max = 1) => {
-  return x < min ? min : x > max ? max : x;
-};
-
-export const isClamped = (x: number, min = 0, max = 1) => {
-  return x > min && x < max;
-};
 
 export const adjust = (rect: {
   x: number;

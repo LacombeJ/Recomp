@@ -2,6 +2,7 @@
 @use '@recomp/coast';
 @use '@recomp/dropzone';
 @use '@recomp/edge';
+@use '@recomp/flashcard';
 @use '@recomp/folder';
 @use '@recomp/herald';
 @use '@recomp/katex';
@@ -16,6 +17,7 @@
 @include dropzone.init();
 @include edge.init();
 @include folder.init();
+@include flashcard.init();
 @include herald.init();
 @include katex.init();
 @include menu.init();

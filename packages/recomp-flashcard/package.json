@@ -1,0 +1,20 @@
+{
+  "name": "@recomp/flashcard",
+  "private": true,
+  "version": "0.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@recomp/core": "link:../recomp-core"
+  },
+  "devDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

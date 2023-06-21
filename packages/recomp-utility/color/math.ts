@@ -1,11 +1,3 @@
-export const modulo = (n: number, m: number) => {
-  return ((n % m) + m) % m;
-};
-
-export const clamp = (x: number, min: number, max: number) => {
-  return x < min ? min : x > max ? max : x;
-};
-
 export const hue2rgb = (p: number, q: number, t: number) => {
   if (t < 0) t += 1;
   if (t > 1) t -= 1;
