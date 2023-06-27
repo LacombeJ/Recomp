@@ -46,7 +46,7 @@ export { Switch } from './src/elements/Switch';
 export { Table } from './src/elements/Table';
 export { Text } from './src/elements/Text';
 export { TextArea } from './src/elements/TextArea';
-export { Tooltip } from './src/elements/Tooltip';
+export * from './src/elements/Tooltip';
 export { Video } from './src/elements/Video';
 
 declare module '@recomp/core';

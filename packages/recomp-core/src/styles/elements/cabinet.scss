@@ -1,6 +1,6 @@
 @use "sass:color" as color;
 
-@use '../common/colors.scss' as recomp;
+@use '../common' as recomp;
 
 @mixin init() {
 

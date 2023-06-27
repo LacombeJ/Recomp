@@ -1,5 +1,5 @@
 @use "sass:color" as color;
-@use '../common/colors.scss' as recomp;
+@use '../common' as recomp;
 
 @function sc($amount) {
   @return hsl(0deg 0% 5% / $amount);
@@ -41,7 +41,7 @@
 
     overflow: hidden;
 
-    @include variant(rgb(82, 82, 82));
+    @include variant(lighten(recomp.$background, 15%));
 
     &.primary {
       @include variant(recomp.$primary);

@@ -1,6 +1,6 @@
 @use "sass:color" as color;
 
-@use '../common/colors.scss' as recomp;
+@use '../common' as recomp;
 
 @function desaturate_then_darken($color, $desaturation_amount, $darken_amount) {
   @return color.scale(color.scale($color,
@@ -11,7 +11,7 @@
 @mixin init() {
 
   .recomp-quote {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(white, 0.6);
     background: desaturate_then_darken(recomp.$primary, 50%, 20%);
     border-radius: 0.5em;
     display: flex;

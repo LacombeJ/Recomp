@@ -101,4 +101,6 @@ const TemplateLong = (args) => (
 );
 
 export const LongText = TemplateLong.bind({});
-LongText.args = {};
+LongText.args = {
+  style: { margin: '16px' },
+};

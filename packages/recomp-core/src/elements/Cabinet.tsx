@@ -5,7 +5,7 @@ import * as util from '@recomp/utility/common';
 import { useSpring, animated } from '@react-spring/web';
 
 import { Collapse, Expand } from '@recomp/icons';
-import { useHover, useMeasure, useModel, Update } from '@recomp/hooks';
+import { useMouseInside, useMeasure, useModel, Update } from '@recomp/hooks';
 
 interface CabinetProps {
   children?: React.ReactNode;
@@ -35,7 +35,7 @@ export const Cabinet = (props: CabinetProps) => {
 
   const { style } = props;
 
-  const [hover, handleMouseEnter, handleMouseLeave] = useHover(false);
+  const { inside, props: insideProps } = useMouseInside(false);
 
   const [expanded, setExpanded] = useModel(
     props.defaultExpanded,
@@ -70,7 +70,7 @@ export const Cabinet = (props: CabinetProps) => {
   const className = util.classnames({
     [props.className]: true,
     expanded,
-    hover,
+    hover: inside,
   });
 
   const handleClick = () => {
@@ -85,12 +85,7 @@ export const Cabinet = (props: CabinetProps) => {
 
   return (
     <div className={className} style={style}>
-      <div
-        className={classNames.head}
-        onClick={handleClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
+      <div className={classNames.head} onClick={handleClick} {...insideProps}>
         <span className={classNames.icon}>{props.icon}</span>
         <div className={classNames.label}>
           <span className={classNames.title}>{props.title}</span>

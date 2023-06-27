@@ -4,8 +4,9 @@
 
   .recomp-edge {
 
-    $background: rgb(30, 30, 30);
-    $hover: rgb(50, 50, 50);
+    $background: recomp.$background;
+    $hover: recomp.$bg_lighter;
+    $selected: recomp.$bg_lighter;
 
     background-color: $background;
     display: inline-flex;
@@ -49,12 +50,12 @@
       justify-content: space-between;
 
       border: 1px solid transparent;
-      border-left-width: 2px;
+      border-left-width: 3px;
       margin: 6px 4px 6px 0px;
       padding: 4px 4px 4px 4px;
       min-width: 16px;
       height: 22px;
-      border-radius: 2px;
+      border-radius: 6px;
 
       user-select: none;
 
@@ -99,7 +100,7 @@
         transition: background-color 0.3s;
 
         &:hover {
-          background-color: rgba(white, 0.2);
+          background-color: $hover;
         }
       }
 
@@ -108,7 +109,7 @@
         .close {
           visibility: visible;
           pointer-events: visible;
-          color: rgb(200, 200, 200);
+          color: rgb(white, 0.7);
         }
       }
 
@@ -117,8 +118,8 @@
       }
 
       &.selected {
-        border: 1px solid lighten(recomp.$primary, 30%);
-        border-left-width: 2px;
+        border-color: lighten(recomp.$primary, 30%);
+        background-color: $selected;
       }
     }
 
@@ -190,8 +191,7 @@
       }
 
       &.selected {
-        border: 1px solid lighten(recomp.$primary, 30%);
-        border-left-width: 2px;
+        border-color: lighten(recomp.$primary, 30%);
       }
     }
 

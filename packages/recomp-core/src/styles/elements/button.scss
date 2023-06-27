@@ -1,4 +1,4 @@
-@use '../common/colors.scss' as recomp;
+@use '../common' as recomp;
 
 @mixin init() {
 
@@ -12,12 +12,12 @@
     $warn_background: #852c33;
     $warn_border: #ca4343;
 
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(white, 0.9);
     background-color: rgba($default_background, 0.1);
     border: 1px solid rgba($default_border, 0.5);
 
     border-radius: 2px;
-    box-shadow: inset rgba(0, 0, 0, 0.0) 0 4px 8px, rgba(0, 0, 0, 0.0) 0px 4px 8px;
+    box-shadow: inset rgba(black, 0.0) 0 4px 8px, rgba(black, 0.0) 0px 4px 8px;
     cursor: pointer;
     display: inline-block;
     line-height: 1.5em;
@@ -30,13 +30,13 @@
     touch-action: manipulation;
 
     &:hover:not(:disabled) {
-      box-shadow: inset rgba(0, 0, 0, 0.0) 0 4px 8px, rgba(0, 0, 0, 0.9) 0px 4px 8px;
+      box-shadow: inset rgba(black, 0.0) 0 4px 8px, rgba(black, 0.9) 0px 4px 8px;
       background-color: rgba($default_background, 0.2);
       border: 1px solid rgba(lighten($default_border, 20%), 0.6);
     }
 
     &.primary {
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(white, 0.9);
       background-color: rgba($primary_background, 0.3);
       border: 1px solid $primary_border;
 
@@ -47,7 +47,7 @@
     }
 
     &.warn {
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(white, 0.9);
       background-color: rgba($warn_background, 0.7);
       border: 1px solid $warn_border;
 
@@ -59,7 +59,7 @@
 
     &:active {
       transition-duration: .1s;
-      box-shadow: inset rgba(0, 0, 0, 0.3) 0 4px 8px, rgba(0, 0, 0, 0.9) 0px 4px 8px;
+      box-shadow: inset rgba(black, 0.3) 0 4px 8px, rgba(black, 0.9) 0px 4px 8px;
     }
 
     &:disabled {

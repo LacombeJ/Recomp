@@ -1,9 +1,9 @@
-@use '../common/colors.scss' as recomp;
+@use '../common' as recomp;
 
 @mixin init() {
 
   .recomp-input {
-    background-color: rgb(40, 40, 40);
+    background-color: recomp.$bg_lighter;
     color: rgba(white, 0.75);
     border-width: 0px;
     padding: 4px 8px;
@@ -12,11 +12,15 @@
     outline: 1px solid transparent;
 
     &:focus {
-      outline: 1px solid recomp.$primary;
+      outline-color: recomp.$primary;
     }
 
     &.disabled {
       color: rgb(128, 128, 128);
+
+      &:focus {
+        outline-color: rgb(64, 64, 64);
+      }
     }
   }
 

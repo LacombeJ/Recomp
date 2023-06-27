@@ -1,22 +1,29 @@
+@use '../common' as recomp;
+
 @mixin init() {
 
   .recomp-board {
-    $border_color: rgba(100, 100, 100, 0.7);
+    $border_color: rgba(white, 0.15);
+    $border_radius: 6px;
 
     min-width: 200px;
     min-height: 250px;
-    background-color: rgb(28, 28, 28);
+    background-color: recomp.$background;
     display: flex;
     flex-direction: column;
-    border-radius: 4px;
+    border-radius: $border_radius;
     border: 1px solid $border_color;
-    box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.3);
-    color: rgb(220, 220, 220);
+
+    @include recomp.shadow-raised();
+
+    color: rgb(white, 0.85);
 
     >.header {
-      color: rgb(180, 180, 180);
+      color: rgb(white, 0.7);
       background-color: rgba(black, 0.3);
       border-bottom: 1px solid $border_color;
+      border-top-left-radius: $border_radius;
+      border-top-right-radius: $border_radius;
       display: flex;
       justify-content: space-between;
       flex-grow: 0;

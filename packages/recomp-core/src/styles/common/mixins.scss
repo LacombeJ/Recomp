@@ -1,0 +1,11 @@
+// Small shadow for normal elements
+@mixin shadow() {
+  // box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 4px 4px 1px rgba(black, 0.3);
+}
+
+// Raised shadow for hovering or overlay elements
+@mixin shadow-raised() {
+  box-shadow: rgba(black, 0.25) 0 8px 16px,
+    rgba(black, 0.25) 8px 16px 32px;
+}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import useEventListener from './useEventListener';
+import { useEventListener } from './useEventListener';
 
 const useInteract = (
   handleMouseUp: (this: HTMLElement, ev: MouseEvent) => any,

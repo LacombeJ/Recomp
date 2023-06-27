@@ -15,6 +15,7 @@ $hover: rgba(recomp.$primary, 0.5);
     // display: inline-flex;
 
     @include recomp.scrollbar($width: 4px);
+
     .scrollable {
       // display: block;
       overflow-y: scroll;
@@ -54,7 +55,8 @@ $hover: rgba(recomp.$primary, 0.5);
         }
 
         &.file {
-          color: #79C1EA;
+          // color: #79C1EA;
+          color: lighten(recomp.$primary, 20%);
         }
 
       }

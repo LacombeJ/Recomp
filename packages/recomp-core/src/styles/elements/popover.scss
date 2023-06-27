@@ -1,4 +1,4 @@
-@use '../common/colors.scss' as recomp;
+@use '../common' as recomp;
 
 @mixin init() {
 
@@ -18,11 +18,11 @@
       pointer-events: auto;
       position: fixed;
 
-      border: 1px solid rgb(100, 100, 100);
+      border: 1px solid rgb(white, 0.25);
       border-radius: 6px;
-      background-color: rgb(30, 30, 30);
+      background-color: recomp.$background;
 
-      box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.5);
+      @include recomp.shadow-raised();
     }
 
   }

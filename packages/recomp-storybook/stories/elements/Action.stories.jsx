@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Action } from '@recomp/core';
 import '../stories.scss';
-import { IconBarbell } from '@tabler/icons-react';
+import { IconTypography } from '@tabler/icons-react';
 
 export default {
   title: 'Elements/Action',
@@ -14,5 +14,5 @@ const Template = (args) => <Action {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
-  children: <IconBarbell></IconBarbell>,
+  children: <IconTypography stroke={1}></IconTypography>,
 };

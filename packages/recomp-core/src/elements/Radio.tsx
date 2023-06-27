@@ -114,3 +114,34 @@ const groupDefaultProps: GroupProps = {
 };
 
 Radio.Group = Group;
+
+// ----------------------------------------------------------------------------
+
+/**
+ * Utility hook for radio logic
+ *
+ * Usage:
+ * ```
+ * const radio = useRadio("1"); // default select item 1
+ *
+ * console.log("selected: ", radio.selected);
+ *
+ * return (
+ *  <div>
+ *    <div onClick={radio.click("1")} ></div>
+ *    <div onClick={radio.click("2")} ></div>
+ *    <div onClick={radio.click("3")} ></div>
+ *  </div>
+ * );
+ * ```
+ */
+export const useRadio = (props: { defaultSelected?: string }) => {
+  const [selected, setSelected] = React.useState(props.defaultSelected);
+
+  return {
+    selected,
+    click: (id: string) => () => {
+      setSelected(id);
+    },
+  };
+};

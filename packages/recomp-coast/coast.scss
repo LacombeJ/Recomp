@@ -3,7 +3,7 @@
 @mixin init() {
 
   .recomp-coast {
-    background-color: rgb(30, 30, 30);
+    background-color: recomp.$background;
     display: inline-flex;
     justify-content: space-between;
     flex-direction: column;

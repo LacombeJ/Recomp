@@ -6,7 +6,7 @@
 
   .recomp-action {
     $color: rgba(white, 0.7);
-    $hover: color.scale(recomp.$primary, $lightness: 30%);
+    $hover: color.scale(recomp.$primary, $lightness: 40%);
 
     color: $color;
     background-color: transparent;

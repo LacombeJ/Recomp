@@ -1,9 +1,9 @@
-@use '../common/colors.scss' as recomp;
+@use '../common' as recomp;
 
 @mixin init() {
 
   .recomp-textarea {
-    background-color: rgb(40, 40, 40);
+    background-color: recomp.$bg_lighter;
     color: rgba(white, 0.75);
     border-width: 0px;
     padding: 4px 8px;

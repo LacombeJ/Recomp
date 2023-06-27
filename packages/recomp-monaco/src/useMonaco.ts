@@ -2,8 +2,6 @@ import * as React from 'react';
 
 import loader from '@monaco-editor/loader';
 
-import { useMount } from '@recomp/hooks';
-
 import { Monaco } from './MonacoEditor';
 
 // from loader
@@ -20,7 +18,7 @@ export const useMonaco = (
   const cancellableRef = React.useRef<CancelablePromise<Monaco>>(null);
 
   // Initialize/load monaco on mount if monaco has not been loaded
-  useMount(() => {
+  React.useEffect(() => {
     if (!monacoRef.current && !cancellableRef.current) {
       cancellableRef.current = loader.init();
 

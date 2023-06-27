@@ -1,6 +1,6 @@
 @use "sass:color" as color;
 
-@use '../common/colors.scss' as recomp;
+@use '../common' as recomp;
 
 @function desaturate_then_darken($color, $desaturation_amount, $darken_amount) {
   @return color.scale(color.scale($color,
@@ -15,11 +15,13 @@
     $V1: 50%; // darken value
 
     margin: 4px 0px 4px 0px;
-    padding: 4px 16px 4px 14px;
+    padding: 4px 16px 4px 12px;
+    border-radius: 4px;
+    @include recomp.shadow();
 
     &:not(.solid) {
-      border-left: 4px solid rgba(recomp.$primary, 1);
-      background-color: rgba(0, 0, 0, 0.15);
+      border-left: 6px solid rgba(recomp.$primary, 1);
+      background-color: rgba(black, 0.15);
 
       &.level-1 {
         border-color: recomp.$level_1;

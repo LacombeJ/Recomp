@@ -4,7 +4,8 @@ import * as util from '@recomp/utility/common';
 
 import { animated } from '@react-spring/web';
 
-import { useSize } from '@recomp/hooks';
+import { useMouseHover, useSize } from '@recomp/hooks';
+import { Overlay } from '../containers/Overlay';
 
 type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
 
@@ -194,4 +195,90 @@ const triangleDefaultProps: TriangleProps = {
   position: 'top',
   tipSize: 14,
   borderSize: 2,
+};
+
+// ----------------------------------------------------------------------------
+
+type TooltipContextProps = {
+  className?: string;
+  classNames?: {
+    offset?: string;
+  };
+  visible: boolean;
+  offset: { x: number; y: number };
+  position?: TooltipPosition;
+  children?: React.ReactNode;
+};
+
+const Context = (props: TooltipContextProps) => {
+  props = util.propUnion(defaultContextProps, props);
+
+  return (
+    <div className={props.className}>
+      {props.visible ? (
+        <div
+          className={props.classNames.offset}
+          style={{ left: `${props.offset.x}px`, top: `${props.offset.y}px` }}
+        >
+          <Tooltip position="bottom">{props.children}</Tooltip>
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
+const defaultContextProps: Omit<TooltipContextProps, 'visible' | 'offset'> = {
+  className: 'recomp-tooltip-context',
+  classNames: {
+    offset: 'offset',
+  },
+};
+
+Tooltip.Context = Context;
+
+export const useTooltip = () => {
+  const [visible, setVisible] = React.useState(false);
+  const [offset, setOffset] = React.useState({ x: 0, y: 0 });
+  const tooptipNodeRef = React.useRef<React.ReactNode>(null);
+  const contentNodeRef = React.useRef<React.ReactNode>(null);
+
+  const handleHover = (hover: boolean, position: { x: number; y: number }) => {
+    setVisible(hover);
+    setOffset(position);
+  };
+
+  const internalHover = useMouseHover({
+    onHover: (hover: boolean, position: { x: number; y: number }) => {
+      if (hover) {
+        tooptipNodeRef.current = contentNodeRef.current;
+      }
+      handleHover(hover, position);
+    },
+  });
+
+  return {
+    visible,
+    offset,
+    contextProps: {
+      visible,
+      offset,
+      children: tooptipNodeRef.current,
+    },
+    hover: handleHover,
+    hoverProps: internalHover.itemProps,
+    content: (node: React.ReactNode) => {
+      console.log('content');
+      return (hover: boolean, position: { x: number; y: number }) => {
+        console.log('hover: ', hover);
+        if (hover) {
+          tooptipNodeRef.current = node;
+        }
+        handleHover(hover, position);
+      };
+    },
+    contentProps: (node: React.ReactNode) => {
+      contentNodeRef.current = node;
+      return internalHover.itemProps;
+    },
+  };
 };

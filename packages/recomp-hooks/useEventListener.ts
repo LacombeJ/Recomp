@@ -1,20 +1,18 @@
 import * as React from 'react';
 
-const useEventListener = (
-  element: any,
-  type: any,
-  listener: (this: HTMLElement, ev: any) => any,
-  options?: boolean | AddEventListenerOptions,
+export const useEventListener = <T extends Window | Document | HTMLElement>(
+  item: T,
+  type: Parameters<T['addEventListener']>[0],
+  listener: Parameters<T['addEventListener']>[1],
+  options?: Parameters<T['addEventListener']>[2],
   skipAdd = false
 ) => {
   React.useEffect(() => {
     if (!skipAdd) {
-      element.addEventListener(type, listener, options);
+      item.addEventListener(type, listener, options);
     }
     return () => {
-      element.removeEventListener(type, listener, options);
+      item.removeEventListener(type, listener, options);
     };
   });
 };
-
-export default useEventListener;

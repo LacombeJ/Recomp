@@ -593,3 +593,70 @@ export const useContextMenu = (context: {
     contextProps,
   };
 };
+
+const convertQuickContextToModel = (
+  items: QuickContextItem[]
+): MenuElement[] => {
+  return items.map((item): MenuElement => {
+    if (item === 'separator') {
+      return { type: 'separator' };
+    } else {
+      return { type: 'item', id: item.label, label: item.label };
+    }
+  });
+};
+
+export type QuickContextActionItem = { label: string; action: () => void };
+export type QuickContextItem = QuickContextActionItem | 'separator';
+
+export const useQuickContextMenu = () => {
+  const model = React.useRef<MenuElement[]>(null);
+  const quickItems = React.useRef<QuickContextItem[]>(null);
+
+  const [opened, setOpened] = React.useState(false);
+  const [position, setPosition] = React.useState({ x: 0, y: 0 });
+
+  const override = (items: QuickContextItem[]) => (e: React.MouseEvent) => {
+    console.log('override');
+
+    const menu = convertQuickContextToModel(items);
+    model.current = menu;
+    quickItems.current = items;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    console.log('menu...', menu);
+
+    setPosition({ x: e.clientX, y: e.clientY });
+
+    setOpened(true);
+  };
+
+  const handleAction = (id: string) => {
+    for (const item of quickItems.current) {
+      if (item !== 'separator' && item.label === id) {
+        item.action();
+        setOpened(false);
+        break;
+      }
+    }
+  };
+
+  const contextProps = {
+    opened,
+    model: model.current,
+    position,
+    onClickOutside: () => setOpened(false),
+    onClick: handleAction,
+  };
+
+  return {
+    opened,
+    setOpened,
+    override,
+    model: model.current,
+    position,
+    contextProps,
+  };
+};

@@ -1,4 +1,4 @@
-@forward 'src/styles/common/colors.scss';
+@forward 'src/styles/common';
 
 // Containers:
 @use 'src/styles/containers/bar.scss';
@@ -107,10 +107,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-@mixin shadow() {
-  box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.3);
 }
 
 @mixin scrollbar($width: 12px,

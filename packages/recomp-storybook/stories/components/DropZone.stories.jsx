@@ -9,18 +9,32 @@ export default {
   argTypes: {},
 };
 
-const Template = (args) => <DropZone {...args} />;
+const Template = (args) => {
+  return (
+    <DropZone
+      {...args}
+      onDrop={(items) => {
+        console.log(items);
+
+        for (const item of items) {
+          if (item.kind === 'string') {
+            item.item.getAsString((text) => {
+              console.log(text);
+            });
+          }
+        }
+
+        findImageItem(items)
+          .then((imageItem) => {
+            console.log(imageItem);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      }}
+    />
+  );
+};
 
 export const Basic = Template.bind({});
-Basic.args = {
-  onDrop: (items) => {
-    console.log(items);
-    findImageItem(items)
-      .then((imageItem) => {
-        console.log(imageItem);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  },
-};
+Basic.args = {};

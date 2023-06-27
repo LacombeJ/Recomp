@@ -96,6 +96,11 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
     }
   };
 
+  React.useEffect(() => {
+    // expansion might be triggerd externally, not necessarily through head click
+    setBodyVisible(true);
+  }, [props.expanded]);
+
   const handleItemClick = (id: string) => {
     props.onItemClick?.(id);
   };

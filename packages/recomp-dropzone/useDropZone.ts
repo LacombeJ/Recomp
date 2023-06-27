@@ -1,4 +1,4 @@
-import { ImageInfo, firstImageFromHTML } from '@recomp/utility/common';
+import { ImageInfo, findImageFromHTML } from '@recomp/utility/common';
 import * as React from 'react';
 
 export const useDropZone = (dropCallback: (items: TransferItem[]) => void) => {
@@ -63,12 +63,13 @@ export const findImageItem = async (
 
   let targetDownload: TransferItem | null = null;
   let htmlInfo: ImageInfo | null = null;
+  let fileInfo: File | null = null;
 
   for (const item of items) {
     if (item.kind === 'string' && item.type === 'text/html') {
       htmlInfo = await new Promise((resolve) => {
         item.item.getAsString((text) => {
-          const image = firstImageFromHTML(text);
+          const image = findImageFromHTML(text);
           resolve(image);
         });
       });
@@ -77,10 +78,17 @@ export const findImageItem = async (
     if (item.type === 'text/uri-list' || item.type.startsWith('image')) {
       targetDownload = item;
     }
+
+    if (item.kind === 'file') {
+      fileInfo = item.file;
+    }
   }
 
   if (htmlInfo) {
     title = htmlInfo.alt;
+  }
+  if (!title && fileInfo) {
+    title = fileInfo.name;
   }
 
   if (targetDownload) {

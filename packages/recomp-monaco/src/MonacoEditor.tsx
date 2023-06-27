@@ -9,14 +9,6 @@ import { useResizeDetector } from 'react-resize-detector';
 
 import { updatePasteHandler } from './monaco-paste';
 
-import {
-  useMount,
-  usePostEffect,
-  useStateOrProps,
-  usePrevious,
-  useEffectOnReady,
-} from '@recomp/hooks';
-
 import { useMonaco } from './useMonaco';
 
 import * as monaco from 'monaco-editor';
@@ -29,6 +21,7 @@ export type EditorAction = monaco.editor.IActionDescriptor;
 export type Options = monaco.editor.IStandaloneEditorConstructionOptions;
 export type OverrideServices = monaco.editor.IEditorOverrideServices;
 export type ModelChangedEvent = monaco.editor.IModelChangedEvent;
+export type ModelContentChangedEvent = monaco.editor.IModelContentChangedEvent;
 export type CursorChangedEvent = monaco.editor.ICursorPositionChangedEvent;
 export type ModelDecorationOptions = monaco.editor.IModelDecorationOptions;
 
@@ -49,30 +42,31 @@ export interface MonacoEditorProps {
   language?: string;
   theme?: string;
   transparent?: boolean;
-  editOperations?: EditOperation[];
-  stateDecorations?: StateDecoration[];
   editorActions?: EditorAction[];
   options?: Options;
   overrideServices?: OverrideServices;
-  line?: number;
-  viewStates?: { [key: string]: ViewState };
-  saveViewState?: boolean;
-  onInitialize?: (editor: Editor, monaco: Monaco, element: HTMLElement) => any;
+  /**
+   * Called immediately after editor and model are created but before this component
+   * perform some initialization methods. Use `onReady` instead for
+   * post-initialization callback
+   */
+  onInitialize?: (editor: Editor, monaco: Monaco, element: HTMLElement) => void;
+  onReady?: (editor: Editor, monaco: Monaco, element: HTMLElement) => void;
   onChange?: (
     text: string,
-    event: ModelChangedEvent,
+    event: ModelContentChangedEvent,
     position: Position
-  ) => any;
+  ) => void;
+  onDispose?: (editor: Editor) => void;
   onCursorPositionChange?: (
     text: string,
     event: CursorChangedEvent,
     position: Position
-  ) => any;
-  onDragOver?: () => any;
-  onDrop?: () => any;
-  onDragLeaveCapture?: () => any;
-  onProcessPaste?: (e: any) => any;
-  onSetViewStates?: () => any;
+  ) => void;
+  onDragOver?: () => void;
+  onDrop?: () => void;
+  onDragLeaveCapture?: () => void;
+  onProcessPaste?: (e: any) => void;
   children?: React.ReactNode;
 }
 
@@ -94,31 +88,12 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
   // Set whenever editor has been created and unset when editor is disposed
   const [isEditorReady, setIsEditorReady] = React.useState(false);
 
-  // State or Prop option
-
-  // Saving the monaco editor text
-  const [value, setValue] = useStateOrProps(
-    '',
-    props.value,
-    props.onChange,
-    props.value !== null
-  );
-
-  // Saving the monaco view state
-  const [viewStates, setViewStates] = useStateOrProps(
-    {},
-    props.viewStates,
-    props.onSetViewStates,
-    props.viewStates !== null
-  );
-
   // Fields
 
   const monacoRef: React.MutableRefObject<Monaco> = React.useRef(null);
   const editorRef: React.MutableRefObject<Editor> = React.useRef(null);
   const containerRef: React.MutableRefObject<HTMLDivElement> =
     React.useRef(null);
-  const oldDecorations: React.MutableRefObject<string[]> = React.useRef([]);
   const currentActions: React.MutableRefObject<Disposable[]> = React.useRef([]);
   const preventChange = React.useRef(null);
 
@@ -139,8 +114,6 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
     processPaste: (_: any) => {},
   });
 
-  const previousPath = usePrevious(props.path);
-
   // ----------------------------------------------------------------------------
 
   // Effects
@@ -156,7 +129,7 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
     if (isMonacoMounted && !editorRef.current) {
       const model = getOrCreateModel(
         monacoRef.current,
-        value,
+        props.value,
         props.language,
         props.path
       );
@@ -179,12 +152,13 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
         return handlers.current.processPaste(e);
       });
 
-      if (props.saveViewState) {
-        // Restore view state if exist in map
-        editorRef.current.restoreViewState(viewStates[props.path]);
-      }
-
       monacoRef.current.editor.setTheme(props.theme);
+
+      props.onInitialize?.(
+        editorRef.current,
+        monacoRef.current,
+        containerRef.current
+      );
 
       setIsEditorReady(true);
     }
@@ -197,12 +171,11 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
     props.path,
     props.options,
     props.overrideServices,
-    props.saveViewState,
     props.theme,
   ]);
 
   // Handle disposing editor on unmount
-  useMount(() => {
+  React.useEffect(() => {
     // Unmount
     return () => {
       if (editorRef.current) {
@@ -216,12 +189,8 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
           subscriptions.current.cursorPositionChanged = null;
         }
 
-        if (props.saveViewState) {
-          setViewStates({
-            ...viewStates,
-            [props.path]: editorRef.current.saveViewState(),
-          });
-        }
+        // If save view state is needed before dispose
+        props.onDispose?.(editorRef.current);
 
         // Dispose model
         const model = editorRef.current.getModel();
@@ -236,7 +205,7 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
         setIsEditorReady(false);
       }
     };
-  });
+  }, []);
 
   // ----------------------------------------------------------------------------
 
@@ -245,68 +214,20 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
   // change. This is different than the "post editor" effects below since these
   // types of effects are not handled during editor creation
 
-  useEffectOnReady(
-    () => {
-      if (props.saveViewState) {
-        editorRef.current.restoreViewState(viewStates[props.path]);
-      }
-    },
-    [viewStates],
-    isEditorReady
-  );
-
-  // Update decorations
-  useEffectOnReady(
-    () => {
-      const hasDecorations =
-        props.stateDecorations && props.stateDecorations.length > 0;
-      if (oldDecorations.current.length > 0 && !hasDecorations) {
-        oldDecorations.current = editorRef.current.deltaDecorations(
-          oldDecorations.current,
-          []
-        );
-      } else if (hasDecorations) {
-        const decors = props.stateDecorations.map(({ range, options }) => {
-          return {
-            range: new monacoRef.current.Range(
-              range.start.line,
-              range.start.column,
-              range.end.line,
-              range.end.column
-            ),
-            options,
-          };
-        });
-        oldDecorations.current = editorRef.current.deltaDecorations(
-          oldDecorations.current,
-          decors
-        );
-      }
-    },
-    [props.stateDecorations],
-    isEditorReady
-  );
-
   // Update actions
   // Editor actions are tied to the passed props. Meaning they are added when
   // new actions are added and removed when they are no longer passed through
   // the component.
   useEffectOnReady(
     () => {
-      // editorActions props have changed. The only time where we will not update
-      // this, is if the props is a new empty array that is technically "different"
-      // from the previous empty array passed
-      if (
-        currentActions.current.length !== 0 ||
-        props.editorActions.length !== 0
-      ) {
-        // Remove all previous editor actions
-        for (let i = 0; i < currentActions.current.length; i++) {
-          currentActions.current[i].dispose();
-        }
-        currentActions.current = [];
+      // Remove all previous editor actions
+      for (let i = 0; i < currentActions.current.length; i++) {
+        currentActions.current[i].dispose();
+      }
+      currentActions.current = [];
 
-        // Add new actions
+      // Add new actions
+      if (props.editorActions) {
         for (let i = 0; i < props.editorActions.length; i++) {
           const action = props.editorActions[i];
           const disposableAction = editorRef.current.addAction(action);
@@ -318,56 +239,12 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
     isEditorReady
   );
 
-  // Update line
-  useEffectOnReady(
-    () => {
-      if (props.line) {
-        editorRef.current.revealLine(props.line);
-      }
-    },
-    [props.line],
-    isEditorReady
-  );
-
   // ----------------------------------------------------------------------------
 
   // Post editor effects
   // These effects are only applied after certains props change
   // POST editor creation. Since otherwise, the editor will already
   // have these values set on creation (value, lang, theme, etc)
-
-  // Update model and save / restore view states when path/id changes
-  usePostEffect(
-    () => {
-      const model = getOrCreateModel(
-        monacoRef.current,
-        value,
-        props.language,
-        props.path
-      );
-
-      if (model !== editorRef.current.getModel()) {
-        if (props.saveViewState) {
-          // Save view state before changing model
-          editorRef.current.restoreViewState(viewStates[props.path]);
-          setViewStates({
-            ...viewStates,
-            [previousPath]: editorRef.current.saveViewState(),
-          });
-        }
-
-        // Update model
-        editorRef.current.setModel(model);
-
-        if (props.saveViewState) {
-          // Restore view state if exist in map
-          editorRef.current.restoreViewState(viewStates[props.path]);
-        }
-      }
-    },
-    [props.path],
-    isEditorReady
-  );
 
   // Update options if modified
   usePostEffect(
@@ -390,6 +267,7 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
       }
 
       subscriptions.current.modelContentChanged =
+      
         editorRef.current.onDidChangeModelContent((event) => {
           if (!preventChange.current) {
             const eventPosition = editorRef.current.getPosition();
@@ -397,10 +275,11 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
               line: eventPosition.lineNumber,
               column: eventPosition.column,
             };
+            
             // Calls onChange if managing using props, otherwise updates internal state
             // We do this because we need to keep track of editor text in case
             // of an refresh (unmount/remount where state/refs are not reset)
-            setValue(editorRef.current.getValue(), event, position);
+            props.onChange?.(editorRef.current.getValue(), event, position);
           }
         });
     },
@@ -417,47 +296,27 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
         )
       ) {
         // If read only, set text to whatever value passed through props
-        editorRef.current.setValue(value);
-      } else {
-        // If not read-only, check if value has changed or if edit operations provided
-        const hasEditOperations =
-          props.editOperations && props.editOperations.length > 0;
-        if (value !== editorRef.current.getValue() && !hasEditOperations) {
-          // Value has change, update full text
-          const model = editorRef.current.getModel();
-          preventChange.current = true;
-          editorRef.current.pushUndoStop();
-          model.pushEditOperations(
-            [],
-            [
-              {
-                range: model.getFullModelRange(),
-                text: value,
-              },
-            ],
-            undefined
-          );
-          editorRef.current.pushUndoStop();
-          preventChange.current = false;
-        } else if (hasEditOperations) {
-          // Edit operations passed, push edits
-          const edits = props.editOperations.map(({ range, text }) => {
-            return {
-              range: new monacoRef.current.Range(
-                range.start.line,
-                range.start.column,
-                range.end.line,
-                range.end.column
-              ),
-              text,
-            };
-          });
-          const model = editorRef.current.getModel();
-          model.pushEditOperations([], edits, undefined);
-        }
+        editorRef.current.setValue(props.value);
+      } else if (props.value !== editorRef.current.getValue()) {
+        // Value has change, update full text
+        const model = editorRef.current.getModel();
+        preventChange.current = true;
+        editorRef.current.pushUndoStop();
+        model.pushEditOperations(
+          [],
+          [
+            {
+              range: model.getFullModelRange(),
+              text: props.value,
+            },
+          ],
+          undefined
+        );
+        editorRef.current.pushUndoStop(); //TODO: should this be a pop? find out
+        preventChange.current = false;
       }
     },
-    [props.value], // we don't need to use (state) value - monaco handles this internally
+    [props.value],
     isEditorReady
   );
 
@@ -484,10 +343,10 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
 
   // Callbacks
 
-  // onInitialize
+  // onReady
   useEffectOnReady(
     () => {
-      props.onInitialize(
+      props.onReady?.(
         editorRef.current,
         monacoRef.current,
         containerRef.current
@@ -506,6 +365,7 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
       }
 
       subscriptions.current.cursorPositionChanged =
+      
         editorRef.current.onDidChangeCursorPosition((event) => {
           if (!preventChange.current) {
             if (
@@ -525,7 +385,7 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
               line: event.position.lineNumber,
               column: event.position.column,
             };
-            props.onCursorPositionChange(
+            props.onCursorPositionChange?.(
               editorRef.current.getValue(),
               event,
               position
@@ -594,11 +454,15 @@ const getOrCreateModel = (
   monaco: Monaco,
   value: string,
   language: string,
-  path: string
+  path?: string
 ) => {
-  let model = monaco.editor.getModel(monaco.Uri.parse(path));
+  let model = null;
+  const uri = path ? monaco.Uri.parse(path) : undefined;
+  if (path) {
+    model = monaco.editor.getModel(uri);
+  }
   if (!model) {
-    model = monaco.editor.createModel(value, language, monaco.Uri.parse(path));
+    model = monaco.editor.createModel(value, language, uri);
   }
   return model;
 };
@@ -608,25 +472,11 @@ const defaultProps: Omit<MonacoEditorProps, 'key'> = {
   classNames: {
     transparent: 'transparent',
   },
-  path: '',
+  path: null,
   value: null,
   language: 'javascript',
   theme: null,
   transparent: false,
-  editOperations: [],
-  stateDecorations: [],
-  editorActions: [],
-  line: null,
-  viewStates: null,
-  saveViewState: true,
-  onInitialize: () => {},
-  onChange: () => {},
-  onCursorPositionChange: () => {},
-  onProcessPaste: () => {},
-  onDragOver: () => {},
-  onDrop: () => {},
-  onDragLeaveCapture: () => {},
-  onSetViewStates: () => {},
 };
 
 export interface Position {
@@ -634,18 +484,98 @@ export interface Position {
   column: number;
 }
 
+export interface Range {
+  start: Position;
+  end: Position;
+}
+
 export interface EditOperation {
-  range: {
-    start: Position;
-    end: Position;
-  };
+  range: Range;
   text: string;
 }
 
 export interface StateDecoration {
-  range: {
-    start: Position;
-    end: Position;
-  };
+  range: Range;
   options: ModelDecorationOptions;
 }
+
+export const toMonacoRange = (monaco: Monaco, range: Range) => {
+  const mappedRange = new monaco.Range(
+    range.start.line,
+    range.start.column,
+    range.end.line,
+    range.end.column
+  );
+  return mappedRange;
+};
+
+export const fromMonacoRange = (range: monaco.IRange): Range => {
+  return {
+    start: {
+      line: range.startLineNumber,
+      column: range.startColumn,
+    },
+    end: {
+      line: range.endLineNumber,
+      column: range.endColumn,
+    },
+  };
+};
+
+export const toMonacoOperations = (
+  monaco: Monaco,
+  editOperations: EditOperation[]
+) => {
+  const mappedEditOperations = editOperations.map(({ range, text }) => {
+    return {
+      range: toMonacoRange(monaco, range),
+      text,
+    };
+  });
+  return mappedEditOperations;
+};
+
+export const toMonacoDecorations = (
+  monaco: Monaco,
+  decorations: StateDecoration[]
+) => {
+  const mappedDecorations = decorations.map(({ range, options }) => {
+    return {
+      range: toMonacoRange(monaco, range),
+      options,
+    };
+  });
+  return mappedDecorations;
+};
+
+// ----------------------------------------------------------------------------
+
+/** Use effect after initial mount */
+const usePostEffect = (effect: () => any, deps: any, applyChanges = true) => {
+  const isInitialMount = React.useRef(true);
+
+  if (isInitialMount.current || !applyChanges) {
+    effect = () => {
+      isInitialMount.current = false;
+    };
+  }
+
+  React.useEffect(effect, deps);
+};
+
+/** Use this effect only when isReady flag is true */
+const useEffectOnReady = (
+  effect: () => any,
+  deps: any[] = [],
+  isReady: boolean = false
+) => {
+  const wrappedEffect = React.useCallback(() => {
+    if (isReady) {
+      return effect();
+    }
+  }, [isReady, effect]);
+
+  const dependencies = [...deps, isReady];
+
+  React.useEffect(wrappedEffect, dependencies);
+};

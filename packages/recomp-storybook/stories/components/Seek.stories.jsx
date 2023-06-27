@@ -11,7 +11,7 @@ import {
   IconNote,
   IconNotes,
 } from '@tabler/icons-react';
-import { useFuse } from '@recomp/hooks';
+import { useSearch, highlightRanges } from '@recomp/hooks';
 
 export default {
   title: 'Components/Seek',
@@ -52,24 +52,63 @@ const Template = (args) => {
     setSearchText(event.target.value);
   };
 
-  const results = React.useMemo(() => {
-    const results = search(searchText);
+  const results = useSearch(searchText, items, {
+    keys: ['name', 'description'],
+  });
+
+  const highlightText = (text, ranges) => {
+    return highlightRanges(text, ranges, (substring, index, match) => {
+      return (
+        <div
+          key={index}
+          style={{
+            color: match ? 'rgb(90, 200, 230)' : 'rgb(210, 210, 210)',
+            display: 'inline',
+          }}
+        >
+          {substring}
+        </div>
+      );
+    });
+  };
+
+  const highlighted = React.useMemo(() => {
+    const highlighted = [];
+
+    for (const result of results) {
+      const { item, ranges } = result;
+      // Not sure why I have to wrap in div, this freezes if I don't...
+      // specifically the name property, can't React node arrays be passed as a
+      // property?
+      highlighted.push({
+        key: item.name,
+        name: <div>{highlightText(item.name, ranges.name)}</div>,
+        description: (
+          <div>{highlightText(item.description, ranges.description)}</div>
+        ),
+        icon: item.icon,
+      });
+    }
+
+    // Whenever rendered results change, set selected index to first item
+    // (if in its own separate useEffect, rendered change will be slightly delayed)
     setSelectedIndex(0);
     if (results.length > 0) {
-      setSelected(results[0].name);
-    } else {
-      setSelected(null);
+      setSelected(results[0].item.name);
     }
-    return results;
-  }, [searchText]);
+
+    return highlighted;
+  }, [results]);
+
+  React.useEffect(() => {}, [results]);
 
   const handleMove = (direction) => {
     if (direction === 'down' && selectedIndex < results.length - 1) {
       setSelectedIndex(selectedIndex + 1);
-      setSelected(results[selectedIndex + 1].name);
+      setSelected(results[selectedIndex + 1].item.name);
     } else if (direction === 'up' && selectedIndex > 0) {
       setSelectedIndex(selectedIndex - 1);
-      setSelected(results[selectedIndex - 1].name);
+      setSelected(results[selectedIndex - 1].item.name);
     }
   };
 
@@ -77,13 +116,13 @@ const Template = (args) => {
     <div style={{ maxWidth: '500px' }}>
       <Seek
         {...args}
-        children={results.map((item) => {
+        children={highlighted.map((item) => {
           return (
             <Item
-              key={item.name}
+              key={item.key}
               icon={item.icon}
               name={item.name}
-              selected={item.name === selected}
+              selected={item.key === selected}
             >
               {item.description}
             </Item>

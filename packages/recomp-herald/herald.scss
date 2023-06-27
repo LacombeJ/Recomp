@@ -1,15 +1,15 @@
+
 @use '@recomp/core' as recomp;
 
 @mixin init() {
 
   .recomp-herald {
-    position: absolute;
+    position: fixed;
 
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-end;
-    position: fixed;
     
     pointer-events: none;
 

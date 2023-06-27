@@ -7,10 +7,10 @@
     flex-direction: column;
     justify-content: stretch;
     align-items: stretch;
-    background-color: rgb(35, 35, 35);
+    background-color: recomp.$bg_lighter;
     border-radius: 4px;
     border: 1px solid rgba(white, 0.15);
-    @include recomp.shadow();
+    @include recomp.shadow-raised();
 
     .search {
       display: flex;
@@ -38,7 +38,7 @@
     }
 
     .entries {
-      background-color: rgb(30, 30, 30);
+      background-color: recomp.$background;
 
       .item {
         display: flex;
@@ -47,6 +47,8 @@
         padding: 8px;
         margin: 4px;
         border-radius: 4px;
+
+        transition: background-color 0.2s;
 
         .icon {
           color: rgba(white, 0.4);
@@ -57,11 +59,11 @@
         }
 
         &.selected {
-          background-color: recomp.$primary;
+          background-color: rgba(recomp.$primary, 0.7);
         }
 
         &:hover:not(.selected) {
-          background-color: rgba(recomp.$primary, 0.3);
+          background-color: rgba(recomp.$primary, 0.2);
         }
       }
     }

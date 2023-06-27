@@ -2,9 +2,9 @@
 
 @mixin init() {
 
-  $border_color: rgb(90, 90, 90);
-  $background_color: rgb(30, 30, 30);
-  $hover_color: rgb(60, 60, 60);
+  $border_color: rgba(white, 0.25);
+  $background_color: recomp.$background;
+  $hover_color: rgba(white, 0.15);
 
   .recomp-menu {
 
@@ -25,11 +25,12 @@
       overflow: hidden;
 
       .highlight {
+        border: 1px solid transparent;
         $inset: 0px 4px 0px 4px;
         position: absolute;
         inset: $inset;
         z-index: 0;
-        transition: background-color 0.3s;
+        transition: background-color 0.3s, border-color 0.3s;
         border-radius: 4px;
       }
 

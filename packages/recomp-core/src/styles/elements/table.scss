@@ -4,7 +4,7 @@
 
     overflow-y: auto;
     display: inline-block;
-    border: 1px solid rgba(150, 150, 150, 0.5);
+    border: 1px solid rgba(white, 0.2);
 
     .table {
       border-collapse: collapse;
@@ -19,7 +19,7 @@
     .th,
     .td {
       padding: 8px;
-      border: 1px solid rgba(150, 150, 150, 0.5);
+      border: 1px solid rgba(white, 0.2);
     }
 
     .th {
@@ -27,11 +27,11 @@
     }
 
     .tr .th {
-      background-color: rgba(10, 10, 10, 0.2);
+      background-color: rgba(black, 0.15);
     }
 
     .tr:nth-child(even) {
-      background-color: rgba(10, 10, 10, 0.25);
+      background-color: rgba(black, 0.2);
     }
 
     .tr {

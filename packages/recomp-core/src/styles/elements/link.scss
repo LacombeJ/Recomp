@@ -1,6 +1,6 @@
 @use "sass:color" as color;
 
-@use '../common/colors.scss' as recomp;
+@use '../common' as recomp;
 
 @function lighten_then_desaturate($color, $lighten_amount, $desaturation_amount) {
   @return color.scale(color.scale($color,
