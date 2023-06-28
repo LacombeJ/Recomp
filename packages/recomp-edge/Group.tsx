@@ -7,7 +7,7 @@ import {
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 
 import { useSpring, animated } from '@react-spring/web';
-import { useMeasure } from '@recomp/hooks';
+import { Rect, useMeasure } from '@recomp/hooks';
 
 import * as util from '@recomp/utility/common';
 
@@ -29,16 +29,17 @@ interface EdgeGroupProps extends GroupProps {
   expanded: boolean;
   invisible: boolean;
   animated: boolean;
-  onItemClick: (id: string) => any;
+  onItemClick: (id: string, rect: Rect) => any;
   onItemDoubleClick: (id: string) => any;
   onItemClose: (id: string) => any;
-  onGroupClick: (id: string) => any;
+  onGroupClick: (id: string, rect: Rect) => any;
   onItemContextMenu: (e: React.MouseEvent, id: string) => any;
   onGroupContextMenu: (e: React.MouseEvent, id: string) => any;
   onRenderItem: (id: string) => TabProps;
+  onMouseEnter?: (id: string, rect: Rect) => any;
+  onMouseLeave?: (id: string) => any;
   model: EdgeModel;
-  divRef?: React.LegacyRef<HTMLDivElement>;
-  handleRef?: React.LegacyRef<HTMLDivElement>;
+  handleRef?: (element: HTMLDivElement) => void;
   handleListeners?: SyntheticListenerMap;
 }
 
@@ -89,20 +90,36 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
     border: `1px solid ${props.color}`,
   };
 
-  const handeHeadClick = () => {
-    props.onGroupClick?.(props.id);
+  const handleHeadRef = (element: HTMLDivElement) => {
+    props.handleRef?.(element);
+  };
+
+  const handeHeadClick = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    props.onGroupClick?.(props.id, rect);
     if (!props.expanded) {
       setBodyVisible(true);
     }
   };
 
+  const handleHeadMouseEnter = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    props.onMouseEnter?.(props.id, rect);
+  };
+
+  const handleHeadMouseLeave = () => {
+    props.onMouseLeave?.(props.id);
+  };
+
   React.useEffect(() => {
     // expansion might be triggerd externally, not necessarily through head click
-    setBodyVisible(true);
+    if (props.expanded) {
+      setBodyVisible(true);
+    }
   }, [props.expanded]);
 
-  const handleItemClick = (id: string) => {
-    props.onItemClick?.(id);
+  const handleItemClick = (id: string, rect: Rect) => {
+    props.onItemClick?.(id, rect);
   };
 
   const handleItemCloseClick = (id: string) => {
@@ -115,6 +132,14 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
 
   const handleGroupContextMenu = (e: React.MouseEvent) => {
     props.onGroupContextMenu?.(e, props.id);
+  };
+
+  const handleMouseEnter = (id: string, rect: Rect) => {
+    props.onMouseEnter?.(id, rect);
+  };
+
+  const handleMouseLeave = (id: string) => {
+    props.onMouseLeave?.(id);
   };
 
   const group = () => {
@@ -136,6 +161,8 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
                 onDoubleClick={props.onItemDoubleClick}
                 onCloseClick={handleItemCloseClick}
                 onContextMenu={handleItemContextMenu}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
                 {...itemProps}
               />
             </Sortable>
@@ -146,13 +173,15 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
   };
 
   return (
-    <div className={className} style={style} ref={props.divRef}>
+    <div className={className} style={style}>
       <div
         className="head"
         style={headStyle}
         onClick={handeHeadClick}
         onContextMenu={handleGroupContextMenu}
-        ref={props.handleRef}
+        ref={handleHeadRef}
+        onMouseEnter={handleHeadMouseEnter}
+        onMouseLeave={handleHeadMouseLeave}
         {...props.handleListeners}
       >
         <div className={props.classNames.icon}>{props.icon}</div>
@@ -160,7 +189,7 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
       </div>
       <div className="body" style={bodyStyle}>
         {bodyVisible ? (
-          animated ? (
+          props.animated ? (
             <animated.div style={{ ...expand, overflow: 'hidden' }}>
               <div className="inner" ref={bodyRef}>
                 {group()}

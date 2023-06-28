@@ -2,7 +2,8 @@
 
 @mixin init() {
 
-  .recomp-dropzone {
+  .recomp-dropzone,
+  .recomp-dropzone-context>.zone {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,6 +45,39 @@
         color: rgba(white, 0.6);
         font-size: 16px;
       }
+    }
+  }
+
+  .recomp-dropzone-context {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    position: absolute;
+    background-color: rgba(black, 0.7);
+    inset: 0;
+
+    opacity: 0;
+    z-index: 100;
+    transition: opacity 0.5s;
+
+    &.visible {
+      opacity: 1;
+    }
+
+    &.dragging {
+      pointer-events: all;
+
+      .zone {
+        pointer-events: none; // to stop flickering when dragging over zone
+      }
+    }
+
+    .zone {
+      position: relative;
+      width: 90%;
+      height: 90%;
+      // background-color: rgba(black, 0.3);
     }
   }
 

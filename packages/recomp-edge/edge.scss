@@ -1,12 +1,46 @@
 @use '@recomp/core' as recomp;
+@use 'sass:color';
+
+$border-radius: 6px;
+$border-left: 3px;
+
+// shared by item and group icon (caret)
+@mixin icon() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 1.5em;
+  margin-left: 0.2em;
+  margin-right: 0.6em;
+
+  svg {
+    $size: 1.5em;
+    width: $size;
+    height: $size;
+  }
+}
+
+// shared by item and group root
+@mixin root-element() {
+  margin: 6px 4px 6px 0px;
+}
+
+// shared by item and group head
+@mixin element() {
+  border: 1px solid transparent;
+  border-left-width: $border-left;
+  min-width: 24px;
+  height: 1.5em;
+}
 
 @mixin init() {
 
   .recomp-edge {
 
     $background: recomp.$background;
-    $hover: recomp.$bg_lighter;
-    $selected: recomp.$bg_lighter;
+    $hover: color.adjust(recomp.$background, $lightness: 8%);
+    $selected: color.adjust(recomp.$background, $lightness: 8%);
 
     background-color: $background;
     display: inline-flex;
@@ -14,7 +48,8 @@
     justify-content: space-between;
     align-items: stretch;
 
-    padding: 4px 4px 12px 8px;
+    padding: 4px 0px 12px 8px;
+    box-sizing: border-box;
 
     // Need to apply to both parent and scroll container
     // (to work with both browsers)
@@ -23,6 +58,7 @@
     .scrollable {
 
       overflow-y: scroll;
+      overflow-x: hidden;
       @include recomp.scrollbar($width: 4px);
     }
 
@@ -47,28 +83,20 @@
 
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: flex-start;
 
-      border: 1px solid transparent;
-      border-left-width: 3px;
-      margin: 6px 4px 6px 0px;
-      padding: 4px 4px 4px 4px;
-      min-width: 16px;
-      height: 22px;
-      border-radius: 6px;
+      @include element();
+      @include root-element();
+      padding: 0.4em 0;
+
+      border-radius: $border-radius;
 
       user-select: none;
 
       transition: border-color 0.3s, box-shadow 0.6s, border-color 0.3s, background-color 0.3s;
 
-      .icon {
-        display: flex;
-        margin-right: 4px;
-
-        svg {
-          width: 20px;
-          height: 20px;
-        }
+      >.icon {
+        @include icon();
       }
 
       .label {
@@ -83,9 +111,10 @@
         position: relative;
       }
 
+
       .close {
         position: absolute;
-        transform: translate(-22px, -12px);
+        transform: translateX(calc(-100% - 0.1em)) translateY(-50%);
 
         visibility: hidden;
         color: transparent;
@@ -100,16 +129,7 @@
         transition: background-color 0.3s;
 
         &:hover {
-          background-color: $hover;
-        }
-      }
-
-      &:hover:not(.dragging),
-      &.selected:not(.dragging) {
-        .close {
-          visibility: visible;
-          pointer-events: visible;
-          color: rgb(white, 0.7);
+          background-color: rgba(white, 0.2);
         }
       }
 
@@ -122,6 +142,27 @@
         background-color: $selected;
       }
     }
+
+    &:not(.minimized) {
+      .item {
+
+        &:hover:not(.dragging):not(.minimized),
+        &.selected:not(.dragging):not(.minimized) {
+          .close {
+            visibility: visible;
+            pointer-events: visible;
+            color: rgb(white, 0.7);
+
+            svg {
+              $size: 1em;
+              width: $size;
+              height: $size;
+            }
+          }
+        }
+      }
+    }
+
 
     &:not(.dragging) .tab.item:not(.selected) {
       &:hover {
@@ -137,54 +178,48 @@
       align-content: stretch;
       align-items: stretch;
       overflow: hidden;
-
-      margin: 6px 4px 6px 0px;
+      @include root-element();
 
       .head {
         color: rgba(0, 0, 0, 1);
-        font-size: 16px;
+        font-size: 1.0em;
         font-weight: 500;
         display: flex;
         flex-direction: row;
         align-items: center;
         text-align: center;
-        min-width: 24px;
-        height: 22px;
 
-        border: 1px solid transparent;
-        border-left-width: 2px;
-        border-top-left-radius: 2px;
-        border-top-right-radius: 2px;
+        @include element();
+        padding: 0.2em 0;
+        border-top-left-radius: $border-radius;
+        border-top-right-radius: $border-radius;
 
         .label {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
+
+        >.icon {
+          @include icon();
+
+          svg {
+            transition: transform 0.2s;
+            transform: rotate(0deg);
+          }
+        }
       }
 
       .body {
         background-color: $background;
-        border-bottom-left-radius: 2px;
-        border-bottom-right-radius: 2px;
+        border-bottom-left-radius: $border-radius;
+        border-bottom-right-radius: $border-radius;
       }
 
       user-select: none;
       transition: border-color 0.3s,
       box-shadow 0.6s,
       border-color 0.3s;
-
-      .icon {
-        display: flex;
-        margin-right: 4px;
-
-        svg {
-          transition: transform 0.2s;
-          transform: rotate(0deg);
-          width: 20px;
-          height: 20px;
-        }
-      }
 
       &.dragging {
         box-shadow: rgba(0, 0, 0, 0.5) 0 4px 8px;
@@ -198,6 +233,25 @@
     .tab.group.expanded {
       >.head>.icon>svg {
         transform: rotate(90deg);
+      }
+    }
+
+    .tab.group:not(.expanded) {
+      border-bottom-left-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+    }
+
+    .tooltip-overlay {
+      pointer-events: none;
+      position: fixed;
+      top: 0px;
+      bottom: 0px;
+      left: 0;
+      right: 0;
+      z-index: 100;
+
+      .tooltip {
+        position: absolute;
       }
     }
 

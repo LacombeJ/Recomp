@@ -40,7 +40,7 @@ Vertical.args = {
 export const LeftSnap = Template.bind({});
 LeftSnap.args = {
   children: [
-    <Split.Item minSnap={250} key="1">
+    <Split.Item snapFrom={250} key="1">
       <div className="split-left">Left</div>
     </Split.Item>,
     <Split.Item key="2">
@@ -55,7 +55,32 @@ RightSnap.args = {
     <Split.Item key="1">
       <div className="split-left">Left</div>
     </Split.Item>,
-    <Split.Item minSnap={250} key="2">
+    <Split.Item snapFrom={250} key="2">
+      <div className="split-right">Right</div>
+    </Split.Item>,
+  ],
+};
+
+export const DoubleSnap = Template.bind({});
+DoubleSnap.args = {
+  children: [
+    <Split.Item snapFrom={250} key="1">
+      <div className="split-left">Left</div>
+    </Split.Item>,
+    <Split.Item snapFrom={250} key="2">
+      <div className="split-right">Right</div>
+    </Split.Item>,
+  ],
+  orientation: 'second',
+};
+
+export const SnapTo = Template.bind({});
+SnapTo.args = {
+  children: [
+    <Split.Item snapTo={50} snapFrom={250} key="1">
+      <div className="split-left">Left</div>
+    </Split.Item>,
+    <Split.Item snapTo={150} snapFrom={250} key="2">
       <div className="split-right">Right</div>
     </Split.Item>,
   ],
@@ -100,7 +125,7 @@ const PropsSizeTemplate = (args) => {
         <Split.Item minSize={'150px'}>
           <div className="split-left">Left</div>
         </Split.Item>
-        <Split.Item minSnap={'150px'} maxSize={'400px'} defaultSize={'200px'}>
+        <Split.Item snapFrom={'150px'} maxSize={'400px'} defaultSize={'200px'}>
           <div className="split-right">Right</div>
         </Split.Item>
       </Split>

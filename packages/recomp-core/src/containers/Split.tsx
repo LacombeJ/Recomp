@@ -77,6 +77,14 @@ export const Split = (props: SplitProps) => {
     [props.classNames.horizontal]: props.split === 'horizontal',
   });
 
+  // An issue seen is when resizing window, split can get adjusted outside
+  // expected min/max range. An attempted fix like listening to size changes
+  // and calling performOnResize but with target pos instead of mouse pos
+  // did not work since on initialization, client rect can vary during layout
+  // and size could be inproperly adjusted before layout.
+  // TODO: find a solution for this, maybe considering snap states, possible
+  // ignoring callbacks like onResize when adjusting
+
   const handleMouseUp = () => {
     unsubscribeMouseUp();
     unsubscribeMouseMove();
@@ -123,13 +131,8 @@ export const Split = (props: SplitProps) => {
     const rect = measureResult.clientRect;
     const offsets = util.offsets(clientX, clientY, rect);
 
-    const minSnapLeft = !!first.props.minSnap;
-    const minSnapRight = !!second.props.minSnap;
-    const maxSnapLeft = !!first.props.maxSnap;
-    const maxSnapRight = !!second.props.maxSnap;
-
-    const minSnap = minSnapLeft || maxSnapRight; // first-side snapping
-    const maxSnap = maxSnapLeft || minSnapRight; // second-side snapping
+    const snapLeft = !!first.props.snapFrom;
+    const snapRight = !!second.props.snapFrom;
 
     const containerSize = rect[label.size];
     const cursorOffset = offsets[label.pos];
@@ -142,12 +145,10 @@ export const Split = (props: SplitProps) => {
       second.props.maxSize
     );
 
-    const snapbound = util.resizeBoundary(
+    const snapbound = util.snapBoundary(
       containerSize,
-      first.props.minSnap,
-      first.props.maxSnap,
-      second.props.minSnap,
-      second.props.maxSnap
+      first.props.snapFrom,
+      second.props.snapFrom
     );
 
     // position of mouse clipped to size bounds
@@ -166,25 +167,33 @@ export const Split = (props: SplitProps) => {
       snapbound.max
     );
 
+    const snapTo = util.snapBoundary(
+      containerSize,
+      first.props.snapTo,
+      second.props.snapTo
+    );
+    const snapToLeft = util.toSize(snapTo.min, '%', containerSize);
+    const snapToRight = util.toSize(snapTo.max, '%', containerSize);
+
     let actualTarget = target;
 
-    if (minSnap || maxSnap) {
-      if (minSnap && cursorOffset < snapbound.min) {
-        // Left snapping around midway point between (0) and snapbound.min
-        if (cursorOffset < snapbound.min * 0.45) {
-          actualTarget = '0%';
-        } else if (cursorOffset > snapbound.min * 0.55) {
-          actualTarget = snaptarget;
-        }
-      }
+    // determining midpoint, with a gap of of 10% wide to control snapping
 
-      if (maxSnap && cursorOffset > snapbound.max) {
-        // Right snapping around midway point between snapbound.max and container
-        if (cursorOffset > 0.45 * containerSize + 0.55 * snapbound.max) {
-          actualTarget = '100%';
-        } else if (cursorOffset < 0.55 * containerSize + 0.55 * snapbound.max) {
-          actualTarget = snaptarget;
-        }
+    if (snapLeft && cursorOffset < snapbound.min) {
+      // Left snapping around midway point between snapTo.min and snapbound.min
+      if (cursorOffset < 0.45 * snapTo.min + snapbound.min * 0.55) {
+        actualTarget = snapToLeft;
+      } else if (cursorOffset > 0.55 * snapTo.min + snapbound.min * 0.45) {
+        actualTarget = snaptarget;
+      }
+    }
+
+    if (snapRight && cursorOffset > snapbound.max) {
+      // Right snapping around midway point between snapbound.max and snapTo.max
+      if (cursorOffset > 0.45 * snapTo.max + 0.55 * snapbound.max) {
+        actualTarget = snapToRight;
+      } else if (cursorOffset < 0.55 * snapTo.max + 0.55 * snapbound.max) {
+        actualTarget = snaptarget;
       }
     }
 
@@ -354,8 +363,8 @@ interface SplitItemProps {
   size?: string | number;
   minSize?: string | number;
   maxSize?: string | number;
-  minSnap?: string | number;
-  maxSnap?: string | number;
+  snapFrom?: string | number;
+  snapTo?: string | number;
   defaultSize?: string | number;
   onSetRef?: () => any;
   children?: React.ReactNode;

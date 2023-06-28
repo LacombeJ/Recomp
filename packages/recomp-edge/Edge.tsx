@@ -28,12 +28,18 @@ import {
 import * as util from '@recomp/utility/common';
 
 import { Chevron, File } from '@recomp/icons';
-import { useModel, Update, Draft } from '@recomp/hooks';
+import { useModel, Update, Draft, useMeasure, Rect } from '@recomp/hooks';
 
 import { EdgeItem } from './Item';
 import { EdgeGroup } from './Group';
 import { Sortable } from './Sortable';
 import { closestAdjustedCenter } from './collision';
+import {
+  Tooltip,
+  calculateParentAnchor,
+  useTooltipCalculations,
+} from '@recomp/core';
+import { animated } from '@react-spring/web';
 
 // ----------------------------------------------------------------------------
 
@@ -57,6 +63,10 @@ interface EdgeProps {
   classNames?: {
     scrollable?: string;
     dragging?: string;
+    minimized?: string;
+    tooltip?: string;
+    tooltipOffset?: string;
+    tooltipOverlay?: string;
   };
   style?: React.CSSProperties;
   model?: EdgeModel;
@@ -66,6 +76,7 @@ interface EdgeProps {
   children?: React.ReactNode;
   onRenderItem?: (id: string) => TabProps;
   onRenderGroup?: (id: string) => GroupProps;
+  onTooltip?: (id: string) => string;
   onItemClose?: (id: string) => any;
   onItemContextMenu?: (e: React.MouseEvent, id: string) => any;
   onGroupContextMenu?: (e: React.MouseEvent, id: string) => any;
@@ -102,12 +113,31 @@ export const Edge = (props: EdgeProps) => {
 
   const [dragging, setDragging] = React.useState<string>(null);
 
+  const [edgeRef, edgeMeasure] = useMeasure();
+
+  const isMinimized = React.useMemo(() => {
+    return edgeMeasure.contentRect.width < 100;
+  }, [edgeMeasure.contentRect.width]);
+
+  const tooltipCalc = useTooltipCalculations();
+  const tooltipAnchor = calculateParentAnchor(
+    'left',
+    edgeMeasure.clientRect.x,
+    edgeMeasure.clientRect.width
+  );
+
+  const tooltipStyle: any = {
+    ...tooltipCalc.moveTip,
+    ...tooltipAnchor,
+  };
+
   const lastOverId = React.useRef<UniqueIdentifier | null>(null);
   const recentlyMovedToNewContainer = React.useRef(false);
 
   const className = util.classnames({
     [props.className]: true,
     [props.classNames.dragging]: dragging !== null,
+    [props.classNames.minimized]: isMinimized,
   });
 
   const sensors = useSensors(
@@ -325,23 +355,33 @@ export const Edge = (props: EdgeProps) => {
     }
   };
 
-  const handleItemClick = (id: string) => {
+  const handleItemClick = (id: string, rect: Rect) => {
     setSelected(() => id);
+    tooltipCalc.handleItemClick(id, rect);
   };
 
   const handleItemClose = (id: string) => {
     props.onItemClose?.(id);
   };
 
-  const handleItemContextMneu = (e: React.MouseEvent, id: string) => {
+  const handleElementMouseEnter = (id: string, rect: Rect) => {
+    // Determine tooltip from callback
+    const tooltip = props.onTooltip?.(id);
+    tooltipCalc.handleItemMouseEnter(id, tooltip, rect);
+  };
+  const handleElementMouseLeave = (id: string) => {
+    tooltipCalc.handleItemMouseLeave(id);
+  };
+
+  const handleItemContextMenu = (e: React.MouseEvent, id: string) => {
     props.onItemContextMenu?.(e, id);
   };
 
-  const handleGroupContextMneu = (e: React.MouseEvent, id: string) => {
+  const handleGroupContextMenu = (e: React.MouseEvent, id: string) => {
     props.onGroupContextMenu?.(e, id);
   };
 
-  const handleGroupClick = (id: string) => {
+  const handleGroupClick = (id: string, rect: Rect) => {
     const group = model.byId[id] as EdgeTabGroup;
 
     props.onEmitUpdate?.({
@@ -358,6 +398,8 @@ export const Edge = (props: EdgeProps) => {
       const group = model.byId[id] as Draft<EdgeTabGroup>;
       group.expanded = !group.expanded;
     });
+
+    tooltipCalc.handleItemClick(id, rect);
   };
 
   const renderDragging = () => {
@@ -382,8 +424,8 @@ export const Edge = (props: EdgeProps) => {
           onItemDoubleClick={props.onItemDoubleClick}
           onItemClose={handleItemClose}
           onGroupClick={handleGroupClick}
-          onItemContextMenu={handleItemContextMneu}
-          onGroupContextMenu={handleGroupContextMneu}
+          onItemContextMenu={handleItemContextMenu}
+          onGroupContextMenu={handleGroupContextMenu}
           {...groupProps}
         />
       );
@@ -401,7 +443,7 @@ export const Edge = (props: EdgeProps) => {
           onClick={handleItemClick}
           onDoubleClick={props.onItemDoubleClick}
           onCloseClick={handleItemClose}
-          onContextMenu={handleItemContextMneu}
+          onContextMenu={handleItemContextMenu}
           {...itemProps}
         />
       );
@@ -409,7 +451,25 @@ export const Edge = (props: EdgeProps) => {
   };
 
   return (
-    <div className={className}>
+    <div className={className} ref={edgeRef}>
+      <div className={props.classNames.tooltipOverlay}>
+        {tooltipCalc.tooltipVisible ? (
+          <animated.div
+            className={props.classNames.tooltip}
+            style={tooltipStyle}
+          >
+            <div className={props.classNames.tooltipOffset}>
+              <Tooltip.Animated
+                position="right"
+                animatedStyle={tooltipCalc.expandTip}
+                onResize={tooltipCalc.handleTooltipSize}
+              >
+                {tooltipCalc.tooltip}
+              </Tooltip.Animated>
+            </div>
+          </animated.div>
+        ) : null}
+      </div>
       <div className={props.classNames.scrollable}>
         <DndContext
           sensors={sensors}
@@ -453,8 +513,10 @@ export const Edge = (props: EdgeProps) => {
                       onItemDoubleClick={props.onItemDoubleClick}
                       onItemClose={handleItemClose}
                       onGroupClick={handleGroupClick}
-                      onItemContextMenu={handleItemContextMneu}
-                      onGroupContextMenu={handleGroupContextMneu}
+                      onItemContextMenu={handleItemContextMenu}
+                      onGroupContextMenu={handleGroupContextMenu}
+                      onMouseEnter={handleElementMouseEnter}
+                      onMouseLeave={handleElementMouseLeave}
                       {...groupProps}
                     />
                   </Sortable>
@@ -475,7 +537,9 @@ export const Edge = (props: EdgeProps) => {
                       onClick={handleItemClick}
                       onDoubleClick={props.onItemDoubleClick}
                       onCloseClick={handleItemClose}
-                      onContextMenu={handleItemContextMneu}
+                      onContextMenu={handleItemContextMenu}
+                      onMouseEnter={handleElementMouseEnter}
+                      onMouseLeave={handleElementMouseLeave}
                       {...itemProps}
                     />
                   </Sortable>
@@ -495,9 +559,14 @@ const defaultProps: EdgeProps = {
   classNames: {
     scrollable: 'scrollable',
     dragging: 'dragging',
+    minimized: 'minimized',
+    tooltip: 'tooltip',
+    tooltipOffset: 'tooltip-offset',
+    tooltipOverlay: 'tooltip-overlay',
   },
   onRenderItem: (id: string) => ({ children: id }),
   onRenderGroup: (id: string) => ({ children: id }),
+  onTooltip: (id: string) => id,
 };
 
 // ----------------------------------------------------------------------------

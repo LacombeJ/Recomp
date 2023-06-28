@@ -111,6 +111,20 @@ export const resizeBoundary = (
   return { min, max };
 };
 
+export const snapBoundary = (
+  containerSize: number,
+  min: string | number,
+  max: string | number
+) => {
+  const defaultMin = 0;
+  const defaultMax = 0;
+  const minPx = min ? convertSizeToPixels(min, containerSize) : defaultMin;
+  const maxPx = max ? convertSizeToPixels(max, containerSize) : defaultMax;
+  const minv = Number(minPx);
+  const maxv = containerSize - Number(maxPx);
+  return { min: minv, max: maxv };
+};
+
 export const targetSize = (
   containerSize: number,
   value: number,

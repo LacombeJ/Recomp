@@ -13,7 +13,12 @@ import {
   useHandle,
   useHandleChildren,
 } from '@recomp/hooks';
-import { Spacer, Tooltip } from '@recomp/core';
+import {
+  Spacer,
+  Tooltip,
+  calculateParentAnchor,
+  useTooltipCalculations,
+} from '@recomp/core';
 
 /*
  * Move these notes to a README
@@ -470,108 +475,4 @@ const tooltipPosition = (position: Position): Position => {
   } else {
     return 'left';
   }
-};
-
-const useTooltipCalculations = () => {
-  const [tooltipSize, setTooltipSize] = React.useState({ width: 0, height: 0 });
-  const handleTooltipSize = (width: number, height: number) => {
-    setTooltipSize({ width, height });
-  };
-
-  // For opacity animation to finish before making invisible
-  const [tooltipVisible, setTooltipVisible] = React.useState(false);
-  const [tipActive, setTipActive] = React.useState(false);
-  const [tooltip, setTooltip] = React.useState('');
-  // if any item was hovered over recently
-  const [recentHover, setRecentHover] = React.useState(false);
-  const [hoverRect, setHoverRect] = React.useState<Rect>();
-
-  const hoverTimeout = useTimeout(1500);
-  const recentTimeout = useTimeout(1000);
-
-  const handleItemClick = (_id: string, _rect: Rect) => {
-    setTipActive(false);
-    setRecentHover(false);
-  };
-
-  const handleItemMouseEnter = (_id: string, tooltip: string, rect: Rect) => {
-    setHoverRect(rect);
-    hoverTimeout.cancel();
-
-    if (recentHover) {
-      setTooltip(tooltip);
-      setTipActive(true);
-      setTooltipVisible(true);
-    } else if (!tipActive) {
-      hoverTimeout.begin(() => {
-        setTooltip(tooltip);
-        setTipActive(true);
-        setTooltipVisible(true);
-      });
-    }
-
-    setRecentHover(true);
-    recentTimeout.cancel();
-  };
-
-  const handleItemMouseLeave = (_id: string) => {
-    hoverTimeout.cancel();
-    setTipActive(false);
-    recentTimeout.begin(() => {
-      setRecentHover(false);
-    });
-  };
-
-  const expandTip = useSpring({
-    width: `${tooltipSize.width}px`,
-  });
-
-  let tipY = 0;
-  const actualTooltipHight = tooltipSize.height + 5 + 5;
-  if (hoverRect) {
-    tipY = hoverRect.y + hoverRect.height / 2 - actualTooltipHight / 2;
-  }
-
-  let moveConfig = {};
-  let moveY = '0px';
-  moveConfig = { mass: 1, tension: 1000, friction: 100 };
-  moveY = hoverRect ? `${tipY}px` : '0px';
-
-  const moveTip = useSpring({
-    config: moveConfig,
-    y: moveY,
-    opacity: tipActive ? 1 : 0,
-    onRest: () => {
-      if (tooltipVisible && !tipActive) {
-        setTooltipVisible(false);
-      }
-    },
-  });
-
-  return {
-    handleTooltipSize,
-    tooltip,
-    handleItemClick,
-    handleItemMouseEnter,
-    handleItemMouseLeave,
-    expandTip,
-    moveTip,
-    tooltipVisible,
-  };
-};
-
-const calculateParentAnchor = (
-  position: 'left' | 'right',
-  parentX: number,
-  parentWidth: number
-) => {
-  const style: React.CSSProperties = {};
-
-  if (position === 'left') {
-    style.left = `${parentX + parentWidth + 10}px`;
-  } else {
-    style.right = `${window.innerWidth - parentX + 10}px`;
-  }
-
-  return style;
 };

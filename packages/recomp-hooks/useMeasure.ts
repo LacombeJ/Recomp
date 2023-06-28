@@ -20,12 +20,17 @@ export type Rect = {
   right: number;
 };
 
+/**
+ * Listens to resize events and obtain rect. This does not listen
+ * to all position change events (ex: sibling moves which moves
+ * measured element, failing to trigger an update).
+ */
 export const useMeasure = <E extends Element>(): [
   (element: E) => void,
   MeasureResult
 ] => {
   const elementRef = React.useRef<Element>(null);
-  // const [element, ref] = React.useState<Element>(null);
+
   const [rect, setRect] = React.useState<MeasureResult>({
     clientRect: defaultRect(),
     contentRect: defaultRect(),
@@ -34,27 +39,13 @@ export const useMeasure = <E extends Element>(): [
   const handleSetRef = React.useCallback((element: Element) => {
     if (element && elementRef.current !== element) {
       elementRef.current = element;
+      // When setting ref for the first time, update clientRect
       setRect({
         ...rect,
         clientRect: getRect(elementRef.current.getBoundingClientRect()),
       });
     }
   }, []);
-
-  React.useEffect(() => {
-    const updateWidthAndHeight = () => {
-      if (elementRef.current) {
-        setRect({
-          ...rect,
-          clientRect: getRect(elementRef.current.getBoundingClientRect()),
-        });
-      }
-    };
-
-    window.addEventListener('resize', updateWidthAndHeight);
-
-    return () => window.removeEventListener('resize', updateWidthAndHeight);
-  }, [elementRef.current]);
 
   const observer = React.useMemo(() => {
     return new window.ResizeObserver((entries) => {

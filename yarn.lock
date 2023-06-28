@@ -1766,7 +1766,7 @@
     "@react-spring/web" "^9.7.2"
     "@recomp/hooks" "link:packages/recomp-hooks"
     "@recomp/icons" "link:packages/recomp-icons"
-    "@recomp/utility" "link:packages/recomp-utils"
+    "@recomp/utility" "link:packages/recomp-utility"
 
 "@recomp/hooks@link:packages/recomp-hooks":
   version "0.0.0"
@@ -1783,21 +1783,18 @@
     "@react-spring/web" "^9.7.2"
     "@recomp/hooks" "link:packages/recomp-hooks"
     "@recomp/icons" "link:packages/recomp-icons"
-    "@recomp/utility" "link:packages/recomp-utils"
+    "@recomp/utility" "link:packages/recomp-utility"
 
 "@recomp/monaco@link:packages/recomp-monaco":
   version "0.0.0"
   dependencies:
     "@monaco-editor/loader" "^1.3.2"
     "@recomp/hooks" "link:packages/recomp-hooks"
-    "@recomp/utility" "link:packages/recomp-utils"
+    "@recomp/utility" "link:packages/recomp-utility"
     monaco-editor "^0.34.0"
     react-resize-detector "^7.1.2"
 
 "@recomp/utility@link:packages/recomp-utility":
-  version "0.0.0"
-
-"@recomp/utility@link:packages/recomp-utils":
   version "0.0.0"
 
 "@rollup/pluginutils@^4.2.1":

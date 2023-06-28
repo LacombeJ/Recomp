@@ -1,7 +1,7 @@
-import { ImageInfo, findImageFromHTML } from '@recomp/utility/common';
 import * as React from 'react';
+import { DataTransferKind, TransferItem, collectDataTransferItems } from './transfer';
 
-export const useDropZone = (dropCallback: (items: TransferItem[]) => void) => {
+export const useDropZone = (dropCallback: (items: DataTransferKind[]) => void) => {
   const [dragOver, setDragOver] = React.useState(false);
 
   const onDragOver = (e: React.MouseEvent<HTMLElement>) => {
@@ -16,36 +16,9 @@ export const useDropZone = (dropCallback: (items: TransferItem[]) => void) => {
   const onDrop = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
 
-    const items: TransferItem[] = [];
+    setDragOver(false);
 
-    if (e.dataTransfer.items) {
-      for (let i = 0; i < e.dataTransfer.items.length; i++) {
-        const item = e.dataTransfer.items[i];
-        if (item.kind === 'file') {
-          items.push({
-            kind: 'file',
-            type: item.type,
-            file: item.getAsFile(),
-          });
-        } else if (item.kind === 'string') {
-          items.push({
-            kind: 'string',
-            type: item.type,
-            item,
-          });
-        }
-      }
-    } else if (e.dataTransfer.files) {
-      for (let i = 0; i < e.dataTransfer.files.length; i++) {
-        const file = e.dataTransfer.files[i];
-        items.push({
-          kind: 'file',
-          type: 'unknown',
-          file,
-        });
-      }
-    }
-
+    const items = collectDataTransferItems(e.dataTransfer);
     dropCallback(items);
   };
 
@@ -53,116 +26,4 @@ export const useDropZone = (dropCallback: (items: TransferItem[]) => void) => {
     dragOver,
     dropzoneProps: { onDragOver, onDragLeave, onDrop },
   };
-};
-
-/** Determines the downloadable image from a list of transfer items */
-export const findImageItem = async (
-  items: TransferItem[]
-): Promise<TransferImage> => {
-  let title = null;
-
-  let targetDownload: TransferItem | null = null;
-  let htmlInfo: ImageInfo | null = null;
-  let fileInfo: File | null = null;
-
-  for (const item of items) {
-    if (item.kind === 'string' && item.type === 'text/html') {
-      htmlInfo = await new Promise((resolve) => {
-        item.item.getAsString((text) => {
-          const image = findImageFromHTML(text);
-          resolve(image);
-        });
-      });
-    }
-
-    if (item.type === 'text/uri-list' || item.type.startsWith('image')) {
-      targetDownload = item;
-    }
-
-    if (item.kind === 'file') {
-      fileInfo = item.file;
-    }
-  }
-
-  if (htmlInfo) {
-    title = htmlInfo.alt;
-  }
-  if (!title && fileInfo) {
-    title = fileInfo.name;
-  }
-
-  if (targetDownload) {
-    if (targetDownload.kind === 'file') {
-      return {
-        title,
-        src: {
-          kind: 'file',
-          value: targetDownload.file,
-        },
-      };
-    } else {
-      const target = targetDownload;
-      const url = await new Promise<string>((resolve) => {
-        target.item.getAsString((text) => {
-          resolve(text);
-        });
-      });
-      return {
-        title,
-        src: {
-          kind: 'url',
-          value: url,
-        },
-      };
-    }
-  }
-
-  if (!targetDownload && htmlInfo) {
-    // Try to find image within htmlText
-    if (htmlInfo.source.kind === 'base64') {
-      return {
-        title,
-        src: {
-          kind: 'base64',
-          type: htmlInfo.source.type,
-          value: htmlInfo.source.base64,
-        },
-      };
-    } else {
-      return {
-        title,
-        src: {
-          kind: 'url',
-          value: htmlInfo.source.value,
-        },
-      };
-    }
-  }
-
-  return null;
-};
-
-// ----------------------------------------------------------------------------
-
-export type TransferItem = TransferString | TransferFile;
-
-export type TransferString = {
-  kind: 'string';
-  type: string;
-  item: DataTransferItem;
-};
-
-export type TransferFile = {
-  kind: 'file';
-  type: string;
-  file: File;
-};
-
-export type TransferImage = {
-  /** Alt attribute or name */
-  title: string;
-  src:
-    | { kind: 'base64'; value: string; type: string }
-    | { kind: 'url'; value: string }
-    | { kind: 'file'; value: File };
 };

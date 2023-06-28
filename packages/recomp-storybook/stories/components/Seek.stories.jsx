@@ -46,7 +46,6 @@ const Template = (args) => {
   const [selected, setSelected] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [searchText, setSearchText] = React.useState('');
-  const search = useFuse(items, { keys: ['name', 'description'] });
 
   const handleChange = (event) => {
     setSearchText(event.target.value);

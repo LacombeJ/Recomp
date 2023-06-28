@@ -1,7 +1,9 @@
 import * as React from 'react';
 
 import * as util from '@recomp/utility/common';
-import { TransferItem, useDropZone } from './useDropZone';
+import { useDropZone } from './useDropZone';
+import { useTimeout } from '@recomp/hooks';
+import { DataTransferKind, TransferItem } from './transfer';
 
 interface DropZoneProps {
   className?: string;
@@ -16,7 +18,7 @@ interface DropZoneProps {
   title?: string;
   subtitle?: string;
   icon?: React.ReactNode;
-  onDrop: (items: TransferItem[]) => void;
+  onDrop: (items: DataTransferKind[]) => void;
 }
 
 export const DropZone = (props: DropZoneProps) => {
@@ -84,3 +86,106 @@ const defaultProps: Omit<DropZoneProps, 'onDrop'> = {
 };
 
 // ----------------------------------------------------------------------------
+
+type DropZoneContextProps = {
+  className?: string;
+  classNames?: {
+    zone?: string;
+    placeholder?: string;
+    icon?: string;
+    title?: string;
+    subtitle?: string;
+  };
+  children?: React.ReactNode;
+  title?: string;
+  subtitle?: string;
+  icon?: React.ReactNode;
+  onDrop: (items: DataTransferKind[]) => void;
+};
+
+const Context = (props: DropZoneContextProps) => {
+  props = util.propUnion(defaultContextProps, props);
+
+  const [dragging, setDragging] = React.useState(false);
+
+  const dropzone = useDropZone(props.onDrop);
+
+  const className = util.classnames({
+    [props.className]: true,
+    visible: dropzone.dragOver,
+    dragging,
+  });
+
+  // To unset dragging when user leaves area or stops dragging
+  // without it, the dragging property is kept and user can't click within
+  // area since pointer-events all in css is activated. And we can't simply just
+  // use the document dragleave listener alone because this activates when dragging
+  // within the dropzone context. Instead we set a timeout on drag leave that's
+  // canceled on every other drag event
+  const timeout = useTimeout(500);
+
+  React.useEffect(() => {
+    const handleDragOver = () => {
+      timeout.cancel();
+      setDragging(true);
+    };
+    const handleDragLeave = () => {
+      timeout.begin(() => {
+        setDragging(false);
+      });
+    };
+    document.addEventListener('dragover', handleDragOver, null);
+    document.addEventListener('dragleave', handleDragLeave, null);
+    return () => {
+      document.removeEventListener('dragenter', handleDragOver, null);
+      document.removeEventListener('dragleave', handleDragLeave, null);
+    };
+  }, []);
+
+  let children = props.children;
+  if (!children) {
+    children = (
+      <div className={props.classNames.placeholder}>
+        <div className={props.classNames.icon}>{props.icon}</div>
+        <div className={props.classNames.title}>{props.title}</div>
+        <div className={props.classNames.subtitle}>{props.subtitle}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={className}
+      onDragOver={(e) => {
+        timeout.cancel();
+        dropzone.dropzoneProps.onDragOver(e);
+      }}
+      onDragLeave={() => {
+        setDragging(false);
+        dropzone.dropzoneProps.onDragLeave();
+      }}
+      onDrop={(e) => {
+        setDragging(false);
+        dropzone.dropzoneProps.onDrop(e);
+      }}
+    >
+      <div className={props.classNames.zone}>{children}</div>
+    </div>
+  );
+};
+
+const defaultContextProps: Omit<DropZoneContextProps, 'onDrop'> = {
+  className: 'recomp-dropzone-context',
+  classNames: {
+    zone: 'zone',
+    placeholder: 'placeholder',
+    icon: 'icon',
+    title: 'title',
+    subtitle: 'subtitle',
+  },
+  title: 'Drop File',
+  subtitle: 'Drop file here to upload.',
+  icon: <IconFileUpload></IconFileUpload>,
+};
+
+DropZone.Context = Context;

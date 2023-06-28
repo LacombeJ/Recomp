@@ -1,6 +1,11 @@
 @use '@recomp/core' as recomp;
+@use 'sass:color';
 
 @mixin init() {
+
+  $hint: color.adjust(recomp.$primary, $lightness: 20%, $saturation: 20%);
+  $hover: color.adjust(recomp.$primary, $lightness: 30%, $saturation: 25%);
+  $active: color.adjust(recomp.$primary, $lightness: 30%, $saturation: 25%);
 
   .recomp-coast {
     background-color: recomp.$background;
@@ -19,15 +24,13 @@
       left: 0;
       right: 0;
       z-index: 100;
+
+      .tooltip {
+        position: absolute;
+      }
     }
 
-    &.right .tooltip {
-      position: absolute;
-    }
 
-    &.left .tooltip {
-      position: absolute;
-    }
 
     .hint {
       position: absolute;
@@ -37,11 +40,11 @@
     }
 
     &.right .hint {
-      border-right: 2px solid lighten(recomp.$primary, 30%);
+      border-right: 2px solid $hint;
     }
 
     &.left .hint {
-      border-left: 2px solid lighten(recomp.$primary, 30%);
+      border-left: 2px solid $hint;
     }
 
     .bar {
@@ -65,11 +68,11 @@
         transition: all 0.3s, transform 0.1s;
 
         &:hover {
-          color: lighten(recomp.$primary, 40%);
+          color: $hover;
         }
 
         &.active {
-          color: white;
+          color: $active;
         }
       }
     }
@@ -89,7 +92,11 @@
         transition: all 0.3s, transform 0.1s;
 
         &:hover {
-          color: lighten(recomp.$primary, 40%);
+          color: $hover;
+        }
+
+        &.active {
+          color: $active;
         }
       }
     }

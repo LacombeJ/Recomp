@@ -109,13 +109,14 @@
   align-items: center;
 }
 
-@mixin scrollbar($width: 12px,
+@mixin scrollbar($width: 8px,
   $margin: 100px,
   $trackColor: transparent,
   $thumbColor: rgba(white, 0.1),
   $thumbRadius: 2px,
   $thumbColorHover: rgba(white, 0.2),
   $cornerColor: transparent) {
+
 
   // Standard (Chrome, etc)
   // I think webkit style prioritizes ancestors

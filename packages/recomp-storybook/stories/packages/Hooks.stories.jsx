@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Button, Alert } from '@recomp/core';
 import '../stories.scss';
-import { useFuse } from '@recomp/hooks';
 
 export default {
   title: 'Packages/Hooks',
