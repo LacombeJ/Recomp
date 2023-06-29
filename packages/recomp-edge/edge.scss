@@ -23,7 +23,7 @@ $border-left: 3px;
 
 // shared by item and group root
 @mixin root-element() {
-  margin: 6px 4px 6px 0px;
+  margin: 6px 0px 6px 0px;
 }
 
 // shared by item and group head
@@ -48,7 +48,7 @@ $border-left: 3px;
     justify-content: space-between;
     align-items: stretch;
 
-    padding: 4px 0px 12px 8px;
+    // padding: 4px 0px 12px 8px;
     box-sizing: border-box;
 
     // Need to apply to both parent and scroll container
