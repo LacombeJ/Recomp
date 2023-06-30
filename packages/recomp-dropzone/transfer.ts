@@ -17,39 +17,48 @@ https://learn.microsoft.com/en-us/windows/win32/dataxchg/html-clipboard-format
 */
 
 /**
- * General parsing of a transfer list. Obtaining images, urls/links, html, text, etc. This
- * prioritizes items in order.
+ * General parsing of a transfer list. Obtaining images, urls/links, html, text, etc.
  *
  * Example uses of this could be obtaining an image and downloading it to a server or reading
  * the base64, or obtaining some url and inserting some preview element linking to the url.
  */
-export const parseTransferList = async (
+export const collectTransferList = async (
   items: DataTransferKind[]
-): Promise<TransferItem | null> => {
-  // Accessing data from from to bottom, stopping if we have enough information
+): Promise<TransferItem[]> => {
+  const transferItems: TransferItem[] = [];
+
+  // Accessing data from from to bottom, collecting all known transfer items
 
   // URLs can be found in uri-lists, html text (href links, data-role="img", or img src)
   for (const item of items) {
     if (item.kind === 'string') {
       const res = await parseStringTransfer(item);
       if (res !== null) {
-        return res;
+        transferItems.push(res);
       }
     } else if (item.kind === 'file') {
       const res = await parseFileTransfer(item);
       if (res !== null) {
-        return res;
+        transferItems.push(res);
       }
     }
   }
 
-  return null;
+  return transferItems;
+};
+
+/** Gets the first item from `collectTransferList` */
+export const parseTransferList = async (
+  items: DataTransferKind[]
+): Promise<TransferItem | null> => {
+  const transferItems = await collectTransferList(items);
+  return transferItems[0];
 };
 
 export const parseStringTransfer = async (
   item: DataTransferString
 ): Promise<TransferItem> => {
-  const string = await getTransferString(item);
+  const string = item.data;
 
   if (item.type === 'text/plain') {
     return { type: 'string', text: string };
@@ -110,8 +119,20 @@ export const parseTextHTML = (htmlText: string): TransferItem => {
       if (element.tagName === 'IMG') {
         const info = imageInfo(element as HTMLImageElement);
         const item = imageInfoIntoTransferImage(info);
-        return item;
+        if (item) {
+          return item;
+        }
       }
+    }
+  }
+
+  // If no fragments found, try to get image
+  for (let i = 0; i < doc.images.length; i++) {
+    const image = doc.images[i];
+    const info = imageInfo(image);
+    const item = imageInfoIntoTransferImage(info);
+    if (item) {
+      return item;
     }
   }
 
@@ -155,11 +176,11 @@ export const parseURIList = (text: string) => {
 export const parseFileTransfer = async (
   item: DataTransferFile
 ): Promise<TransferItem> => {
-  if (item.type === 'application/json') {
-    // string; // return plain string
-  } else if (item.type.startsWith('image')) {
-    // todo image
-  }
+  // if (item.type === 'application/json') {
+  //   // string; // return plain string
+  // } else if (item.type.startsWith('image')) {
+  //   // todo image
+  // }
   return { type: 'file', file: item.file };
 };
 
@@ -170,7 +191,8 @@ export type DataTransferKind = DataTransferString | DataTransferFile;
 export type DataTransferString = {
   kind: 'string';
   type: string;
-  item: DataTransferItem;
+  // item: DataTransferItem;
+  data: string;
 };
 
 export type DataTransferFile = {
@@ -183,9 +205,9 @@ export type DataTransferImage = {
   /** Alt attribute or name */
   title: string;
   src:
-    | { kind: 'base64'; value: string; type: string }
-    | { kind: 'url'; value: string }
-    | { kind: 'file'; value: File };
+  | { kind: 'base64'; value: string; type: string }
+  | { kind: 'url'; value: string }
+  | { kind: 'file'; value: File };
 };
 
 export const collectDataTransferItems = (transfer: DataTransfer) => {
@@ -201,11 +223,14 @@ export const collectDataTransferItems = (transfer: DataTransfer) => {
           file: item.getAsFile(),
         });
       } else if (item.kind === 'string') {
+        // getData seems the best approach (as opposed to getAsString method of item)
+        // https://stackoverflow.com/questions/71466295/extracting-value-from-a-datatransferitem-synchronously-what-am-i-doing-wrong
         items.push({
           kind: 'string',
           type: item.type,
-          item,
+          data: transfer.getData(item.type),
         });
+
       }
     }
   } else if (transfer.files) {
@@ -220,15 +245,6 @@ export const collectDataTransferItems = (transfer: DataTransfer) => {
   }
 
   return items;
-};
-
-export const getTransferString = async (item: DataTransferString) => {
-  const string: string = await new Promise((resolve) => {
-    item.item.getAsString((string) => {
-      resolve(string);
-    });
-  });
-  return string;
 };
 
 export const getTransferItemAsImage = async (
@@ -261,13 +277,34 @@ export const getTransferItemAsImage = async (
           src: {
             kind: 'base64',
             type: image.parsed.type,
-            value: image.base64,
+            value: image.parsed.body,
           },
         },
       };
     }
   }
 };
+
+/**
+ * Gets the first image item if it exist, otherwise will try to determine images
+ * from items (ex: from a link) prioritizing order
+ */
+export const findTransferItemAsImage = async (items: TransferItem[]): Promise<TransferImage> => {
+  for (const item of items) {
+    if (item.type === 'image') {
+      return item;
+    }
+  }
+
+  for (const item of items) {
+    const asImage = await getTransferItemAsImage(item);
+    if (asImage) {
+      return asImage;
+    }
+  }
+
+  return null;
+}
 
 // ----------------------------------------------------------------------------
 
@@ -297,9 +334,9 @@ export type TransferImage = {
   image: {
     title: string;
     src:
-      | { kind: 'base64'; value: string; type: string }
-      | { kind: 'url'; value: string }
-      | { kind: 'file'; value: File };
+    | { kind: 'base64'; value: string; type: string }
+    | { kind: 'url'; value: string }
+    | { kind: 'file'; value: File };
   };
 };
 

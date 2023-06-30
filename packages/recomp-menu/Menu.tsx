@@ -617,16 +617,12 @@ export const useQuickContextMenu = () => {
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
 
   const override = (items: QuickContextItem[]) => (e: React.MouseEvent) => {
-    console.log('override');
-
     const menu = convertQuickContextToModel(items);
     model.current = menu;
     quickItems.current = items;
 
     e.preventDefault();
     e.stopPropagation();
-
-    console.log('menu...', menu);
 
     setPosition({ x: e.clientX, y: e.clientY });
 

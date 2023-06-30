@@ -15,22 +15,25 @@ const Template = (args) => {
       {...args}
       onDrop={(items) => {
         console.log(items);
-
+        console.log('Begin Items------------');
         for (const item of items) {
-          if (item.kind === 'string') {
-            item.item.getAsString((text) => {
-              console.log(text);
-            });
+          if (item.file) {
+            console.log(item.file);
+          } else {
+            console.log(item.data);
           }
         }
+        console.log('End Items------------');
 
         transfer
-          .parseTransferList(items)
-          .then((item) => {
-            console.log('resulting transfer:');
-            console.log(item);
-            transfer.getTransferItemAsImage(item).then((item) => {
+          .collectTransferList(items)
+          .then((transferItems) => {
+            console.log('resulting transfer items:');
+            console.log(transferItems);
+            transfer.findTransferItemAsImage(transferItems).then((item) => {
               console.log('as image?: ', item);
+            }).catch((err) => {
+              console.error(err);
             });
           })
           .catch((err) => {
