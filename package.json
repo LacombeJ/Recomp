@@ -7,8 +7,8 @@
   ],
   "scripts": {
     "build": "yarn workspace build",
-    "storybook":"SET NODE_OPTIONS=--openssl-legacy-provider && yarn run storybook-serve",
-    "storybook-serve": "yarn workspace @recomp/storybook storybook",
+    "storybook": "yarn workspace @recomp/storybook storybook",
+    "storybook-olp":"SET NODE_OPTIONS=--openssl-legacy-provider && yarn run storybook",
     "build-storybook": "yarn workspace @recomp/storybook build-storybook"
   },
   "dependencies": {},

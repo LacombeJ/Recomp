@@ -36,7 +36,7 @@ Nested.args = {
       <Block>Go to sleep</Block>
       Else:
       <Block>
-        If there is gas in the car:
+        If there isn't gas in the car:
         <Block>
           <div>Go to the gas station</div>
           <div>If you are hungry:</div>

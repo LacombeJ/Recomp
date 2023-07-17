@@ -1,8 +1,9 @@
 // https://github.com/mrdoob/three.js/blob/master/src/math/Color.js
 // https://www.rapidtables.com/convert/color/rgb-to-hsl.html
 
-import { modulo, clamp, hue2rgb } from './math';
+import { modulo, clamp } from '../common/math';
 
+import { hue2rgb } from './math';
 import { nameToHexMap, hexToNameMap } from './named';
 
 /** Standard hex, returns the 6 hexit code prepended with '#' */
@@ -191,13 +192,26 @@ export const nameToHex = (name: Name): Hex => {
   return '#000000';
 };
 
+// https://stackoverflow.com/questions/3942878
+export const foregroundFromBackground = (
+  background: RGB
+): 'white' | 'black' => {
+  const { r, g, b } = background;
+  // return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? 'black' : 'white';
+  var uicolors = [r / 255, g / 255, b / 255];
+  var c = uicolors.map((col) => {
+    if (col <= 0.03928) {
+      return col / 12.92;
+    }
+    return Math.pow((col + 0.055) / 1.055, 2.4);
+  });
+  var L = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  return L > 0.179 ? 'black' : 'white';
+};
+
 // ----------------------------------------------------------------------------
 
-export const convert = (
-  color: any,
-  fromType: Format,
-  toType: Format
-): any => {
+export const convert = (color: any, fromType: Format, toType: Format): any => {
   if (fromType === toType) {
     return color;
   }

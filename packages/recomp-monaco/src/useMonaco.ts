@@ -10,7 +10,7 @@ interface CancelablePromise<T> extends Promise<T> {
 }
 
 export const useMonaco = (
-  monacoRef: React.MutableRefObject<Monaco>,
+  monacoRef: React.MutableRefObject<Monaco | undefined>,
   callback: (monaco?: Monaco) => void
 ) => {
   // Holding of a cancellable promise. This is so we do not call the loader

@@ -1,0 +1,21 @@
+@use '@recomp/core' as recomp;
+
+@mixin init() {
+
+  .recomp-color {
+    &.inline {
+      display: inline;
+    }
+
+    .recomp-entry {
+      // Same font-family as prism code
+      font-family: Menlo, Monaco, Consolas, "Andale Mono", "Ubuntu Mono", "Courier New", monospace;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      padding: 0.1em 0.6em;
+      min-width: 0;
+      outline-color: transparent;
+    }
+  }
+
+}

@@ -33,8 +33,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   }
 
   constructor(props: ErrorBoundaryProps) {
-    // props = util.propUnion(defaultProps, props);
-
     super(props);
 
     const hasError = props.hasError != undefined ? props.hasError : false;
@@ -44,16 +42,18 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
     };
   }
 
-  componentDidUpdate() {
-    if (this.props.hasError && !this.state.hasError) {
-      this.setState({
-        hasError: true,
-      });
-    }
-    if (!this.props.hasError && this.state.hasError) {
-      this.setState({
-        hasError: false,
-      });
+  componentDidUpdate(prev: ErrorBoundaryProps) {
+    if (prev.children !== this.props.children) {
+      if (this.props.hasError && !this.state.hasError) {
+        this.setState({
+          hasError: true,
+        });
+      }
+      if (!this.props.hasError && this.state.hasError) {
+        this.setState({
+          hasError: false,
+        });
+      }
     }
   }
 

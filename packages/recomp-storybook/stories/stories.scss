@@ -1,4 +1,6 @@
 @use '@recomp/core';
+
+@use '@recomp/color';
 @use '@recomp/coast';
 @use '@recomp/dropzone';
 @use '@recomp/edge';
@@ -13,6 +15,8 @@
 @use '@recomp/titlebar';
 
 @include core.init();
+
+@include color.init();
 @include coast.init();
 @include dropzone.init();
 @include edge.init();
