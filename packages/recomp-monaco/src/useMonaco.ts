@@ -11,7 +11,7 @@ interface CancelablePromise<T> extends Promise<T> {
 
 export const useMonaco = (
   monacoRef: React.MutableRefObject<Monaco | undefined>,
-  callback: (monaco?: Monaco) => void
+  callback: (monaco: Monaco) => void
 ) => {
   // Holding of a cancellable promise. This is so we do not call the loader
   // multiple times
@@ -26,7 +26,7 @@ export const useMonaco = (
         .then((monaco: Monaco) => {
           monacoRef.current = monaco; // assign monaco
           cancellableRef.current = null; // finished, nullify cancellation
-          callback(); // no need to pass monacoRef.current since it was already assigned
+          callback(monaco);
         })
         .catch((err: any) => {
           if (err?.type !== 'cancelation') {
