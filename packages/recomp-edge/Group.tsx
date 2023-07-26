@@ -9,7 +9,8 @@ import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { useSpring, animated } from '@react-spring/web';
 import { Rect, useMeasure } from '@recomp/hooks';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 // import { TabTree, elementChildren } from './common';
 import { Sortable } from './Sortable';
@@ -46,7 +47,7 @@ interface EdgeGroupProps extends GroupProps {
 // Modeling group after the "Cabinet" component
 // a folder that can contain additonal atabs
 export const EdgeGroup = (props: EdgeGroupProps) => {
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [props.classNames.dragging]: props.dragging,
     expanded: props.expanded,
@@ -146,7 +147,7 @@ export const EdgeGroup = (props: EdgeGroupProps) => {
     return (
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         {items.map((id) => {
-          const itemProps = util.propUnion(
+          const itemProps = propUnion(
             tabDefaultProps,
             props.onRenderItem(id)
           );

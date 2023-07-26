@@ -25,7 +25,8 @@ import {
   restrictToFirstScrollableAncestor,
 } from '@dnd-kit/modifiers';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 import { Chevron, File } from '@recomp/icons';
 import { useModel, Update, Draft, useMeasure, Rect } from '@recomp/hooks';
@@ -97,7 +98,7 @@ export interface EdgeModelUpdateEvent {
 }
 
 export const Edge = (props: EdgeProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const [selected, setSelected] = useModel(
     props.defaultSelected,
@@ -134,7 +135,7 @@ export const Edge = (props: EdgeProps) => {
   const lastOverId = React.useRef<UniqueIdentifier | null>(null);
   const recentlyMovedToNewContainer = React.useRef(false);
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [props.classNames.dragging]: dragging !== null,
     [props.classNames.minimized]: isMinimized,
@@ -406,7 +407,7 @@ export const Edge = (props: EdgeProps) => {
     const node = model.byId[dragging];
 
     if (isGroup(node)) {
-      const groupProps: GroupProps = util.propUnion(
+      const groupProps: GroupProps = propUnion(
         groupDefaultProps,
         props.onRenderGroup(dragging)
       );
@@ -430,7 +431,7 @@ export const Edge = (props: EdgeProps) => {
         />
       );
     } else {
-      const itemProps: TabProps = util.propUnion(
+      const itemProps: TabProps = propUnion(
         tabDefaultProps,
         props.onRenderItem(dragging)
       );
@@ -489,7 +490,7 @@ export const Edge = (props: EdgeProps) => {
             {model.rootIds.map((id) => {
               const node = model.byId[id];
               if (isGroup(node)) {
-                const groupProps: GroupProps = util.propUnion(
+                const groupProps: GroupProps = propUnion(
                   groupDefaultProps,
                   props.onRenderGroup(id)
                 );
@@ -522,7 +523,7 @@ export const Edge = (props: EdgeProps) => {
                   </Sortable>
                 );
               } else {
-                const itemProps: TabProps = util.propUnion(
+                const itemProps: TabProps = propUnion(
                   tabDefaultProps,
                   props.onRenderItem(id)
                 );

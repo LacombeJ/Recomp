@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface NestProps {
   className?: string;
@@ -13,7 +13,7 @@ interface NestProps {
 }
 
 export const Nest = (props: NestProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
   const { className, style } = props;
 
   const handleClick = (e: React.MouseEvent) => {

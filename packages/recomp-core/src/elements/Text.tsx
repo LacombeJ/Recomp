@@ -1,6 +1,11 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import {
+  propUnion,
+  selectAllFromKeys,
+  selectAllFromValues,
+} from '@recomp/props';
 
 interface TextProps {
   className?: string;
@@ -25,13 +30,13 @@ interface TextProps {
 }
 
 export const Text = (props: TextProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const style = {
     ...props.style,
   };
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     keyCode: props.keyCode,
   });
@@ -46,8 +51,8 @@ export const Text = (props: TextProps) => {
     style.color = props.color;
   }
 
-  const omPropTagMap = util.selectAllFromKeys(props, propTagMap);
-  const omTagMap = util.selectAllFromValues(omPropTagMap, tagMap);
+  const omPropTagMap = selectAllFromKeys(props, propTagMap);
+  const omTagMap = selectAllFromValues(omPropTagMap, tagMap);
   const tags = Object.values(omTagMap);
 
   const wrapAll = (node: React.ReactNode, fnList: JSX.Element[]) => {

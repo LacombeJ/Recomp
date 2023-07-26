@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface CanvasProps
   extends React.DetailedHTMLProps<
@@ -11,7 +11,7 @@ interface CanvasProps
 }
 
 export const Canvas = (props: CanvasProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
   const {
     render,
     ref: _0,

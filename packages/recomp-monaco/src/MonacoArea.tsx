@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 import {
   Monaco,
@@ -10,7 +10,7 @@ import {
 } from './MonacoEditor';
 
 export const MonacoArea = (props: MonacoEditorProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const editorRef: React.MutableRefObject<Editor> = React.useRef(null);
 

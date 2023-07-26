@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 import { animated, useSpring } from '@react-spring/web';
 
 import { Rect, useMouseHover, useSize, useTimeout } from '@recomp/hooks';
-import { Overlay } from '../containers/Overlay';
 
 type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
 
@@ -25,7 +25,7 @@ interface TooltipProps {
 }
 
 const TooltipGeneric = (props: TooltipProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
   const { className, style } = props;
 
   return (
@@ -46,7 +46,7 @@ const TooltipGeneric = (props: TooltipProps) => {
 };
 
 export const Tooltip = (props: TooltipProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
   const { children, ...genericProps } = props;
 
   return (
@@ -77,7 +77,7 @@ interface TooltipAnimatedProps extends TooltipProps {
 }
 
 Tooltip.Animated = (props: TooltipAnimatedProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const bodyRef = useSize(({ width, height }) => {
     props.onResize(width, height);
@@ -111,11 +111,11 @@ interface TriangleProps {
 }
 
 const Triangle = (props: TriangleProps) => {
-  props = util.propUnion(triangleDefaultProps, props);
+  props = propUnion(triangleDefaultProps, props);
 
   const { tipSize, borderSize } = props;
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [props.position]: true,
   });
@@ -211,7 +211,7 @@ type TooltipContextProps = {
 };
 
 const Context = (props: TooltipContextProps) => {
-  props = util.propUnion(defaultContextProps, props);
+  props = propUnion(defaultContextProps, props);
 
   return (
     <div className={props.className}>

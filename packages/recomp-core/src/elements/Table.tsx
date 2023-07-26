@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface TableProps {
   className?: string;
@@ -81,7 +81,7 @@ interface TableData {
 }
 
 export const Table = (props: TableProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   return (
     <props.root className={props.className} style={props.style}>

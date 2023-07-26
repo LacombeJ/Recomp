@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 import { usePress, useTimeout } from '@recomp/hooks';
 
 interface OverlayProps {
@@ -22,7 +23,7 @@ interface OverlayProps {
 }
 
 export const Overlay = (props: OverlayProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   // Visibility set for animation
   const [visible, setVisible] = React.useState(props.enabled);
@@ -47,7 +48,7 @@ export const Overlay = (props: OverlayProps) => {
 
   const classToggle = (visible && props.enabled) || !props.animated;
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [props.classNames.animated]: props.animated,
     [props.classNames.tint]: props.tint && classToggle,

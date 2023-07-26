@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
-
 interface EmojiProps {
   className?: string;
   style?: React.CSSProperties;
@@ -10,7 +8,7 @@ interface EmojiProps {
 }
 
 const Emoji = (props: EmojiProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = { ...defaultProps, ...props };
   const { className, style } = props;
 
   if (props.animated) {

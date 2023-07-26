@@ -10,6 +10,7 @@
     "katex": "^0.16.7"
   },
   "devDependencies": {
+    "@recomp/classnames": "link:../recomp-classnames",
     "@types/katex": "^0.16.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

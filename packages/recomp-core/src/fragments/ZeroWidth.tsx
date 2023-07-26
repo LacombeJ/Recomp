@@ -1,5 +1,6 @@
-import { isNullOrWhitespace } from '@recomp/utility/common';
 import * as React from 'react';
+
+import { isNullOrWhitespace } from '@recomp/props';
 
 export const ZeroWidth = () => {
   // ZERO_WIDTH_SPACE

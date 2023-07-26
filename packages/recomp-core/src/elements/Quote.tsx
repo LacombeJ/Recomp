@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface QuoteProps {
   className?: string;
@@ -14,7 +14,7 @@ interface QuoteProps {
 }
 
 export const Quote = (props: QuoteProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   return (
     <div className={props.className} style={props.style}>

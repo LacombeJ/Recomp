@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface HeadingProps {
   className?: string;
@@ -10,7 +10,7 @@ interface HeadingProps {
 }
 
 export const Heading = (props: HeadingProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   if (!props.level) {
     props.level = 1;

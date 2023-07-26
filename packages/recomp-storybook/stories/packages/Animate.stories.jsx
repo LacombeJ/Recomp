@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Button, Alert } from '@recomp/core';
 import '../stories.scss';
-import { useAnimationLifecycle } from '@recomp/animate/useAnimationLifecycle';
+import { useAnimationLifecycle, useAnimationValue } from '@recomp/animate';
 
 export default {
   title: 'Packages/Animate',
@@ -51,4 +51,17 @@ const TemplateLifecycle = (args) => {
 export const Lifecycle = TemplateLifecycle.bind({});
 Lifecycle.args = {
   children: `useAnimationLifecycle`,
+};
+
+const TemplateValue = (args) => {
+  const value = useAnimationValue(0, 255, 3000, true);
+
+  return (
+    <div {...args} style={{ color: `rgb(${Math.floor(value)}, 0, 255)` }}></div>
+  );
+};
+
+export const Value = TemplateValue.bind({});
+Value.args = {
+  children: `useAnimationValue`,
 };

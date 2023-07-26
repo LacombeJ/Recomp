@@ -1,6 +1,8 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames, defineStyle } from '@recomp/classnames';
+import { boundaryLabel } from '@recomp/size';
+
 import { isElement } from '../utility/util';
 
 interface StackProps {
@@ -41,7 +43,7 @@ export const Stack = (props: StackProps) => {
 Stack.Item = (props: StackItemProps) => {
   const isVertical = props.settings.direction === 'vertical';
 
-  const classes = util.classnames({
+  const classes = classnames({
     row: isVertical,
     col: !isVertical,
     [props.scrollPolicy]: props.scrollPolicy !== 'none',
@@ -50,7 +52,7 @@ Stack.Item = (props: StackItemProps) => {
 
   const style = {
     ...stackStyle(props),
-    ...util.defineStyle(classes, stackItemStyleDef),
+    ...defineStyle(classes, stackItemStyleDef),
   };
 
   return (
@@ -112,7 +114,7 @@ const stackItemStyleDef = {
 const stackStyle = (props: StackItemProps) => {
   const style: { [key: string]: any } = {};
 
-  const label = util.boundaryLabel(props.settings.direction);
+  const label = boundaryLabel(props.settings.direction);
 
   if (props.settings.anchor === 'top') {
     style[label.front] = props.settings.offset + 'px';

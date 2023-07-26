@@ -1,7 +1,9 @@
 // Fragments
 export { ErrorBoundary } from './src/fragments/ErrorBoundary';
+export * from './src/fragments/For';
 export { NestBreak } from './src/fragments/NestBreak';
 export { Page } from './src/fragments/Page';
+export * from './src/fragments/Show';
 export * from './src/fragments/ZeroWidth';
 
 // ----------------------------------------------------------------------------

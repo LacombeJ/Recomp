@@ -1,5 +1,3 @@
-import { isClamped } from './math';
-
 const FRACTION = 8;
 
 // Value may be negative
@@ -242,6 +240,10 @@ export const adjust = (rect: {
     x: adjustDimension(rect.x, rect.width, innerWidth),
     y: adjustDimension(rect.y, rect.height, innerHeight),
   };
+};
+
+const isClamped = (x: number, min = 0, max = 1) => {
+  return x >= min && x < max;
 };
 
 /**

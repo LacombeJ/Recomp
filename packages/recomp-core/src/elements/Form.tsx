@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 import { Label } from './Label';
 import { Input } from './Input';
 import { Button } from './Button';
@@ -12,7 +13,7 @@ interface FormProps
   > {}
 
 export const Form = (props: FormProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { onSubmit, dangerouslySetInnerHTML: _0, ...formProps } = props;
 
@@ -31,10 +32,10 @@ const defaultProps: FormProps = {
 // ----------------------------------------------------------------------------
 
 Form.Row = (props: RowProps) => {
-  props = util.propUnion(rowDefaultProps, props);
+  props = propUnion(rowDefaultProps, props);
   const { style } = props;
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     row: props.direction === 'row',
     column: props.direction === 'column',
@@ -80,7 +81,7 @@ interface FieldProps
 }
 
 Form.Field = (props: FieldProps) => {
-  props = util.propUnion(fieldDefaultProps, props);
+  props = propUnion(fieldDefaultProps, props);
 
   const {
     classNames,

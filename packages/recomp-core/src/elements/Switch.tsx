@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 import { Checkbox } from './Checkbox';
 
@@ -19,7 +19,7 @@ interface SwitchProps {
 }
 
 export const Switch = (props: SwitchProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   return <Checkbox {...props}></Checkbox>;
 };

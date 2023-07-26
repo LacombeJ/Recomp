@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Easing, easeOutQuart } from './easing';
 import { useAnimationFrame } from './useAnimationFrame';
+import { clamp } from './util';
 
 type AnimationState<V extends string> = Record<V, number>;
 type AnimationStates<S extends string, V extends string> = Record<
@@ -234,10 +235,6 @@ const stateMatch = <V extends string>(
     }
   }
   return true;
-};
-
-const clamp = (x: number) => {
-  return Math.min(Math.max(x, 0), 1);
 };
 
 const defaultTransition = {

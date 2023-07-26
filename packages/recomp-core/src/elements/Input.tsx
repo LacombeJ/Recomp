@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 interface InputProps
   extends React.DetailedHTMLProps<
@@ -15,7 +16,7 @@ interface InputProps
 }
 
 export const Input = (props: InputProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const {
     classNames,
@@ -31,7 +32,7 @@ export const Input = (props: InputProps) => {
     props.onComplete?.(e.target.value);
   };
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [classNames.disabled]: props.disabled,
   });

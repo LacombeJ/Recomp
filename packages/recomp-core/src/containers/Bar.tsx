@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 interface BarProps {
   className?: string;
@@ -15,10 +16,10 @@ interface BarProps {
 }
 
 export const Bar = (props: BarProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
   const { classNames, style } = props;
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     vertical: props.direction === 'vertical',
     horizontal: props.direction === 'horizontal',
@@ -34,7 +35,7 @@ export const Bar = (props: BarProps) => {
 const mapChildren = (children: any, classNames: any) => {
   children = React.Children.toArray(children); // make as array so we can map
   return React.Children.map(children, (child, i) => {
-    const className = util.classnames({
+    const className = classnames({
       [classNames.start]: i === 0 && i !== children.length - 1,
       [classNames.center]: !((i === 0) !== (i === children.length - 1)),
       [classNames.end]: i !== 0 && i === children.length - 1,

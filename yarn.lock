@@ -1760,13 +1760,21 @@
 "@recomp/animate@link:packages/recomp-animate":
   version "0.0.0"
 
+"@recomp/chroma@link:packages/recomp-chroma":
+  version "0.0.0"
+
+"@recomp/classnames@link:packages/recomp-classnames":
+  version "0.0.0"
+
 "@recomp/core@link:packages/recomp-core":
   version "0.0.0"
   dependencies:
     "@react-spring/web" "^9.7.2"
+    "@recomp/classnames" "link:packages/recomp-classnames"
     "@recomp/hooks" "link:packages/recomp-hooks"
     "@recomp/icons" "link:packages/recomp-icons"
-    "@recomp/utility" "link:packages/recomp-utility"
+    "@recomp/props" "link:packages/recomp-props"
+    "@recomp/size" "link:packages/recomp-size"
 
 "@recomp/hooks@link:packages/recomp-hooks":
   version "0.0.0"
@@ -1781,20 +1789,26 @@
   version "0.0.0"
   dependencies:
     "@react-spring/web" "^9.7.2"
+    "@recomp/classnames" "link:packages/recomp-classnames"
+    "@recomp/core" "link:packages/recomp-core"
     "@recomp/hooks" "link:packages/recomp-hooks"
     "@recomp/icons" "link:packages/recomp-icons"
-    "@recomp/utility" "link:packages/recomp-utility"
+    "@recomp/props" "link:packages/recomp-props"
+    "@recomp/size" "link:packages/recomp-size"
 
 "@recomp/monaco@link:packages/recomp-monaco":
   version "0.0.0"
   dependencies:
     "@monaco-editor/loader" "^1.3.2"
-    "@recomp/hooks" "link:packages/recomp-hooks"
-    "@recomp/utility" "link:packages/recomp-utility"
+    "@recomp/classnames" "link:packages/recomp-classnames"
+    "@recomp/props" "link:packages/recomp-props"
     monaco-editor "^0.34.0"
     react-resize-detector "^7.1.2"
 
-"@recomp/utility@link:packages/recomp-utility":
+"@recomp/props@link:packages/recomp-props":
+  version "0.0.0"
+
+"@recomp/size@link:packages/recomp-size":
   version "0.0.0"
 
 "@rollup/pluginutils@^4.2.1":

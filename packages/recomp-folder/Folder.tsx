@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames, selectClassName } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 import { Update, useModel, useStateOrProps } from '@recomp/hooks';
 import { Caret, File, Folder as FolderIcon } from '@recomp/icons';
@@ -67,7 +68,7 @@ interface FolderProps {
 }
 
 export const Folder = (props: FolderProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const [model, setModel] = useModel(
     props.defaultModel,
@@ -150,7 +151,7 @@ export const Folder = (props: FolderProps) => {
         >
           {model.rootIds.map((id) => {
             const item = model.byId[id];
-            const itemProps: ItemProps = util.propUnion(
+            const itemProps: ItemProps = propUnion(
               itemDefaultProps,
               props.renderItem(item)
             );
@@ -284,11 +285,9 @@ const FolderItem = (props: FolderItemProps) => {
 
   const selected = props.selected === props.id;
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
-    ...(selected
-      ? util.selectClassName(props.classNames.select, props.select)
-      : {}),
+    ...(selected ? selectClassName(props.classNames.select, props.select) : {}),
   });
 
   let droppableProps: any = {};
@@ -328,7 +327,7 @@ const FolderItem = (props: FolderItemProps) => {
         <div className="body">
           {items.map((id) => {
             const item = props.model.byId[id];
-            const itemProps: ItemProps = util.propUnion(
+            const itemProps: ItemProps = propUnion(
               itemDefaultProps,
               props.renderItem(item)
             );

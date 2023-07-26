@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface BoardProps {
   className?: string;
@@ -10,7 +10,7 @@ interface BoardProps {
 }
 
 export const Board = (props: BoardProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
   return (
     <div className={props.className} style={props.style} ref={props.setRef}>
       {props.children}
@@ -29,7 +29,7 @@ Board.Header = (props: {
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }) => {
-  props = util.propUnion({ className: 'header' }, props);
+  props = propUnion({ className: 'header' }, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -42,7 +42,7 @@ Board.Title = (props: {
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }) => {
-  props = util.propUnion({ className: 'title' }, props);
+  props = propUnion({ className: 'title' }, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -55,7 +55,7 @@ Board.Control = (props: {
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }) => {
-  props = util.propUnion({ className: 'control' }, props);
+  props = propUnion({ className: 'control' }, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -68,7 +68,7 @@ Board.Body = (props: {
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }) => {
-  props = util.propUnion({ className: 'body' }, props);
+  props = propUnion({ className: 'body' }, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -81,7 +81,7 @@ Board.Footer = (props: {
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }) => {
-  props = util.propUnion({ className: 'footer' }, props);
+  props = propUnion({ className: 'footer' }, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}

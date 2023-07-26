@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface SelectProps
   extends React.DetailedHTMLProps<
@@ -11,7 +11,7 @@ interface SelectProps
 }
 
 export const Select = (props: SelectProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { options, dangerouslySetInnerHTML: _0, ...selectProps } = props;
 

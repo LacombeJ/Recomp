@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface PageProps {
   page: any;
@@ -11,7 +11,7 @@ interface PageProps {
 }
 
 export const Page = (props: PageProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const ActivePage = props.pages[props.page];
 

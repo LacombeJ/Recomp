@@ -1,9 +1,11 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
+
 import { useDropZone } from './useDropZone';
 import { useTimeout } from '@recomp/hooks';
-import { DataTransferKind, TransferItem } from './transfer';
+import { DataTransferKind } from './transfer';
 
 interface DropZoneProps {
   className?: string;
@@ -22,11 +24,11 @@ interface DropZoneProps {
 }
 
 export const DropZone = (props: DropZoneProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { dragOver, dropzoneProps } = useDropZone(props.onDrop);
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     dragOver: dragOver,
   });
@@ -104,13 +106,13 @@ type DropZoneContextProps = {
 };
 
 const Context = (props: DropZoneContextProps) => {
-  props = util.propUnion(defaultContextProps, props);
+  props = propUnion(defaultContextProps, props);
 
   const [dragging, setDragging] = React.useState(false);
 
   const dropzone = useDropZone(props.onDrop);
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     visible: dropzone.dragOver,
     dragging,

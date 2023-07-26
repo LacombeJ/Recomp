@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 import { useNestedProps } from '@recomp/hooks';
 import { NestBreak } from '../fragments/NestBreak';
@@ -20,10 +21,10 @@ interface BlockProps {
 }
 
 export const Block = (props: BlockProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { setRef: _0, style } = props;
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [`${props.classNames.level}-${props.level + 1}`]: true,
     [props.classNames.solid]: props.solid,

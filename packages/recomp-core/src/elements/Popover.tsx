@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 import { Rect, useMeasure } from '@recomp/hooks';
 
 interface PopoverProps {
@@ -18,7 +18,7 @@ interface PopoverProps {
 }
 
 export const Popover = (props: PopoverProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   if (!props.visible) {
     return null;

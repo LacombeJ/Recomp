@@ -4,7 +4,7 @@ import katex from 'katex';
 
 import 'katex/src/katex.less';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
 
 interface KatexProps {
   className?: string;
@@ -20,7 +20,7 @@ interface KatexProps {
 }
 
 const Katex = (props: KatexProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = { ...defaultProps, ...props };
 
   // const {children, display, size, margin, nlbreak} = props;
   let text = props.children;
@@ -35,7 +35,7 @@ const Katex = (props: KatexProps) => {
     displayMode: props.display === 'block',
   });
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     math: true,
     'katex-display': props.display === 'block',

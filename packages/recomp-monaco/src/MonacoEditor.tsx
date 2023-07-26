@@ -3,7 +3,8 @@
 
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 import { useResizeDetector } from 'react-resize-detector';
 
@@ -71,7 +72,7 @@ export interface MonacoEditorProps {
 }
 
 export const MonacoEditor = (props: MonacoEditorProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   // State
   // Assuming that this component can unmount and remount at any time, and
@@ -429,7 +430,7 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
     onResize: handleResize,
   });
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true, // always append props.className
     [props.classNames.transparent]: props.transparent, // append if transparency enabled
   });

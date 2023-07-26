@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 import { Stack } from './Stack';
 
@@ -18,7 +18,7 @@ type ScrollDirection = 'x' | 'y' | 'xy';
 type ScrollPolicy = 'scroll' | 'auto' | 'overlay' | 'none';
 
 export const Scroll = (props: ScrollProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { className, style } = props;
 

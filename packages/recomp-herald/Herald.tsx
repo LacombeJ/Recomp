@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 import { useImmer, useTimeout } from '@recomp/hooks';
 import { useAnimationLifecycle } from '@recomp/animate/useAnimationLifecycle';
@@ -36,7 +36,7 @@ export interface HeraldProps {
 }
 
 export const Herald = (props: HeraldProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   return (
     <div className={props.className} style={props.style}>

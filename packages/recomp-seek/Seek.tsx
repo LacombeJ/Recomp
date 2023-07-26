@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import { Input } from '@recomp/core';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 interface SeekProps {
   className?: string;
@@ -19,7 +20,7 @@ interface SeekProps {
 }
 
 export const Seek = (props: SeekProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Escape') {
@@ -70,9 +71,9 @@ interface ItemProps {
 }
 
 const Item = (props: ItemProps) => {
-  props = util.structureUnion(itemDefaultProps, props);
+  props = propUnion(itemDefaultProps, props);
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     selected: props.selected,
   });

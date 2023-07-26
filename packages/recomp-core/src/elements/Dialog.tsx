@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 interface DialogProps
   extends React.DetailedHTMLProps<
@@ -18,7 +19,7 @@ interface DialogProps
 }
 
 export const Dialog = (props: DialogProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const dialogRef = React.useRef<HTMLDialogElement>();
 
@@ -31,7 +32,7 @@ export const Dialog = (props: DialogProps) => {
     ...dialogProps
   } = props;
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [props.classNames.tint]: props.tint,
     [props.classNames.blur]: props.blur,

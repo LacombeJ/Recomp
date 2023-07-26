@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 import { castDraft, useImmer } from '@recomp/hooks';
 import { IconCycle } from './IconCycle';
 
@@ -39,7 +40,7 @@ interface FlashCardProps<T> {
 
 // Comma syntax (<T,>) because arrow functions interfere with TSX syntax
 export const FlashCard = <T,>(props: FlashCardProps<T>) => {
-  props = util.structureUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   // Assuming these keys remain in the same order
   const keys = Object.keys(props.model.card) as (keyof T)[];
@@ -50,7 +51,7 @@ export const FlashCard = <T,>(props: FlashCardProps<T>) => {
 
   const handleCycleClick = () => {
     const currentIndex = keys.indexOf(props.model.side);
-    const nextIndex = util.modulo(currentIndex + 1, keys.length);
+    const nextIndex = modulo(currentIndex + 1, keys.length);
     props.onFlip?.(keys[nextIndex]);
   };
 
@@ -62,7 +63,7 @@ export const FlashCard = <T,>(props: FlashCardProps<T>) => {
               return (
                 <div
                   key={key.toString()}
-                  className={util.classnames({
+                  className={classnames({
                     [props.classNames.badge]: true,
                     active: key === props.model.side,
                   })}
@@ -76,7 +77,7 @@ export const FlashCard = <T,>(props: FlashCardProps<T>) => {
         {props.flip === 'cycle' || props.flip === 'both' ? (
           <div
             key={'recomp-flashcard:cycle'}
-            className={util.classnames({
+            className={classnames({
               [props.classNames.badge]: true,
               cycle: true,
             })}
@@ -106,6 +107,10 @@ const defaultProps: Omit<FlashCardProps<FlashCardStandard>, 'model'> = {
 };
 
 // ----------------------------------------------------------------------------
+
+const modulo = (n: number, m: number) => {
+  return ((n % m) + m) % m;
+};
 
 /** State management hook that controls flipping state internally */
 export const useFlashCardState = <T,>(defaultModel: FlashCardModel<T>) => {

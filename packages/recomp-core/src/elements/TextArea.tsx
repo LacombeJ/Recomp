@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface TextAreaProps
   extends React.DetailedHTMLProps<
@@ -11,7 +11,7 @@ interface TextAreaProps
 }
 
 export const TextArea = (props: TextAreaProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { setRef, dangerouslySetInnerHTML: _0, ...textAreaProps } = props;
 

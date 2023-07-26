@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion, isNullOrWhitespace } from '@recomp/props';
 import { useModel, Update } from '@recomp/hooks';
 import { nonempty } from '../fragments/ZeroWidth';
 
@@ -21,7 +22,7 @@ interface CheckboxProps {
 }
 
 export const Checkbox = (props: CheckboxProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
   const { className, classNames } = props;
   const style = {
     ...props.style,
@@ -38,9 +39,9 @@ export const Checkbox = (props: CheckboxProps) => {
     setChecked(() => e.target.checked);
   };
 
-  const labelClassName = util.classnames({
+  const labelClassName = classnames({
     [classNames.label]: true,
-    [classNames.margin]: !util.isNullOrWhitespace(props.children),
+    [classNames.margin]: !isNullOrWhitespace(props.children),
   });
 
   return (

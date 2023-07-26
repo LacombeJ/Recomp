@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface VideoProps
   extends React.DetailedHTMLProps<
@@ -9,7 +9,7 @@ interface VideoProps
   > {}
 
 export const Video = (props: VideoProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   return <iframe {...props} />;
 };

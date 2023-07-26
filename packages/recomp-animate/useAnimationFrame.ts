@@ -2,7 +2,7 @@ import * as React from 'react';
 
 // modified: https://css-tricks.com/using-requestanimationframe-with-react-hooks/
 export const useAnimationFrame = (
-  callback: (timeOffset: number, deltaTime: number) => void | boolean
+  callback: (timeOffsetMS: number, deltaTimeMS: number) => void | boolean
 ) => {
   const requestRef = React.useRef<number>(null);
   const previousTimeRef = React.useRef<number>(null);

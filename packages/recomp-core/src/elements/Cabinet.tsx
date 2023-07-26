@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 import { useSpring, animated } from '@react-spring/web';
 
@@ -31,7 +32,7 @@ interface CabinetProps {
 }
 
 export const Cabinet = (props: CabinetProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { style } = props;
 
@@ -67,7 +68,7 @@ export const Cabinet = (props: CabinetProps) => {
 
   const classNames = props.classNames;
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     expanded,
     hover: inside,

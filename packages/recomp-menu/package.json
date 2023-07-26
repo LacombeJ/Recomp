@@ -8,9 +8,12 @@
   },
   "dependencies": {
     "@react-spring/web": "^9.7.2",
+    "@recomp/classnames": "link:../recomp-classnames",
+    "@recomp/core": "link:../recomp-core",
     "@recomp/hooks": "link:../recomp-hooks",
     "@recomp/icons": "link:../recomp-icons",
-    "@recomp/utility": "link:../recomp-utility"
+    "@recomp/props": "link:../recomp-props",
+    "@recomp/size": "link:../recomp-size"
   },
   "devDependencies": {
     "react": "^18.2.0",

@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
-import * as color from '@recomp/utility/color';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
+import * as chroma from '@recomp/chroma';
 
 import { Entry, Popover, usePopover } from '@recomp/core';
 
@@ -16,7 +17,7 @@ interface ColorProps {
 }
 
 export const Color = (props: ColorProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const popover = usePopover();
 
@@ -33,12 +34,12 @@ export const Color = (props: ColorProps) => {
 
   const value = props.value ?? '#000000';
 
-  const foregroundColor = color.foregroundFromBackground(
-    color.convertTo(value, 'RGB')
+  const foregroundColor = chroma.foregroundFromBackground(
+    chroma.convertTo(value, 'RGB')
   );
-  const fg = color.convertTo(foregroundColor, 'RGB');
+  const fg = chroma.convertTo(foregroundColor, 'RGB');
   const fga = foregroundColor === 'white' ? '0.3' : '0.6';
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     inline: props.display === 'inline',
   });

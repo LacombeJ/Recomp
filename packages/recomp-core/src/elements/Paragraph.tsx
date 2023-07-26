@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface ParagraphProps
   extends React.DetailedHTMLProps<
@@ -9,7 +9,7 @@ interface ParagraphProps
   > {}
 
 export const Paragraph = (props: ParagraphProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { dangerouslySetInnerHTML: _0, ...paragraphProps } = props;
 

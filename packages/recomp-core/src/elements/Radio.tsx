@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 import { NestBreak } from '../fragments/NestBreak';
 import { useNestedProps } from '@recomp/hooks';
 
@@ -20,7 +20,7 @@ interface RadioProps {
 }
 
 export const Radio = (props: RadioProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { className, classNames, style } = props;
 
@@ -65,7 +65,7 @@ interface GroupProps {
 }
 
 const Group = (props: GroupProps) => {
-  props = util.propUnion(groupDefaultProps, props);
+  props = propUnion(groupDefaultProps, props);
 
   const { className, style } = props;
 

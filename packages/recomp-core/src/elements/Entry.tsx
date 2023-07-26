@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 import { nonempty } from '@recomp/core';
 
 interface EntryProps {
@@ -21,13 +22,13 @@ interface EntryProps {
  * Similar to input but for custom value and inner content
  */
 export const Entry = (props: EntryProps) => {
-  props = util.structureUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const entryRef = React.useRef<HTMLDivElement>();
 
   const [focused, setFocused] = React.useState(false);
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [props.classNames.focused]: focused,
     [props.classNames.disabled]: props.disabled,

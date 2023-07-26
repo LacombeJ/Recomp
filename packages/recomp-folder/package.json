@@ -10,10 +10,11 @@
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/modifiers": "^6.0.1",
     "@dnd-kit/utilities": "^3.2.1",
+    "@recomp/classnames": "link:../recomp-classnames",
     "@recomp/core": "link:../recomp-core",
     "@recomp/hooks": "link:../recomp-hooks",
     "@recomp/icons": "link:../recomp-icons",
-    "@recomp/utility": "link:../recomp-utility"
+    "@recomp/props": "link:../recomp-props"
   },
   "devDependencies": {
     "react": "^18.2.0",

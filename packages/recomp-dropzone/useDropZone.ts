@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataTransferKind, TransferItem, collectDataTransferItems } from './transfer';
+import { DataTransferKind, collectDataTransferItems } from './transfer';
 
 export const useDropZone = (dropCallback: (items: DataTransferKind[]) => void) => {
   const [dragOver, setDragOver] = React.useState(false);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface LinkProps
   extends React.DetailedHTMLProps<
@@ -9,7 +9,7 @@ interface LinkProps
   > {}
 
 export const Link = (props: LinkProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { dangerouslySetInnerHTML: _0, ...linkProps } = props;
 

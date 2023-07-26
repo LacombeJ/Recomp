@@ -1,7 +1,10 @@
 import * as React from 'react';
 
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
+import * as szu from '@recomp/size';
+
 import { useInteract, useMeasure } from '@recomp/hooks';
-import * as util from '@recomp/utility/common';
 import { isElement } from '../utility/util';
 
 export interface SplitProps {
@@ -45,7 +48,7 @@ export type View = 'split' | 'first' | 'second';
 export type Orientation = 'first' | 'second';
 
 export const Split = (props: SplitProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const nodeRef: React.MutableRefObject<HTMLDivElement> = React.useRef();
   const [setMeasureRef, measureResult] = useMeasure();
@@ -60,7 +63,7 @@ export const Split = (props: SplitProps) => {
     [props.children]
   );
 
-  const label = util.boundaryLabel(props.split);
+  const label = szu.boundaryLabel(props.split);
 
   const style: React.CSSProperties = {
     ...props.style,
@@ -70,7 +73,7 @@ export const Split = (props: SplitProps) => {
   const [size, setSize] = React.useState<string | number>(null);
   const [resizing, setResizing] = React.useState(false);
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [props.classNames.resizing]: resizing,
     [props.classNames.vertical]: props.split === 'vertical',
@@ -129,7 +132,7 @@ export const Split = (props: SplitProps) => {
 
   const performOnResize = (clientX: number, clientY: number) => {
     const rect = measureResult.clientRect;
-    const offsets = util.offsets(clientX, clientY, rect);
+    const offsets = szu.offsets(clientX, clientY, rect);
 
     const snapLeft = !!first.props.snapFrom;
     const snapRight = !!second.props.snapFrom;
@@ -137,7 +140,7 @@ export const Split = (props: SplitProps) => {
     const containerSize = rect[label.size];
     const cursorOffset = offsets[label.pos];
 
-    const rbound = util.resizeBoundary(
+    const rbound = szu.resizeBoundary(
       containerSize,
       first.props.minSize,
       first.props.maxSize,
@@ -145,14 +148,14 @@ export const Split = (props: SplitProps) => {
       second.props.maxSize
     );
 
-    const snapbound = util.snapBoundary(
+    const snapbound = szu.snapBoundary(
       containerSize,
       first.props.snapFrom,
       second.props.snapFrom
     );
 
     // position of mouse clipped to size bounds
-    const target = util.targetSize(
+    const target = szu.targetSize(
       containerSize,
       cursorOffset,
       rbound.min,
@@ -160,20 +163,20 @@ export const Split = (props: SplitProps) => {
     );
 
     // position of mouse clipped to snap bounds
-    const snaptarget = util.targetSize(
+    const snaptarget = szu.targetSize(
       containerSize,
       cursorOffset,
       snapbound.min,
       snapbound.max
     );
 
-    const snapTo = util.snapBoundary(
+    const snapTo = szu.snapBoundary(
       containerSize,
       first.props.snapTo,
       second.props.snapTo
     );
-    const snapToLeft = util.toSize(snapTo.min, '%', containerSize);
-    const snapToRight = util.toSize(snapTo.max, '%', containerSize);
+    const snapToLeft = szu.toSize(snapTo.min, '%', containerSize);
+    const snapToRight = szu.toSize(snapTo.max, '%', containerSize);
 
     let actualTarget = target;
 
@@ -233,7 +236,7 @@ export const Split = (props: SplitProps) => {
         // Sometimes fullSize is null, not sure why
         // Set remaining size: 100% - actualSize
         // If we only use percentages, we wouldn't need to use "fullSize"
-        itemProps.size = util.sizeInverse(fullSize, actualSize);
+        itemProps.size = szu.sizeInverse(fullSize, actualSize);
       }
 
       // itemProps.fill = true;
@@ -349,7 +352,7 @@ const orientedSize = (
   if (orientation === 'first') {
     return size;
   } else {
-    return util.sizeInverse(container, size);
+    return szu.sizeInverse(container, size);
   }
 };
 
@@ -371,16 +374,16 @@ interface SplitItemProps {
 }
 
 const Item = (props: SplitItemProps) => {
-  props = util.propUnion(itemDefaultProps, props);
+  props = propUnion(itemDefaultProps, props);
 
   const className = props.className;
 
-  const boundaryStyle = util.boundarySizeStyle(
+  const boundaryStyle = szu.boundarySizeStyle(
     props.direction,
     props.minSize,
     props.maxSize
   );
-  const sizeStyle = util.sizeStyle(props.direction, props.size);
+  const sizeStyle = szu.sizeStyle(props.direction, props.size);
   const style = {
     ...itemDefaultStyle,
     ...boundaryStyle,

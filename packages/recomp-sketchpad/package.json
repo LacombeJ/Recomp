@@ -6,7 +6,9 @@
   "scripts": {
     "build": "vite build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@recomp/props": "link:../recomp-props"
+  },
   "devDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

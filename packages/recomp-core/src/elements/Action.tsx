@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 interface ActionProps
   extends React.DetailedHTMLProps<
@@ -15,7 +16,7 @@ interface ActionProps
 }
 
 export const Action = (props: ActionProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const {
     className: _0,
@@ -28,7 +29,7 @@ export const Action = (props: ActionProps) => {
   } = props;
 
   const { classNames } = props;
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [classNames.disabled]: props.disabled,
   });

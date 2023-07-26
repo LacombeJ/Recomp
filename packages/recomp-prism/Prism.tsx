@@ -4,7 +4,8 @@ import * as prism from 'prismjs';
 
 import 'prismjs/plugins/line-numbers/prism-line-numbers';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 interface PrismProps {
   className?: string;
@@ -25,7 +26,7 @@ interface PrismProps {
 }
 
 const Prism = (props: PrismProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { style } = props;
 
@@ -36,14 +37,14 @@ const Prism = (props: PrismProps) => {
   const display = determineDisplay(text, props.display);
   const inline = display === 'inline';
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [props.classNames.inline]: inline,
     [props.classNames.block]: !inline,
     [props.classNames.lineNumbers]: !inline && props.lineNumbers,
   });
 
-  const codeClassName = util.classnames({
+  const codeClassName = classnames({
     [prismLang(props.language)]: !!props.language,
   });
 

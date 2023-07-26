@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface AudioProps
   extends React.DetailedHTMLProps<
@@ -12,7 +12,7 @@ interface AudioProps
 }
 
 export const Audio = (props: AudioProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const { className, style, src, ...audioProps } = props;
 

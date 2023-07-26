@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames, selectClassName } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 import { X } from '@recomp/icons';
 
 export interface AlertProps {
@@ -30,11 +31,11 @@ export interface AlertProps {
 }
 
 export const Alert = (props: AlertProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
-    ...util.selectClassName(props.classNames.variant, props.variant),
+    ...selectClassName(props.classNames.variant, props.variant),
   });
 
   return (

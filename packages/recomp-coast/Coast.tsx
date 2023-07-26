@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 import { useSpring, animated } from '@react-spring/web';
 
 import {
   useMeasure,
   Rect,
-  useTimeout,
   useChildrenProps,
   useStateOrProps,
   useHandle,
@@ -44,8 +44,8 @@ interface CoastProps {
 }
 
 export const Coast = (props: CoastProps) => {
-  props = util.propUnion(defaultProps, props);
-  const className = util.classnames({
+  props = propUnion(defaultProps, props);
+  const className = classnames({
     [props.className]: true,
     [props.position]: true,
   });
@@ -153,7 +153,7 @@ interface TabsProps {
 }
 
 const Tabs = (props: TabsProps) => {
-  props = util.propUnion(tabsDefaultProps, props);
+  props = propUnion(tabsDefaultProps, props);
   const { className, style } = props;
 
   const [parentRef, parentMeasure] = useMeasure();
@@ -284,7 +284,7 @@ interface ControlsProps {
 }
 
 const Controls = (props: ControlsProps) => {
-  props = util.propUnion(controlsDefaultProps, props);
+  props = propUnion(controlsDefaultProps, props);
   const { className, style } = props;
 
   const [parentRef, parentMeasure] = useMeasure();
@@ -391,7 +391,7 @@ interface CoastItemProps {
 }
 
 const CoastItem = (props: CoastItemProps) => {
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [props.classNames.active]: props.active,
   });
@@ -432,7 +432,7 @@ const CoastItem = (props: CoastItemProps) => {
 // ----------------------------------------------------------------------------
 
 const Tab = (props: CoastItemProps) => {
-  props = util.propUnion(tabDefaultProps, props);
+  props = propUnion(tabDefaultProps, props);
   return <CoastItem {...props}></CoastItem>;
 };
 Tab.identifier = 'recomp-coast-tab';
@@ -448,7 +448,7 @@ const tabDefaultProps = {
 // ----------------------------------------------------------------------------
 
 const Control = (props: CoastItemProps) => {
-  props = util.propUnion(controlDefaultProps, props);
+  props = propUnion(controlDefaultProps, props);
   return <CoastItem {...props}></CoastItem>;
 };
 Control.identifier = 'recomp-coast-control';

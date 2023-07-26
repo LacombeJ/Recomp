@@ -1,6 +1,8 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
+
 import { nonempty } from '../fragments/ZeroWidth';
 import { useNestedProps } from '@recomp/hooks';
 import { NestBreak } from '../fragments/NestBreak';
@@ -18,7 +20,7 @@ interface ListProps {
 }
 
 export const List = (props: ListProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
   const { className } = props;
 
   const bulletList = bulletsMap[props.type];
@@ -149,10 +151,10 @@ interface ItemProps {
 }
 
 const Item = (props: ItemProps) => {
-  props = util.propUnion(itemDefaultProps, props);
+  props = propUnion(itemDefaultProps, props);
   // const { className } = props;
 
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [`${props.classNames.level}-${props.level + 1}`]: props.nesting,
   });

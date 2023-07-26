@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames, selectClassName } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
 
 import { nonempty } from '../fragments/ZeroWidth';
 
@@ -26,7 +27,7 @@ interface ButtonProps
 }
 
 export const Button = (props: ButtonProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   const {
     className: _0,
@@ -42,11 +43,11 @@ export const Button = (props: ButtonProps) => {
   } = props;
 
   const { classNames } = props;
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [classNames.loading]: props.loading,
     [classNames.disabled]: props.disabled,
-    ...util.selectClassName(classNames.variant, props.variant),
+    ...selectClassName(classNames.variant, props.variant),
   });
 
   const handleClick = (e: any) => {

@@ -1,6 +1,8 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
+import { propUnion } from '@recomp/props';
+
 import {
   Menu,
   MenuGroup,
@@ -18,7 +20,7 @@ interface TitleBarProps {
 }
 
 export const TitleBar = (props: TitleBarProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
 
   return (
     <div className={props.className} style={props.style} {...props.ext}>
@@ -42,7 +44,7 @@ interface IconProps {
 }
 
 const Icon = (props: IconProps) => {
-  props = util.propUnion(IconDefaultProps, props);
+  props = propUnion(IconDefaultProps, props);
   return (
     <div className={props.className} style={props.style} {...props.ext}>
       {props.children}
@@ -75,7 +77,7 @@ interface MenuBarProps {
 }
 
 const MenuBar = (props: MenuBarProps) => {
-  props = util.propUnion(menuDefaultProps, props);
+  props = propUnion(menuDefaultProps, props);
   if (props.model) {
     props.model = normalizeMenuElements(props.model) as MenuGroup[];
   }
@@ -177,7 +179,7 @@ interface ButtonProps {
 }
 
 const Button = (props: ButtonProps) => {
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [props.classNames.active]: props.active,
   });
@@ -221,7 +223,7 @@ interface HeaderProps {
 }
 
 const Header = (props: HeaderProps) => {
-  props = util.propUnion(headerDefaultProps, props);
+  props = propUnion(headerDefaultProps, props);
   return (
     <div className={props.className} style={props.style} {...props.ext}>
       {props.children}
@@ -245,7 +247,7 @@ interface ControlBarProps {
 }
 
 const ControlBar = (props: ControlBarProps) => {
-  props = util.propUnion(controlBarDefaultProps, props);
+  props = propUnion(controlBarDefaultProps, props);
   return (
     <div className={props.className} style={props.style} {...props.ext}>
       {props.children}
@@ -270,7 +272,7 @@ interface ControlButtonProps {
 }
 
 const ControlButton = (props: ControlButtonProps) => {
-  props = util.propUnion(controlButtonDefaultProps, props);
+  props = propUnion(controlButtonDefaultProps, props);
 
   let className = props.className;
 

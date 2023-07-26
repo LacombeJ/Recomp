@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
 
 interface SpacerProps {
   className?: string;
@@ -11,7 +11,7 @@ interface SpacerProps {
 }
 
 export const Spacer = (props: SpacerProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
   const { className } = props;
 
   const style = {

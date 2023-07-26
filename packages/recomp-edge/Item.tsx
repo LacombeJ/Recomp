@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { classnames } from '@recomp/classnames';
 import { Close } from '@recomp/icons';
 import { Rect } from '@recomp/hooks';
 
@@ -28,7 +28,7 @@ interface EdgeItemProps {
 }
 
 export const EdgeItem = (props: EdgeItemProps) => {
-  const className = util.classnames({
+  const className = classnames({
     [props.className]: true,
     [props.classNames.dragging]: props.dragging === props.id,
     [props.classNames.selected]: props.selected === props.id,

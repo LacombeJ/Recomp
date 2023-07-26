@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import * as util from '@recomp/utility/common';
+import { propUnion } from '@recomp/props';
+import * as szu from '@recomp/size';
 import { Chevron } from '@recomp/icons';
 import {
   Rect,
@@ -72,7 +73,7 @@ interface MenuProps {
 }
 
 export const Menu = (props: MenuProps) => {
-  props = util.propUnion(defaultProps, props);
+  props = propUnion(defaultProps, props);
   if (props.model) {
     props.model = normalizeMenuElements(props.model);
   }
@@ -81,7 +82,14 @@ export const Menu = (props: MenuProps) => {
 
   // The below div element is of size (0), so instead use ref of first submenu
   return (
-    <div className={props.className} style={props.style}>
+    <div
+      className={props.className}
+      style={props.style}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    >
       <SubMenu {...restProps}></SubMenu>
     </div>
   );
@@ -131,7 +139,7 @@ export const SubMenu = (props: SubMenuProps) => {
   const handleSubmenuResize = (width: number, height: number) => {
     setAdjusted({
       calculated: true,
-      ...util.adjust({
+      ...szu.adjust({
         x: intent.x,
         y: intent.y,
         width,
@@ -284,7 +292,7 @@ interface SeparatorProps {
 }
 
 const Separator = (props: SeparatorProps) => {
-  props = util.propUnion(separatorDefaultProps, props);
+  props = propUnion(separatorDefaultProps, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -306,7 +314,7 @@ interface ComponentProps {
 }
 
 const Component = (props: ComponentProps) => {
-  props = util.propUnion(componentDefaultProps, props);
+  props = propUnion(componentDefaultProps, props);
   return (
     <div className={props.className} style={props.style}>
       {props.children}
@@ -332,7 +340,7 @@ interface MenuContextProps {
 }
 
 const Context = (props: MenuContextProps) => {
-  props = util.propUnion(contextDefaultProps, props);
+  props = propUnion(contextDefaultProps, props);
 
   const [adjusted, setAdjusted] = React.useState({
     x: 0,
@@ -377,7 +385,7 @@ const Context = (props: MenuContextProps) => {
   React.useEffect(() => {
     setAdjusted({
       calculated: true,
-      ...util.adjust({
+      ...szu.adjust({
         x: props.position.x,
         y: props.position.y,
         width: size.width,
@@ -529,14 +537,14 @@ export const normalizeMenuElements = (items: any[]): MenuElement[] => {
     } else if (item.type === 'component' || item.component) {
       model.push({ type: 'component', id: item.id, component: item.component });
     } else if (item.children) {
-      const props = util.propUnion(groupDefaultProps, item);
+      const props = propUnion(groupDefaultProps, item);
       model.push({
         ...props,
         type: 'group',
         children: normalizeMenuElements(props.children),
       });
     } else {
-      const props = util.propUnion(itemDefaultProps, item);
+      const props = propUnion(itemDefaultProps, item);
       model.push({
         ...props,
         type: 'item',

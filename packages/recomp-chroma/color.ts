@@ -1,8 +1,6 @@
 // https://github.com/mrdoob/three.js/blob/master/src/math/Color.js
 // https://www.rapidtables.com/convert/color/rgb-to-hsl.html
 
-import { modulo, clamp } from '../common/math';
-
 import { hue2rgb } from './math';
 import { nameToHexMap, hexToNameMap } from './named';
 
@@ -490,6 +488,16 @@ const rgbMetrics = (rgb: RGB) => {
     min,
     minIndex,
   };
+};
+
+// ----------------------------------------------------------------------------
+
+const modulo = (n: number, m: number) => {
+  return ((n % m) + m) % m;
+};
+
+const clamp = (x: number, min = 0, max = 1) => {
+  return x < min ? min : x > max ? max : x;
 };
 
 // ----------------------------------------------------------------------------
