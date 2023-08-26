@@ -142,7 +142,10 @@ const MenuBar = (props: MenuBarProps) => {
             <Menu
               key={selected}
               model={menuChildren(props.model, selected)}
-              onClick={props.onClick}
+              onClick={(id) => {
+                props.onClick?.(id);
+                setSelected(null);
+              }}
             ></Menu>
           </div>
         </Overlay>

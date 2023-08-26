@@ -6,7 +6,7 @@ import { propUnion } from '@recomp/props';
 import { useSpring, animated } from '@react-spring/web';
 
 import { Collapse, Expand } from '@recomp/icons';
-import { useMouseInside, useMeasure, useModel, Update } from '@recomp/hooks';
+import { useMouseInside, useMeasure } from '@recomp/hooks';
 
 interface CabinetProps {
   children?: React.ReactNode;
@@ -22,13 +22,12 @@ interface CabinetProps {
     hover?: string;
   };
   style?: React.CSSProperties;
-  defaultExpanded?: boolean;
   expanded?: boolean;
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   icon?: React.ReactNode;
-  controlIcon?: (expanded: boolean) => any;
-  onExpanded?: Update<boolean>;
+  controlIcon?: (expanded: boolean) => React.ReactNode;
+  onExpanded?: (expanded: boolean) => void;
 }
 
 export const Cabinet = (props: CabinetProps) => {
@@ -38,15 +37,9 @@ export const Cabinet = (props: CabinetProps) => {
 
   const { inside, props: insideProps } = useMouseInside(false);
 
-  const [expanded, setExpanded] = useModel(
-    props.defaultExpanded,
-    props.expanded,
-    props.onExpanded
-  );
-
   // Using this because of react spring. We'll wait until animation finishes
   // before making invisible again
-  const [visible, setVisible] = React.useState(expanded);
+  const [visible, setVisible] = React.useState(props.expanded);
 
   const [bodyRef, { contentRect }] = useMeasure();
   const { height } = contentRect;
@@ -54,32 +47,32 @@ export const Cabinet = (props: CabinetProps) => {
   // added margins for correct height, not sure why this is needed
   const actualHeight = height + 8 + 8 + 4 + 4;
   const expand = useSpring({
-    height: expanded ? `${actualHeight}px` : '0px',
+    height: props.expanded ? `${actualHeight}px` : '0px',
   });
   const spin = useSpring({
     onRest: () => {
       // If rested, is visible, and no longer expanded, make invisible
-      if (visible && !expanded) {
+      if (visible && !props.expanded) {
         setVisible(false);
       }
     },
-    transform: expanded ? `rotate(90deg)` : 'rotate(0deg)',
+    transform: props.expanded ? `rotate(90deg)` : 'rotate(0deg)',
   });
 
   const classNames = props.classNames;
 
   const className = classnames({
     [props.className]: true,
-    expanded,
+    expanded: props.expanded,
     hover: inside,
   });
 
   const handleClick = () => {
     // Toggle expanded
-    setExpanded((expanded) => !expanded);
+    props.onExpanded(!props.expanded);
 
     // If element isn't expanded, toggle visibility
-    if (!expanded) {
+    if (!props.expanded) {
       setVisible(true);
     }
   };
@@ -128,4 +121,22 @@ const defaultProps: CabinetProps = {
   },
   controlIcon: controlIconCallback,
   onExpanded: () => {},
+};
+
+// ----------------------------------------------------------------------------
+
+export const useCabinetState = (defaultExpanded: boolean = false) => {
+  const [expanded, setExpanded] = React.useState(defaultExpanded);
+
+  const onExpanded = (expanded: boolean) => {
+    setExpanded(expanded);
+  };
+
+  return {
+    expanded,
+    props: {
+      expanded,
+      onExpanded,
+    },
+  };
 };

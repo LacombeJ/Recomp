@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { File, Folder as FolderIcon, Caret } from '@recomp/icons';
-import { Folder, createModel } from '@recomp/folder';
+import { Folder, createModel, useFolderState } from '@recomp/folder';
 import '../stories.scss';
 
 export default {
@@ -10,11 +10,15 @@ export default {
   argTypes: {},
 };
 
-const Template = (args) => (
-  <div className="folder-wrapper">
-    <Folder {...args} />
-  </div>
-);
+const Template = (args) => {
+  const { defaultModel, ...restArgs } = args;
+  const folder = useFolderState(defaultModel);
+  return (
+    <div className="folder-wrapper">
+      <Folder {...restArgs} {...folder.props} />
+    </div>
+  );
+};
 
 const edgeModel = [
   {

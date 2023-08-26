@@ -1,1 +1,1 @@
-export { Edge, createModel } from './Edge';
+export * from './Edge';

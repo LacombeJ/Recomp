@@ -3,6 +3,7 @@
 import { produce, Draft, freeze } from 'immer';
 import { useState, useCallback } from 'react';
 
+export type { Draft } from 'immer';
 export type DraftFunction<S> = (draft: Draft<S>) => void;
 export type Updater<S> = (arg: S | DraftFunction<S>) => void;
 export type ImmerHook<S> = [S, Updater<S>];

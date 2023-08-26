@@ -3,7 +3,7 @@ import * as React from 'react';
 import { classnames, selectClassName } from '@recomp/classnames';
 import { propUnion } from '@recomp/props';
 
-import { Update, useModel, useStateOrProps } from '@recomp/hooks';
+import { useImmer, useStateOrProps } from '@recomp/hooks';
 import { Caret, File, Folder as FolderIcon } from '@recomp/icons';
 import {
   DndContext,
@@ -49,8 +49,7 @@ interface FolderProps {
   };
   style?: React.CSSProperties;
   selected?: string;
-  model?: FolderModel;
-  defaultModel?: FolderModel;
+  model: FolderModel;
   action?: 'item' | 'control';
   expand?: 'single' | 'double';
   select?: 'head' | 'all';
@@ -64,17 +63,10 @@ interface FolderProps {
   onItemContextMenu?: (e: React.MouseEvent, id: string) => any;
   onItemMove?: (from: string, to: string) => any;
   onBaseContextMenu?: (e: React.MouseEvent) => any;
-  onUpdateModel?: Update<FolderModel>;
 }
 
 export const Folder = (props: FolderProps) => {
   props = propUnion(defaultProps, props);
-
-  const [model, setModel] = useModel(
-    props.defaultModel,
-    props.model,
-    props.onUpdateModel
-  );
 
   const [selected, setSelected] = useStateOrProps(
     null,
@@ -91,18 +83,14 @@ export const Folder = (props: FolderProps) => {
   );
 
   const parentMap = React.useMemo(() => {
-    return createParentMap(model);
-  }, [model]);
+    return createParentMap(props.model);
+  }, [props.model]);
 
   const handleItemClick = (id: string) => {
     props.onItemClick?.(id);
     if (props.selectable) {
       setSelected(id);
     }
-    setModel((model) => {
-      const item = model.byId[id];
-      item.expanded = !item.expanded;
-    });
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -120,22 +108,6 @@ export const Folder = (props: FolderProps) => {
     }
 
     props.onItemMove?.(from, to);
-    setModel((model) => {
-      const fromParent = parentMap[from];
-      if (fromParent) {
-        const parentItem = model.byId[fromParent];
-        parentItem.items = parentItem.items.filter((id) => id !== from);
-      } else {
-        model.rootIds = model.rootIds.filter((id) => id !== from);
-      }
-
-      if (to) {
-        const parentItem = model.byId[to];
-        parentItem.items.push(from);
-      } else {
-        model.rootIds.push(from);
-      }
-    });
   };
 
   return (
@@ -149,8 +121,8 @@ export const Folder = (props: FolderProps) => {
           modifiers={[restrictToVerticalAxis]}
           onDragEnd={handleDragEnd}
         >
-          {model.rootIds.map((id) => {
-            const item = model.byId[id];
+          {props.model.rootIds.map((id) => {
+            const item = props.model.byId[id];
             const itemProps: ItemProps = propUnion(
               itemDefaultProps,
               props.renderItem(item)
@@ -162,7 +134,7 @@ export const Folder = (props: FolderProps) => {
                 expanded={item.expanded}
                 level={0}
                 moveable={props.moveable}
-                model={model}
+                model={props.model}
                 selected={selected}
                 select={props.select}
                 renderItem={props.renderItem}
@@ -179,7 +151,7 @@ export const Folder = (props: FolderProps) => {
   );
 };
 
-const defaultProps: FolderProps = {
+const defaultProps: Omit<FolderProps, 'model'> = {
   className: 'recomp-folder',
   classNames: {
     scrollable: 'scrollable',
@@ -448,4 +420,49 @@ const canMoveNonRecursively = (
     current = parents[current];
   }
   return true;
+};
+
+// ----------------------------------------------------------------------------
+
+export const useFolderState = (defaultModel: FolderModel) => {
+  const [model, setModel] = useImmer(defaultModel);
+
+  const parentMap = React.useMemo(() => {
+    return createParentMap(model);
+  }, [model]);
+
+  const onItemClick = (id: string) => {
+    setModel((model) => {
+      const item = model.byId[id];
+      item.expanded = !item.expanded;
+    });
+  };
+
+  const onItemMove = (from: string, to: string) => {
+    setModel((model) => {
+      const fromParent = parentMap[from];
+      if (fromParent) {
+        const parentItem = model.byId[fromParent];
+        parentItem.items = parentItem.items.filter((id) => id !== from);
+      } else {
+        model.rootIds = model.rootIds.filter((id) => id !== from);
+      }
+
+      if (to) {
+        const parentItem = model.byId[to];
+        parentItem.items.push(from);
+      } else {
+        model.rootIds.push(from);
+      }
+    });
+  };
+
+  return {
+    model,
+    props: {
+      model,
+      onItemClick,
+      onItemMove,
+    },
+  };
 };

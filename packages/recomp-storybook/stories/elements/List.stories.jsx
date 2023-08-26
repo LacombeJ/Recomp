@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { List } from '@recomp/core';
+import { Checkbox, List } from '@recomp/core';
 import '../stories.scss';
 
 export default {
@@ -54,6 +54,21 @@ Nested.args = {
       </List.Item>
       <List.Item>Item 2</List.Item>
       <List.Item>Item 3</List.Item>
+    </React.Fragment>
+  ),
+};
+
+export const CustomBullet = Template.bind({});
+CustomBullet.args = {
+  children: (
+    <React.Fragment>
+      <List.Item>Item 1</List.Item>
+      <List.Item customBullet={<Checkbox></Checkbox>}>
+        Item 2
+      </List.Item>
+      <List.Item customBullet={"-"}>Item 3</List.Item>
+      <List.Item customBullet={"x"}>Item 4</List.Item>
+      <List.Item customBullet={"o"}>Item 5</List.Item>
     </React.Fragment>
   ),
 };

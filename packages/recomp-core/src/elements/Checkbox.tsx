@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { classnames } from '@recomp/classnames';
 import { propUnion, isNullOrWhitespace } from '@recomp/props';
-import { useModel, Update } from '@recomp/hooks';
 import { nonempty } from '../fragments/ZeroWidth';
 
 interface CheckboxProps {
@@ -15,28 +14,21 @@ interface CheckboxProps {
   style?: React.CSSProperties;
   size?: string;
   checked?: boolean;
-  defaultChecked?: boolean;
-  block?: boolean;
-  onChecked?: Update<boolean>;
+  onChecked?: (checked: boolean) => void;
   children?: React.ReactNode;
 }
 
 export const Checkbox = (props: CheckboxProps) => {
   props = propUnion(defaultProps, props);
+
   const { className, classNames } = props;
   const style = {
     ...props.style,
     fontSize: props.size,
   };
 
-  const [checked, setChecked] = useModel(
-    props.defaultChecked,
-    props.checked,
-    props.onChecked
-  );
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(() => e.target.checked);
+    props.onChecked?.(e.target.checked);
   };
 
   const labelClassName = classnames({
@@ -46,7 +38,7 @@ export const Checkbox = (props: CheckboxProps) => {
 
   return (
     <label className={className} style={style}>
-      <input type="checkbox" checked={checked} onChange={handleChange}></input>
+      <input type="checkbox" checked={props.checked} onChange={handleChange}></input>
       <span className={classNames.mark}></span>
       <span className={labelClassName}>{nonempty(props.children)}</span>
     </label>
@@ -60,7 +52,23 @@ const defaultProps: CheckboxProps = {
     label: 'label',
     margin: 'margin',
   },
-  defaultChecked: false,
-  block: false,
   onChecked: () => {},
+};
+
+// ----------------------------------------------------------------------------
+
+export const useCheckboxState = (defaultChecked: boolean = false) => {
+  const [checked, setChecked] = React.useState(defaultChecked);
+
+  const onChecked = (checked: boolean) => {
+    setChecked(checked);
+  };
+
+  return {
+    checked,
+    props: {
+      checked,
+      onChecked,
+    },
+  };
 };

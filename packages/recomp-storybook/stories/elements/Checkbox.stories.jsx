@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Checkbox } from '@recomp/core';
+import { Checkbox, useCheckboxState } from '@recomp/core';
 import '../stories.scss';
 
 export default {
@@ -9,7 +9,10 @@ export default {
   argTypes: {},
 };
 
-const Template = (args) => <Checkbox {...args} />;
+const Template = (args) => {
+  const checkbox = useCheckboxState();
+  return <Checkbox {...args} {...checkbox.props} />;
+};
 
 export const Basic = Template.bind({});
 Basic.args = {

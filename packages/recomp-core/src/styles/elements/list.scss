@@ -12,29 +12,32 @@
 
   $V0: 20%; // desaturation value
   $V1: 70%; // lighten value
-  
+  $PAD: 4px; // extra padding between bullet and content
+
   .recomp-list {
     margin: 0;
     padding: 0 0 0 28px;
   }
-  
+
   .recomp-list-item {
+    padding-left: $PAD;
+
     &.level-1 {
       color: desaturate_then_lighten(recomp.$level_1, $V0, $V1);
     }
-  
+
     &.level-2 {
       color: desaturate_then_lighten(recomp.$level_2, $V0, $V1);
     }
-  
+
     &.level-3 {
       color: desaturate_then_lighten(recomp.$level_3, $V0, $V1);
     }
-  }
-  
-  .recomp-listitemcontent {
-    position: absolute;
-    transform: translateX(-25%) translateX(-17px);
+
+    .content {
+      position: absolute;
+      transform: translateX(-25%) translateX(-17px - calc($PAD/2));
+    }
   }
 
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Cabinet } from '@recomp/core';
+import { Cabinet, useCabinetState } from '@recomp/core';
 import '../stories.scss';
 
 export default {
@@ -9,7 +9,10 @@ export default {
   argTypes: {},
 };
 
-const Template = (args) => <Cabinet {...args} />;
+const Template = (args) => {
+  const cabinet = useCabinetState();
+  return <Cabinet {...args} {...cabinet.props} />;
+};
 
 export const Basic = Template.bind({});
 Basic.args = {

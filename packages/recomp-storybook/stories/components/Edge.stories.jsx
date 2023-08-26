@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Edge, createModel } from '@recomp/edge';
+import { Edge, createModel, useEdgeState } from '@recomp/edge';
 import '../stories.scss';
 import '../stories.scss';
 
@@ -10,7 +10,11 @@ export default {
   argTypes: {},
 };
 
-const Template = (args) => <Edge {...args} />;
+const Template = (args) => {
+  const { defaultModel, ...restArgs } = args;
+  const edge = useEdgeState(defaultModel);
+  return <Edge {...restArgs} {...edge.props} />;
+};
 
 const edgeRenderMap = {
   Components: {

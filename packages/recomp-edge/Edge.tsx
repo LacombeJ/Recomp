@@ -29,7 +29,7 @@ import { classnames } from '@recomp/classnames';
 import { propUnion } from '@recomp/props';
 
 import { Chevron, File } from '@recomp/icons';
-import { useModel, Update, Draft, useMeasure, Rect } from '@recomp/hooks';
+import { useMeasure, Rect, useImmer, Draft } from '@recomp/hooks';
 
 import { EdgeItem } from './Item';
 import { EdgeGroup } from './Group';
@@ -70,21 +70,18 @@ interface EdgeProps {
     tooltipOverlay?: string;
   };
   style?: React.CSSProperties;
-  model?: EdgeModel;
-  defaultModel?: EdgeModel;
+  model: EdgeModel;
   selected?: string;
-  defaultSelected?: string;
   children?: React.ReactNode;
   onRenderItem?: (id: string) => TabProps;
   onRenderGroup?: (id: string) => GroupProps;
   onTooltip?: (id: string) => string;
-  onItemClose?: (id: string) => any;
-  onItemContextMenu?: (e: React.MouseEvent, id: string) => any;
-  onGroupContextMenu?: (e: React.MouseEvent, id: string) => any;
-  onUpdateModel?: Update<EdgeModel>;
-  onEmitUpdate?: (event: EdgeModelUpdateEvent) => any;
-  onSelected?: Update<string>;
-  onItemDoubleClick?: (id: string) => any;
+  onItemClose?: (id: string) => void;
+  onItemContextMenu?: (e: React.MouseEvent, id: string) => void;
+  onGroupContextMenu?: (e: React.MouseEvent, id: string) => void;
+  onEmitUpdate?: (event: EdgeModelUpdateEvent) => void;
+  onItemClick?: (id: string) => void;
+  onItemDoubleClick?: (id: string) => void;
 }
 
 export interface EdgeModelUpdateEvent {
@@ -99,18 +96,6 @@ export interface EdgeModelUpdateEvent {
 
 export const Edge = (props: EdgeProps) => {
   props = propUnion(defaultProps, props);
-
-  const [selected, setSelected] = useModel(
-    props.defaultSelected,
-    props.selected,
-    props.onSelected
-  );
-
-  const [model, setModel] = useModel(
-    props.defaultModel,
-    props.model,
-    props.onUpdateModel
-  );
 
   const [dragging, setDragging] = React.useState<string>(null);
 
@@ -154,13 +139,13 @@ export const Edge = (props: EdgeProps) => {
     (args) => {
       // If group, then just perform closest center with other root items,
       // since groups cannot be placed under other groups
-      const draggingElement = model.byId[dragging];
+      const draggingElement = props.model.byId[dragging];
 
       if (dragging && isGroup(draggingElement)) {
         return closestAdjustedCenter({
           ...args,
           droppableContainers: args.droppableContainers.filter((container) => {
-            return model.rootIds.includes(container.id as string);
+            return props.model.rootIds.includes(container.id as string);
           }),
         });
       }
@@ -174,7 +159,7 @@ export const Edge = (props: EdgeProps) => {
       let overId = getFirstCollision(intersections, 'id');
 
       if (overId !== null) {
-        const overNode = model.byId[overId];
+        const overNode = props.model.byId[overId];
         if (isGroup(overNode)) {
           // If over a group, but possibly inbetween items, find closest
           const containerItems = overNode.items;
@@ -208,11 +193,11 @@ export const Edge = (props: EdgeProps) => {
       // If no droppable is matched, return the last match
       return lastOverId.current ? [{ id: lastOverId.current }] : [];
     },
-    [dragging, model]
+    [dragging, props.model]
   );
 
   const determineDroppableContainer = (id: UniqueIdentifier) => {
-    const node = model.byId[id];
+    const node = props.model.byId[id];
 
     if (isGroup(node)) {
       // If container is not expanded, cannot drop inside, return null
@@ -223,8 +208,8 @@ export const Edge = (props: EdgeProps) => {
       }
     }
 
-    for (const rootId of model.rootIds) {
-      const element = model.byId[rootId];
+    for (const rootId of props.model.rootIds) {
+      const element = props.model.byId[rootId];
       if (isGroup(element) && element.items.includes(id as string)) {
         return rootId;
       }
@@ -234,12 +219,12 @@ export const Edge = (props: EdgeProps) => {
   };
 
   const findParentContainer = (id: UniqueIdentifier) => {
-    if (model.rootIds.includes(id as string)) {
+    if (props.model.rootIds.includes(id as string)) {
       return null;
     }
 
-    for (const rootId of model.rootIds) {
-      const element = model.byId[rootId];
+    for (const rootId of props.model.rootIds) {
+      const element = props.model.byId[rootId];
       if (isGroup(element) && element.items.includes(id as string)) {
         return element.id;
       }
@@ -258,7 +243,7 @@ export const Edge = (props: EdgeProps) => {
     const { active, over } = event;
 
     const overId = over.id;
-    const activeNode = model.byId[active.id];
+    const activeNode = props.model.byId[active.id];
     if (overId === null || isGroup(activeNode)) {
       return; // return if dragging group node or not over anything
     }
@@ -270,8 +255,8 @@ export const Edge = (props: EdgeProps) => {
       return; // if not over a container, just return
     }
 
-    const overTabGroup = model.byId[overContainer] as EdgeTabGroup;
-    const overItems = overContainer ? overTabGroup.items : model.rootIds;
+    const overTabGroup = props.model.byId[overContainer] as EdgeTabGroup;
+    const overItems = overContainer ? overTabGroup.items : props.model.rootIds;
     const overIndex = overItems.indexOf(overId as string);
 
     let newIndex = 0;
@@ -283,7 +268,7 @@ export const Edge = (props: EdgeProps) => {
     const modifier = isBelowOverItem ? 1 : 0;
     newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
 
-    if (isGroup(model.byId[overId])) {
+    if (isGroup(props.model.byId[overId])) {
       // overId is just the container, push to last item
       newIndex = overItems.length + 1;
     } else {
@@ -307,28 +292,6 @@ export const Edge = (props: EdgeProps) => {
       moveToIndex: newIndex,
       expand: false,
     });
-
-    setModel((model) => {
-      if (!activeContainer) {
-        model.rootIds = model.rootIds.filter((item) => item !== active.id);
-      } else if (activeContainer) {
-        // If in old container, remove from container
-        const oldContainer = model.byId[activeContainer] as Draft<EdgeTabGroup>;
-        oldContainer.items = oldContainer.items.filter(
-          (item) => item !== active.id
-        );
-      }
-
-      // Insert into new container
-      if (!overContainer) {
-        // If not over container, add to root
-        model.rootIds.splice(newIndex, 0, active.id as string);
-      } else {
-        // If over container, insert into new container
-        const newContainer = model.byId[overContainer] as Draft<EdgeTabGroup>;
-        newContainer.items.splice(newIndex, 0, active.id as string);
-      }
-    });
   };
 
   const handleDragEnd = (event: DragMoveEvent) => {
@@ -336,9 +299,9 @@ export const Edge = (props: EdgeProps) => {
 
     setDragging(null);
 
-    if (model.rootIds.includes(active.id as string)) {
-      const oldIndex = model.rootIds.findIndex((id) => id === active.id);
-      const newIndex = model.rootIds.findIndex((id) => id === over.id);
+    if (props.model.rootIds.includes(active.id as string)) {
+      const oldIndex = props.model.rootIds.findIndex((id) => id === active.id);
+      const newIndex = props.model.rootIds.findIndex((id) => id === over.id);
 
       props.onEmitUpdate?.({
         type: 'swap',
@@ -349,15 +312,11 @@ export const Edge = (props: EdgeProps) => {
         moveToIndex: newIndex,
         expand: false,
       });
-
-      setModel((model) => {
-        model.rootIds = arrayMove(model.rootIds, oldIndex, newIndex);
-      });
     }
   };
 
   const handleItemClick = (id: string, rect: Rect) => {
-    setSelected(() => id);
+    props.onItemClick?.(id);
     tooltipCalc.handleItemClick(id, rect);
   };
 
@@ -383,7 +342,7 @@ export const Edge = (props: EdgeProps) => {
   };
 
   const handleGroupClick = (id: string, rect: Rect) => {
-    const group = model.byId[id] as EdgeTabGroup;
+    const group = props.model.byId[id] as EdgeTabGroup;
 
     props.onEmitUpdate?.({
       type: 'expand',
@@ -395,16 +354,11 @@ export const Edge = (props: EdgeProps) => {
       expand: !group.expanded,
     });
 
-    setModel((model) => {
-      const group = model.byId[id] as Draft<EdgeTabGroup>;
-      group.expanded = !group.expanded;
-    });
-
     tooltipCalc.handleItemClick(id, rect);
   };
 
   const renderDragging = () => {
-    const node = model.byId[dragging];
+    const node = props.model.byId[dragging];
 
     if (isGroup(node)) {
       const groupProps: GroupProps = propUnion(
@@ -416,10 +370,10 @@ export const Edge = (props: EdgeProps) => {
           id={node.id}
           expanded={node.expanded}
           invisible={false}
-          selected={selected}
+          selected={props.selected}
           dragging={dragging}
           animated={false}
-          model={model}
+          model={props.model}
           onRenderItem={props.onRenderItem}
           onItemClick={handleItemClick}
           onItemDoubleClick={props.onItemDoubleClick}
@@ -439,7 +393,7 @@ export const Edge = (props: EdgeProps) => {
         <EdgeItem
           id={node}
           invisible={false}
-          selected={selected}
+          selected={props.selected}
           dragging={dragging}
           onClick={handleItemClick}
           onDoubleClick={props.onItemDoubleClick}
@@ -484,11 +438,11 @@ export const Edge = (props: EdgeProps) => {
           ]}
         >
           <SortableContext
-            items={model.rootIds}
+            items={props.model.rootIds}
             strategy={verticalListSortingStrategy}
           >
-            {model.rootIds.map((id) => {
-              const node = model.byId[id];
+            {props.model.rootIds.map((id) => {
+              const node = props.model.byId[id];
               if (isGroup(node)) {
                 const groupProps: GroupProps = propUnion(
                   groupDefaultProps,
@@ -505,10 +459,10 @@ export const Edge = (props: EdgeProps) => {
                       id={node.id}
                       expanded={node.expanded}
                       invisible={dragging === node.id}
-                      selected={selected}
+                      selected={props.selected}
                       dragging={dragging}
                       animated={true}
-                      model={model}
+                      model={props.model}
                       onRenderItem={props.onRenderItem}
                       onItemClick={handleItemClick}
                       onItemDoubleClick={props.onItemDoubleClick}
@@ -533,7 +487,7 @@ export const Edge = (props: EdgeProps) => {
                     <EdgeItem
                       id={node}
                       invisible={dragging === node}
-                      selected={selected}
+                      selected={props.selected}
                       dragging={dragging}
                       onClick={handleItemClick}
                       onDoubleClick={props.onItemDoubleClick}
@@ -555,7 +509,7 @@ export const Edge = (props: EdgeProps) => {
   );
 };
 
-const defaultProps: EdgeProps = {
+const defaultProps: Omit<EdgeProps, 'model'> = {
   className: 'recomp-edge',
   classNames: {
     scrollable: 'scrollable',
@@ -660,4 +614,67 @@ export const createModel = (items: EdgeTab[]): EdgeModel => {
   }
 
   return model;
+};
+
+// ----------------------------------------------------------------------------
+
+export const useEdgeState = (
+  defaultModel: EdgeModel,
+  defaultSelected?: string
+) => {
+  const [model, setModel] = useImmer(defaultModel);
+  const [selected, setSelected] = React.useState(defaultSelected);
+
+  const onEmitUpdate = (update: EdgeModelUpdateEvent) => {
+    setModel((model) => {
+      if (update.type === 'move') {
+        const { moveFrom, moveTo, active, moveToIndex } = update;
+        if (!moveFrom) {
+          model.rootIds = model.rootIds.filter((item) => item !== active);
+        } else if (moveFrom) {
+          // If in old container, remove from container
+          const oldContainer = model.byId[moveFrom] as Draft<EdgeTabGroup>;
+          oldContainer.items = oldContainer.items.filter(
+            (item) => item !== active
+          );
+        }
+
+        // Insert into new container
+        if (!moveTo) {
+          // If not over container, add to root
+          model.rootIds.splice(moveToIndex, 0, active);
+        } else {
+          // If over container, insert into new container
+          const newContainer = model.byId[moveTo] as Draft<EdgeTabGroup>;
+          newContainer.items.splice(moveToIndex, 0, active);
+        }
+      }
+
+      if (update.type === 'swap') {
+        const { moveFromIndex, moveToIndex } = update;
+        model.rootIds = arrayMove(model.rootIds, moveFromIndex, moveToIndex);
+      }
+
+      if (update.type === 'expand') {
+        const { active } = update;
+        const group = model.byId[active] as Draft<EdgeTabGroup>;
+        group.expanded = !group.expanded;
+      }
+    });
+  };
+
+  const onItemClick = (id: string) => {
+    setSelected(id);
+  };
+
+  return {
+    model,
+    selected,
+    props: {
+      model,
+      selected,
+      onEmitUpdate,
+      onItemClick,
+    },
+  };
 };
