@@ -261,7 +261,7 @@ export const getTransferItemAsImage = async (
           src: {
             kind: 'base64',
             type: image.parsed.type,
-            value: image.base64,
+            value: image.parsed.body,
           },
         },
       };
