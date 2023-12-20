@@ -7,6 +7,7 @@ export * from './useHandle';
 export * from './useImmer';
 export { default as useInteract } from './useInteract';
 export { useMeasure } from './useMeasure';
+export * from './useMemoizedState';
 export * from './useMouseHover';
 export * from './useMouseInside';
 export { default as useNestedProps } from './useNestedProps';

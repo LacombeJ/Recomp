@@ -125,7 +125,7 @@ const CustomEntryTemplate = (args) => {
       >
         <div style={{ padding: '8px' }}>
           <Folder
-            defaultModel={model}
+            model={model}
             selectable={true}
             selected={selected}
             onSelect={handleSelect}
@@ -138,3 +138,148 @@ const CustomEntryTemplate = (args) => {
 
 export const CustomEntry = CustomEntryTemplate.bind({});
 CustomEntry.args = {};
+
+const TemplateScroll = (args) => {
+  const popover1 = usePopover();
+  const popover2 = usePopover();
+  return (
+    <div style={{ }}>
+      <Popover
+        {...args}
+        visible={popover1.visible}
+        position={popover1.position}
+        setContainerRef={popover1.setContainerRef}
+      >
+        <div style={{ padding: '4px 16px 4px 16px' }}>
+          <h3>Popover (1)</h3>
+        </div>
+      </Popover>
+      <Popover
+        {...args}
+        visible={popover2.visible}
+        position={popover2.position}
+        setContainerRef={popover2.setContainerRef}
+      >
+        <div style={{ padding: '4px 16px 4px 16px' }}>
+          <h3>Popover (2)</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>...</h3>
+          <h3>End.</h3>
+        </div>
+      </Popover>
+      <Button onClick={() => popover1.setVisible(true)} setRef={popover1.setAnchorRef}>
+        Open first popover
+      </Button>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <Button onClick={() => popover2.setVisible(true)} setRef={popover2.setAnchorRef}>
+        Open second popover
+      </Button>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+      <div>Text here</div>
+    </div>
+  );
+};
+
+export const WithinScrollable = TemplateScroll.bind({});
+WithinScrollable.args = {
+  children: <div>Popover</div>,
+};

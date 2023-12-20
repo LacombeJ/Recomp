@@ -15,3 +15,10 @@ export const Basic = Template.bind({});
 Basic.args = {
   children: 'Label',
 };
+
+const TemplateField = (args) => <Label.Field {...args} />;
+
+export const Field = TemplateField.bind({});
+Field.args = {
+  children: "Editable Label"
+};

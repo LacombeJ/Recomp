@@ -29,7 +29,7 @@
     user-select: none;
     touch-action: manipulation;
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(:active) {
       box-shadow: inset rgba(black, 0.0) 0 4px 8px, rgba(black, 0.9) 0px 4px 8px;
       background-color: rgba($default_background, 0.2);
       border: 1px solid rgba(lighten($default_border, 20%), 0.6);

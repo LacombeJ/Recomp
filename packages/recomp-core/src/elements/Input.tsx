@@ -3,17 +3,16 @@ import * as React from 'react';
 import { classnames } from '@recomp/classnames';
 import { propUnion } from '@recomp/props';
 
-interface InputProps
-  extends React.DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-  > {
+export type InputProps = React.DetailedHTMLProps<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+> & {
   classNames?: {
     disabled?: string;
   };
-  onComplete?: (string: any) => any;
-  setRef?: React.LegacyRef<HTMLInputElement>;
-}
+  onComplete?: (text: string) => void;
+  setRef?: (element: HTMLInputElement) => void;
+};
 
 export const Input = (props: InputProps) => {
   props = propUnion(defaultProps, props);

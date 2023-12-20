@@ -282,3 +282,46 @@ export const adjustDimension = (
 
   return 0;
 };
+
+// ----------------------------------------------------------------------------
+
+// Useful utility functions for finding widths and sizes by creating temporary
+// document elements and grabbing sizes
+
+/**
+ * Get cursor position from relative element position.
+ * Currently only working for single line text.
+ */
+export const determineCursorPositionIn = (
+  input: HTMLElement,
+  position: { x: number; y: number }
+) => {
+  if (input.innerText) {
+    const initial = input.innerText;
+    for (let i = 0; i < initial.length; i++) {
+      input.innerText = initial.substring(0, i);
+      const width = input.getBoundingClientRect().width;
+      if (width > position.x) {
+        return i;
+      }
+    }
+    input.innerText = initial;
+    return initial.length;
+  }
+  return null;
+};
+
+export const getWidthOfInputAsLabel = (
+  input: HTMLInputElement,
+  className: string = 'recomp-label'
+) => {
+  var tmp = document.createElement('label');
+  tmp.className = className;
+  tmp.innerText = input.value;
+
+  document.body.appendChild(tmp);
+  const width = tmp.getBoundingClientRect().width;
+  document.body.removeChild(tmp);
+
+  return width;
+};

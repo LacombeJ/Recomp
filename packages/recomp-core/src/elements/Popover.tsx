@@ -67,11 +67,29 @@ const defaultProps: PopoverProps = {
  * Hook that provides data to handle popovers
  */
 export const usePopover = () => {
-  const [visible, setVisible] = React.useState(false);
+  const [visible, internalSetVisible] = React.useState(false);
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
   const [dimensions, setDimensions] = React.useState({ width: 0, height: 0 });
 
-  const [setAnchorRef, anchorMeasure] = useMeasure();
+  const anchorRef = React.useRef<Element>();
+  const [internalSetAnchorRef, anchorMeasure] = useMeasure();
+
+  const setAnchorRef = (element: Element) => {
+    anchorRef.current = element;
+    internalSetAnchorRef(element);
+  };
+
+  const setVisible = (value: boolean) => {
+    // set visible, update clientRect pos
+    if (value && anchorRef.current != null) {
+      const rect = anchorRef.current.getBoundingClientRect();
+      setPosition({
+        x: rect.left,
+        y: rect.bottom,
+      });
+    }
+    internalSetVisible(value);
+  };
 
   const containerRef = React.useRef<HTMLElement>();
 
@@ -107,7 +125,7 @@ export const usePopover = () => {
                   return;
                 }
               }
-              setVisible(false);
+              internalSetVisible(false);
             }
           }
         }

@@ -1,0 +1,49 @@
+@use '../common' as recomp;
+@use 'sass:color';
+
+// Stylesheet made for styling Label.Field, so Label and Input size stay the
+// same when switching between edit modes
+
+@mixin init() {
+
+  .recomp-field {
+
+    .recomp-label {
+      padding-right: 26px;
+
+      &.clickedit {
+        cursor: text;
+      }
+    }
+
+    .recomp-input {
+      // Not using default input props, and inheriting to match label styling
+      color: inherit;
+      padding: inherit;
+      font-size: inherit;
+      font-family: inherit;
+      min-width: inherit;
+      padding-right: 22px;
+    }
+
+    svg {
+
+      width: 16px;
+      height: 16px;
+
+      // Using arbitrary offsets and padding above
+      transform: translate(-18px, 2px);
+      position: absolute;
+      color: rgba(255, 255, 255, 0.5);
+      transition: color 0.3s;
+    }
+
+    &.editing {
+      svg {
+        color: color.adjust(recomp.$primary, $lightness: 20%, $saturation: 20%);
+      }
+    }
+
+  }
+
+}

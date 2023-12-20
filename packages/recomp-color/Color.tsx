@@ -16,6 +16,8 @@ interface ColorProps {
   onChange?: (value: string) => void;
 }
 
+export const HexColorPickerTest = HexColorPicker;
+
 export const Color = (props: ColorProps) => {
   props = propUnion(defaultProps, props);
 
@@ -77,6 +79,8 @@ const defaultProps: ColorProps = {
   className: 'recomp-color',
   display: 'inline',
 };
+
+Color.Picker = HexColorPicker;
 
 // ----------------------------------------------------------------------------
 

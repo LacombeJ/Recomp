@@ -26,12 +26,12 @@
       border-top-right-radius: $border_radius;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       flex-grow: 0;
 
       >.title {
         padding: 8px 16px;
         position: relative;
-        justify-content: center;
         left: 50%;
         transform: translateX(-50%);
       }

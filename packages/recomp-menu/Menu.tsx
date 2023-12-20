@@ -618,8 +618,8 @@ export type QuickContextActionItem = { label: string; action: () => void };
 export type QuickContextItem = QuickContextActionItem | 'separator';
 
 export const useQuickContextMenu = () => {
-  const model = React.useRef<MenuElement[]>(null);
-  const quickItems = React.useRef<QuickContextItem[]>(null);
+  const model = React.useRef<MenuElement[]>([]);
+  const quickItems = React.useRef<QuickContextItem[]>([]);
 
   const [opened, setOpened] = React.useState(false);
   const [position, setPosition] = React.useState({ x: 0, y: 0 });

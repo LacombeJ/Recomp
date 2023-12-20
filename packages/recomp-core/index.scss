@@ -18,6 +18,7 @@
 @use 'src/styles/elements/form.scss';
 @use 'src/styles/elements/heading.scss';
 @use 'src/styles/elements/input.scss';
+@use 'src/styles/elements/label.scss';
 @use 'src/styles/elements/link.scss';
 @use 'src/styles/elements/list.scss';
 @use 'src/styles/elements/paragraph.scss';
@@ -51,6 +52,7 @@
   @include form.init();
   @include heading.init();
   @include input.init();
+  @include label.init();
   @include link.init();
   @include list.init();
   @include paragraph.init();

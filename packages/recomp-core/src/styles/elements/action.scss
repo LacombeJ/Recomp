@@ -21,10 +21,14 @@
     white-space: nowrap;
 
     user-select: none;
-    
+
     transition: color .15s linear;
 
-    &:hover {
+    &:disabled {
+      color: rgba(white, 0.3);
+    }
+
+    &:hover:not(:disabled) {
       color: $hover;
     }
   }
