@@ -16,7 +16,7 @@ interface SeekProps {
   onEscape?: () => any;
   onEnter?: () => any;
   onMove?: (direction: 'down' | 'up') => any;
-  setRef?: React.LegacyRef<HTMLInputElement>;
+  setRef?: (element: HTMLInputElement) => void;
 }
 
 export const Seek = (props: SeekProps) => {
