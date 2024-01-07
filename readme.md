@@ -2,7 +2,7 @@
 
 React Component Library
 
-Storybook: `packages/recomp-storybook/`
+<https://lacombej.github.io/Recomp/>
 
 ---
 
@@ -11,6 +11,8 @@ It includes UI components, hooks, styles, and utilities for creating a react fro
 
 It is created with react, sass, and typescript. It also uses vite and storybook.
 Other modules include external libraries such as monaco, css-doodle, katex, prism, react-spring, immer, fuzzysort, and dnd-kit.
+
+Visit the storybook here: [Recomp Storybook](https://lacombej.github.io/Recomp/)
 
 ---
 

@@ -1,4 +1,7 @@
 import { Meta } from "@storybook/blocks";
+import LinkTo from "@storybook/addon-links/react";
+
+import Github from "./assets/github.svg";
 
 import Block from './assets/block.jpg';
 import Cabinet from './assets/cabinet.jpg';
@@ -10,83 +13,73 @@ import Monaco from './assets/monaco.jpg';
 
 <Meta title="Recomp/Introduction" />
 
-# Recomp
-
-Storybook for "Recomp" react components
+<div className="top-container">
+  <div className="header">
+    <h1>Recomp</h1>
+    <p>Storybook for "Recomp" react components</p>
+  </div>
+  <a
+    className="github"
+    href="https://github.com/LacombeJ/Recomp"
+    target="_blank"
+  >
+    <img src={Github} alt="Github logo" className="image"/>
+    <span className="label">View on GitHub</span>
+  </a>
+</div>
 
 <div className="subheading">Showcase</div>
 
 <div className="link-list">
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/components-edge--basic"
-  >
+  <LinkTo kind="components-edge" story="basic">
     <span>
       <strong>Edge</strong>
       Vertical tabs with fluid animations (inspired by Microsoft Edge browser)
     </span>
     <img src={Edge} alt="edge" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/components-menu--basic"
-  >
+  </LinkTo>
+  <LinkTo kind="components-menu" story="basic">
     <span>
       <strong>Menu</strong>
       Context menu with support for submenus
     </span>
     <img src={Menu} alt="menu" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/components-coast--basic"
-  >
+  </LinkTo>
+  <LinkTo kind="components-coast" story="basic">
     <span>
       <strong>Coast</strong>
       Vertical sidenav bar with fluid animations (inspired by VSCode sidebar)
     </span>
     <img src={Coast} alt="coast" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/components-folder--basic"
-  >
+  </LinkTo>
+  <LinkTo kind="components-folder" story="basic">
     <span>
       <strong>Folder</strong>
       Folder component, collapsible, moveable, selectable (inspired by VSCode explorer)
     </span>
     <img src={Folder} alt="folder" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/elements-cabinet--basic"
-  >
+  </LinkTo>
+  <LinkTo kind="elements-cabinet" story="basic">
     <span>
       <strong>Cabinet</strong>
       Container able to expand/collapse inner content (like a spoiler widget)
     </span>
     <img src={Cabinet} alt="cabinet" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/components-monaco--dark"
-  >
+  </LinkTo>
+  <LinkTo kind="components-monaco" story="dark">
     <span>
       <strong>Monaco</strong>
       React monaco component (code editor used in VSCode)
     </span>
     <img src={Monaco} alt="monaco" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/elements-block--basic"
-  >
+  </LinkTo>
+  <LinkTo kind="elements-block" story="basic">
     <span>
       <strong>Block</strong>
       Nestable container element for block text
     </span>
     <img src={Block} alt="block" />
-  </a>
+  </LinkTo>
 </div>
 
 <style>
@@ -95,6 +88,12 @@ Storybook for "Recomp" react components
       /* For dark theme */
       background-color: rgb(47, 47, 47);
       color: white;
+    }
+
+    .top-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
     }
 
     .subheading {
@@ -109,23 +108,33 @@ Storybook for "Recomp" react components
       margin-top: 40px;
     }
 
-    .link-list {
-
+    .github {
+      display: flex;
+      padding: 16px;
     }
 
-    @media (min-width: 620px) {
-      .link-list {
-
-      }
+    .github img {
+      color: white;
+      margin-right: 8px;
+      width: 24px;
+      height: 24px;
     }
 
-    @media all and (-ms-high-contrast:none) {
-    .link-list {
-
-      }
+    .github img {
+      color: white;
     }
 
-    .link-item {
+    .github .label {
+      font-size: 13px;
+      color: #cccccc;
+      transition: color 0.3s;
+    }
+
+    .github:hover .label {
+      color: rgb(110, 220, 170);
+    }
+
+    .link-list a {
       display: block;
       padding: 20px 30px 20px 15px;
       border: 1px solid #00000030;
@@ -138,32 +147,32 @@ Storybook for "Recomp" react components
       margin-bottom: 10px;
     }
 
-    .link-item:hover {
+    .link-list a:hover {
       border-color: rgb(80, 160, 140);
       transform: translate3d(0, -3px, 0);
       box-shadow: rgba(0, 0, 0, 0.08) 0 3px 10px 0;
     }
 
-    .link-item:active {
+    .link-list a:active {
       border-color: #1EA7FD;
       transform: translate3d(0, 0, 0);
     }
 
-    .link-item strong {
+    .link-list a strong {
       font-weight: 100;
       font-size: 24px;
       display: block;
       margin-bottom: 14px;
     }
 
-    .link-item img {
+    .link-list a img {
    
       
       margin-right: 15px;
       flex: none;
     }
 
-    .link-item span {
+    .link-list a span {
       font-size: 16px;
       line-height: 20px;
     }
