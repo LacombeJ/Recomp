@@ -15,7 +15,6 @@
     "@storybook/addon-essentials": "^7.6.7",
     "@storybook/addon-interactions": "^7.6.7",
     "@storybook/addon-links": "^7.6.7",
-    "@storybook/addon-onboarding": "^1.0.10",
     "@storybook/blocks": "^7.6.7",
     "@storybook/react": "^7.6.7",
     "@storybook/react-vite": "^7.6.7",
@@ -36,5 +35,8 @@
     "arrowParens": "always",
     "endOfLine": "auto"
   },
-  "packageManager": "yarn@1.22.1"
+  "packageManager": "yarn@1.22.1",
+  "resolutions": {
+    "jackspeak": "2.1.1"
+  }
 }
