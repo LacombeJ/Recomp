@@ -30,7 +30,7 @@
 @include seek.init();
 @include titlebar.init();
 
-#root {
+#storybook-root {
   @include core.global();
   color: rgba(white, 0.9);
 }

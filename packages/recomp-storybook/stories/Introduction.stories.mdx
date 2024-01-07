@@ -1,3 +1,5 @@
+import { Meta } from "@storybook/blocks";
+
 import Block from './assets/block.jpg';
 import Cabinet from './assets/cabinet.jpg';
 import Coast from './assets/coast.jpg';
@@ -7,6 +9,85 @@ import Menu from './assets/menu.jpg';
 import Monaco from './assets/monaco.jpg';
 
 <Meta title="Recomp/Introduction" />
+
+# Recomp
+
+Storybook for "Recomp" react components
+
+<div className="subheading">Showcase</div>
+
+<div className="link-list">
+  <a
+    className="link-item"
+    href="http://localhost:6006/?path=/story/components-edge--basic"
+  >
+    <span>
+      <strong>Edge</strong>
+      Vertical tabs with fluid animations (inspired by Microsoft Edge browser)
+    </span>
+    <img src={Edge} alt="edge" />
+  </a>
+  <a
+    className="link-item"
+    href="http://localhost:6006/?path=/story/components-menu--basic"
+  >
+    <span>
+      <strong>Menu</strong>
+      Context menu with support for submenus
+    </span>
+    <img src={Menu} alt="menu" />
+  </a>
+  <a
+    className="link-item"
+    href="http://localhost:6006/?path=/story/components-coast--basic"
+  >
+    <span>
+      <strong>Coast</strong>
+      Vertical sidenav bar with fluid animations (inspired by VSCode sidebar)
+    </span>
+    <img src={Coast} alt="coast" />
+  </a>
+  <a
+    className="link-item"
+    href="http://localhost:6006/?path=/story/components-folder--basic"
+  >
+    <span>
+      <strong>Folder</strong>
+      Folder component, collapsible, moveable, selectable (inspired by VSCode explorer)
+    </span>
+    <img src={Folder} alt="folder" />
+  </a>
+  <a
+    className="link-item"
+    href="http://localhost:6006/?path=/story/elements-cabinet--basic"
+  >
+    <span>
+      <strong>Cabinet</strong>
+      Container able to expand/collapse inner content (like a spoiler widget)
+    </span>
+    <img src={Cabinet} alt="cabinet" />
+  </a>
+  <a
+    className="link-item"
+    href="http://localhost:6006/?path=/story/components-monaco--dark"
+  >
+    <span>
+      <strong>Monaco</strong>
+      React monaco component (code editor used in VSCode)
+    </span>
+    <img src={Monaco} alt="monaco" />
+  </a>
+  <a
+    className="link-item"
+    href="http://localhost:6006/?path=/story/elements-block--basic"
+  >
+    <span>
+      <strong>Block</strong>
+      Nestable container element for block text
+    </span>
+    <img src={Block} alt="block" />
+  </a>
+</div>
 
 <style>
   {`
@@ -113,82 +194,3 @@ import Monaco from './assets/monaco.jpg';
     }
   `}
 </style>
-
-# Recomp
-
-Storybook for "Recomp" react components
-
-<div className="subheading">Showcase</div>
-
-<div className="link-list">
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/components-edge--basic"
-  >
-    <span>
-      <strong>Edge</strong>
-      Vertical tabs with fluid animations (inspired by Microsoft Edge browser)
-    </span>
-    <img src={Edge} alt="edge" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/components-menu--basic"
-  >
-    <span>
-      <strong>Menu</strong>
-      Context menu with support for submenus
-    </span>
-    <img src={Menu} alt="menu" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/components-coast--basic"
-  >
-    <span>
-      <strong>Coast</strong>
-      Vertical sidenav bar with fluid animations (inspired by VSCode sidebar)
-    </span>
-    <img src={Coast} alt="coast" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/components-folder--basic"
-  >
-    <span>
-      <strong>Folder</strong>
-      Folder component, collapsible, moveable, selectable (inspired by VSCode explorer)
-    </span>
-    <img src={Folder} alt="folder" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/elements-cabinet--basic"
-  >
-    <span>
-      <strong>Cabinet</strong>
-      Container able to expand/collapse inner content (like a spoiler widget)
-    </span>
-    <img src={Cabinet} alt="cabinet" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/components-monaco--dark"
-  >
-    <span>
-      <strong>Monaco</strong>
-      React monaco component (code editor used in VSCode)
-    </span>
-    <img src={Monaco} alt="monaco" />
-  </a>
-  <a
-    className="link-item"
-    href="http://localhost:6006/?path=/story/elements-block--basic"
-  >
-    <span>
-      <strong>Block</strong>
-      Nestable container element for block text
-    </span>
-    <img src={Block} alt="block" />
-  </a>
-</div>
