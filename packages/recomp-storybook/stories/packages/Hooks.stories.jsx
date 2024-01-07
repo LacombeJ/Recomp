@@ -2,6 +2,8 @@ import React from 'react';
 
 import { Button, Alert } from '@recomp/core';
 import '../stories.scss';
+import { useAnimationLifecycle } from '@recomp/animate';
+
 
 export default {
   title: 'Packages/Hooks',
