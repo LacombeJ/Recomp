@@ -12,14 +12,14 @@ import {
 export const MonacoArea = (props: MonacoEditorProps) => {
   props = propUnion(defaultProps, props);
 
-  const editorRef: React.MutableRefObject<Editor> = React.useRef(null);
+  const editorRef: React.MutableRefObject<Editor | null> = React.useRef(null);
 
-  const { onInitialize, options, ...restProps } = props;
+  const { onInitialize, options, key, ...restProps } = props;
 
   const handleEditorInitialized = (
     editor: Editor,
     monaco: Monaco,
-    element: HTMLDivElement
+    element: HTMLElement
   ) => {
     editorRef.current = editor;
     editor.focus();

@@ -7,7 +7,7 @@ export const updatePasteHandler = (editor: any, handler: (e: any) => any) => {
     if (e.type === 'paste') {
       const textResult = handler(e);
       if (textResult) {
-        let dataTransfer = null;
+        let dataTransfer: DataTransfer | null = null;
         try {
           dataTransfer = new DataTransfer();
         } catch (e) {
@@ -18,7 +18,7 @@ export const updatePasteHandler = (editor: any, handler: (e: any) => any) => {
           clipboardData: dataTransfer,
         });
 
-        evt.clipboardData.setData('text/plain', textResult.text);
+        evt.clipboardData?.setData('text/plain', textResult.text);
 
         /**
          * Required event details for monaco textAreaInput to call _firePaste:

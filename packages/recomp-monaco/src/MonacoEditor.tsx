@@ -91,12 +91,12 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
 
   // Fields
 
-  const monacoRef: React.MutableRefObject<Monaco> = React.useRef(null);
-  const editorRef: React.MutableRefObject<Editor> = React.useRef(null);
-  const containerRef: React.MutableRefObject<HTMLDivElement> =
+  const monacoRef: React.MutableRefObject<Monaco | null> = React.useRef(null);
+  const editorRef: React.MutableRefObject<Editor | null> = React.useRef(null);
+  const containerRef: React.MutableRefObject<HTMLDivElement | null> =
     React.useRef(null);
   const currentActions: React.MutableRefObject<Disposable[]> = React.useRef([]);
-  const preventChange = React.useRef(null);
+  const preventChange = React.useRef(false);
 
   /**
    * For subscriptions, we need to make sure we also pass the editor
@@ -104,10 +104,11 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
    * usually called after some edit and may interfere with monacos text model
    * if text props is not updated properly.
    */
-  const subscriptions = React.useRef({
-    /** @type {Disposable} */
+  const subscriptions = React.useRef<{
+    modelContentChanged: Disposable | null;
+    cursorPositionChanged: Disposable | null;
+  }>({
     modelContentChanged: null,
-    /** @type {Disposable} */
     cursorPositionChanged: null,
   });
 
@@ -135,33 +136,37 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
         props.path
       );
 
-      // Set editor ref
-      editorRef.current = monacoRef.current.editor.create(
-        containerRef.current,
-        {
-          model,
-          ...props.options,
-        },
-        props.overrideServices
-      );
+      if (monacoRef.current && containerRef.current) {
+        // Set editor ref
+        editorRef.current = monacoRef.current.editor.create(
+          containerRef.current,
+          {
+            model,
+            ...props.options,
+          },
+          props.overrideServices
+        );
 
-      // Note that this callback is created with the editor above
-      // This function overrides the paste handler by wrapping the current one
-      // with a custom one defined here. We don't want to perform this step
-      // more than once so we will do it here after editor creation
-      updatePasteHandler(editorRef.current, (e) => {
-        return handlers.current.processPaste(e);
-      });
+        // Note that this callback is created with the editor above
+        // This function overrides the paste handler by wrapping the current one
+        // with a custom one defined here. We don't want to perform this step
+        // more than once so we will do it here after editor creation
+        updatePasteHandler(editorRef.current, (e) => {
+          return handlers.current.processPaste(e);
+        });
 
-      monacoRef.current.editor.setTheme(props.theme);
+        if (props.theme) {
+          monacoRef.current.editor.setTheme(props.theme);
+        }
 
-      props.onInitialize?.(
-        editorRef.current,
-        monacoRef.current,
-        containerRef.current
-      );
+        props.onInitialize?.(
+          editorRef.current,
+          monacoRef.current,
+          containerRef.current
+        );
 
-      setIsEditorReady(true);
+        setIsEditorReady(true);
+      }
     }
   }, [
     isMonacoMounted,
@@ -195,9 +200,7 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
 
         // Dispose model
         const model = editorRef.current.getModel();
-        if (model) {
-          model.dispose();
-        }
+        model?.dispose();
 
         // Dispose editor
         editorRef.current.dispose();
@@ -228,7 +231,7 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
       currentActions.current = [];
 
       // Add new actions
-      if (props.editorActions) {
+      if (editorRef.current && props.editorActions) {
         for (let i = 0; i < props.editorActions.length; i++) {
           const action = props.editorActions[i];
           const disposableAction = editorRef.current.addAction(action);
@@ -250,7 +253,9 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
   // Update options if modified
   usePostEffect(
     () => {
-      editorRef.current.updateOptions(props.options);
+      if (props.options) {
+        editorRef.current?.updateOptions(props.options);
+      }
     },
     [props.options],
     isEditorReady
@@ -267,22 +272,25 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
         subscriptions.current.modelContentChanged = null;
       }
 
-      subscriptions.current.modelContentChanged =
-      
-        editorRef.current.onDidChangeModelContent((event) => {
-          if (!preventChange.current) {
-            const eventPosition = editorRef.current.getPosition();
-            const position = {
-              line: eventPosition.lineNumber,
-              column: eventPosition.column,
-            };
-            
-            // Calls onChange if managing using props, otherwise updates internal state
-            // We do this because we need to keep track of editor text in case
-            // of an refresh (unmount/remount where state/refs are not reset)
-            props.onChange?.(editorRef.current.getValue(), event, position);
-          }
-        });
+      if (editorRef.current) {
+        subscriptions.current.modelContentChanged =
+          editorRef.current.onDidChangeModelContent((event) => {
+            if (editorRef.current && !preventChange.current) {
+              const eventPosition = editorRef.current.getPosition();
+              if (eventPosition) {
+                const position = {
+                  line: eventPosition.lineNumber,
+                  column: eventPosition.column,
+                };
+
+                // Calls onChange if managing using props, otherwise updates internal state
+                // We do this because we need to keep track of editor text in case
+                // of an refresh (unmount/remount where state/refs are not reset)
+                props.onChange?.(editorRef.current.getValue(), event, position);
+              }
+            }
+          });
+      }
     },
     [props.onChange],
     isEditorReady
@@ -291,28 +299,39 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
   // Edit text
   usePostEffect(
     () => {
+      if (!editorRef.current) {
+        return;
+      }
+
       if (
+        monacoRef.current &&
         editorRef.current.getOption(
-          monacoRef.current.editor.EditorOption.readOnly
+          monacoRef.current?.editor.EditorOption.readOnly
         )
       ) {
         // If read only, set text to whatever value passed through props
-        editorRef.current.setValue(props.value);
+        if (props.value) {
+          editorRef.current.setValue(props.value);
+        } else {
+          editorRef.current.setValue('');
+        }
       } else if (props.value !== editorRef.current.getValue()) {
         // Value has change, update full text
         const model = editorRef.current.getModel();
         preventChange.current = true;
         editorRef.current.pushUndoStop();
-        model.pushEditOperations(
-          [],
-          [
-            {
-              range: model.getFullModelRange(),
-              text: props.value,
-            },
-          ],
-          undefined
-        );
+        if (model) {
+          model.pushEditOperations(
+            [],
+            [
+              {
+                range: model.getFullModelRange(),
+                text: props.value ? props.value : '',
+              },
+            ],
+            () => null
+          );
+        }
         editorRef.current.pushUndoStop(); //TODO: should this be a pop? find out
         preventChange.current = false;
       }
@@ -324,8 +343,15 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
   // Update language
   usePostEffect(
     () => {
-      const model = editorRef.current.getModel();
-      monacoRef.current.editor.setModelLanguage(model, props.language);
+      if (editorRef.current && monacoRef.current) {
+        const model = editorRef.current.getModel();
+        if (model) {
+          monacoRef.current.editor.setModelLanguage(
+            model,
+            props.language ? props.language : ''
+          );
+        }
+      }
     },
     [props.language],
     isEditorReady
@@ -334,7 +360,9 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
   // Update theme
   usePostEffect(
     () => {
-      monacoRef.current.editor.setTheme(props.theme);
+      if (props.theme) {
+        monacoRef.current?.editor.setTheme(props.theme);
+      }
     },
     [props.theme],
     isEditorReady
@@ -347,11 +375,13 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
   // onReady
   useEffectOnReady(
     () => {
-      props.onReady?.(
-        editorRef.current,
-        monacoRef.current,
-        containerRef.current
-      );
+      if (editorRef.current && monacoRef.current && containerRef.current) {
+        props.onReady?.(
+          editorRef.current,
+          monacoRef.current,
+          containerRef.current
+        );
+      }
     },
     [],
     isEditorReady
@@ -365,34 +395,39 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
         subscriptions.current.cursorPositionChanged = null;
       }
 
-      subscriptions.current.cursorPositionChanged =
-      
-        editorRef.current.onDidChangeCursorPosition((event) => {
-          if (!preventChange.current) {
+      if (editorRef.current) {
+        subscriptions.current.cursorPositionChanged =
+          editorRef.current.onDidChangeCursorPosition((event) => {
             if (
-              event.reason !==
-              monacoRef.current.editor.CursorChangeReason.Explicit
+              monacoRef.current &&
+              editorRef.current &&
+              !preventChange.current
             ) {
-              // If event was caused by some update to the text model,
-              // we will not output cursor position change event.
-              // Instead, the onChange callback will pass along the modified
-              // cursor position and should be handled there.
-              // The reason for this is to make sure the cursor pos and text
-              // model are in sync. If we update the cursor and not the
-              // text model, it will result in errors thrown by monaco.
-              return;
+              if (
+                event.reason !==
+                monacoRef.current.editor.CursorChangeReason.Explicit
+              ) {
+                // If event was caused by some update to the text model,
+                // we will not output cursor position change event.
+                // Instead, the onChange callback will pass along the modified
+                // cursor position and should be handled there.
+                // The reason for this is to make sure the cursor pos and text
+                // model are in sync. If we update the cursor and not the
+                // text model, it will result in errors thrown by monaco.
+                return;
+              }
+              const position = {
+                line: event.position.lineNumber,
+                column: event.position.column,
+              };
+              props.onCursorPositionChange?.(
+                editorRef.current.getValue(),
+                event,
+                position
+              );
             }
-            const position = {
-              line: event.position.lineNumber,
-              column: event.position.column,
-            };
-            props.onCursorPositionChange?.(
-              editorRef.current.getValue(),
-              event,
-              position
-            );
-          }
-        });
+          });
+      }
     },
     [props.onCursorPositionChange],
     isEditorReady
@@ -401,7 +436,9 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
   // onProcessPaste
   useEffectOnReady(
     () => {
-      handlers.current.processPaste = props.onProcessPaste;
+      if (props.onProcessPaste) {
+        handlers.current.processPaste = props.onProcessPaste;
+      }
     },
     [props.onProcessPaste],
     isEditorReady
@@ -413,16 +450,12 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
 
   // Layout on all updates
   React.useEffect(() => {
-    if (editorRef.current) {
-      editorRef.current.layout();
-    }
+    editorRef.current?.layout();
   });
 
   // Layout on all resizes (including top level window resizes)
   const handleResize = React.useCallback(() => {
-    if (editorRef.current) {
-      editorRef.current.layout();
-    }
+    editorRef.current?.layout();
   }, []);
 
   useResizeDetector({
@@ -430,10 +463,13 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
     onResize: handleResize,
   });
 
-  const className = classnames({
-    [props.className]: true, // always append props.className
-    [props.classNames.transparent]: props.transparent, // append if transparency enabled
-  });
+  let className = '';
+  if (props.className && props.classNames && props.classNames.transparent) {
+    className = classnames({
+      [props.className]: true, // always append props.className
+      [props.classNames.transparent]: props.transparent, // append if transparency enabled
+    });
+  }
 
   return (
     <div
@@ -452,18 +488,20 @@ export const MonacoEditor = (props: MonacoEditorProps) => {
 // ----------------------------------------------------------------------------
 
 const getOrCreateModel = (
-  monaco: Monaco,
-  value: string,
-  language: string,
-  path?: string
+  monaco: Monaco | null,
+  value: string | undefined,
+  language: string | undefined,
+  path: string | undefined
 ) => {
-  let model = null;
-  const uri = path ? monaco.Uri.parse(path) : undefined;
-  if (path) {
-    model = monaco.editor.getModel(uri);
-  }
-  if (!model) {
-    model = monaco.editor.createModel(value, language, uri);
+  let model: monaco.editor.ITextModel | null = null;
+  if (monaco) {
+    const uri = monaco.Uri.parse(path ?? '');
+    if (path) {
+      model = monaco.editor.getModel(uri);
+    }
+    if (!model) {
+      model = monaco.editor.createModel(value ?? '', language, uri);
+    }
   }
   return model;
 };
@@ -473,10 +511,7 @@ const defaultProps: Omit<MonacoEditorProps, 'key'> = {
   classNames: {
     transparent: 'transparent',
   },
-  path: null,
-  value: null,
   language: 'javascript',
-  theme: null,
   transparent: false,
 };
 

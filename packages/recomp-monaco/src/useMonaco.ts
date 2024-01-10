@@ -10,12 +10,12 @@ interface CancelablePromise<T> extends Promise<T> {
 }
 
 export const useMonaco = (
-  monacoRef: React.MutableRefObject<Monaco | undefined>,
+  monacoRef: React.MutableRefObject<Monaco | null>,
   callback: (monaco: Monaco) => void
 ) => {
   // Holding of a cancellable promise. This is so we do not call the loader
   // multiple times
-  const cancellableRef = React.useRef<CancelablePromise<Monaco>>(null);
+  const cancellableRef = React.useRef<CancelablePromise<Monaco> | null>(null);
 
   // Initialize/load monaco on mount if monaco has not been loaded
   React.useEffect(() => {
