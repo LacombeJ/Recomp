@@ -112,11 +112,11 @@ const Shiki = (props: ShikiProps) => {
 
   if (content.isHTML) {
     return (
-      <div
+      <span
         dangerouslySetInnerHTML={
           content.isHTML ? { __html: content.text } : undefined
         }
-      ></div>
+      ></span>
     );
   }
 
