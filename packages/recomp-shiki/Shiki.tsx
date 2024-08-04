@@ -60,7 +60,13 @@ const Shiki = (props: ShikiProps) => {
         },
         postprocess(html, options) {
           // Note: This "postprocess" hook is only called when calling `codeToHTML`
-          return removeAdditionalLine(html, lang);
+          let result = updateBackground(html, theme);
+          if (result) html = result;
+
+          result = removeAdditionalLine(html, lang);
+          if (result) html = result;
+
+          return html;
         },
       },
     ];
@@ -140,6 +146,28 @@ type Display = 'inline' | 'block';
 const determineDisplay = (text: string, display?: Display): Display => {
   if (display) return display;
   return /\r?\n/.test(text) ? 'block' : 'inline';
+};
+
+const updateBackground = (html: string, theme: string): string | void => {
+  // Not sure best way to update background style. For vs-dark, I want the
+  // background to be a bit darker.
+
+  if (theme === 'dark-plus') {
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+
+    const pre = temp
+      .getElementsByClassName('recomp-shiki')
+      .item(0) as HTMLElement;
+    if (pre) {
+      pre.style.backgroundColor = '#141414';
+
+      const content = temp.innerHTML || temp.textContent;
+      if (content) {
+        return content;
+      }
+    }
+  }
 };
 
 const removeAdditionalLine = (html: string, lang: string): string | void => {
