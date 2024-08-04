@@ -5,7 +5,7 @@ import { propUnion } from '@recomp/props';
 interface SpacerProps {
   className?: string;
   style?: React.CSSProperties;
-  direction: 'vertical' | 'horizontal';
+  direction?: 'vertical' | 'horizontal';
   size?: number;
   children?: React.ReactNode;
 }

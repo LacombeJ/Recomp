@@ -1,5 +1,29 @@
 // https://github.com/JedWatson/classnames/blob/master/index.js
 
+type Classifiable = string | [string | null | undefined, boolean];
+
+export const classesExp = (...args: Classifiable[]): string[] => {
+  const items: string[] = [];
+
+  for (const arg of args) {
+    if (typeof arg === 'string') {
+      const classname = arg;
+      items.push(classname);
+    } else if (typeof arg === 'object') {
+      const [classname, condition] = arg;
+      if (classname && condition) {
+        items.push(classname);
+      }
+    }
+  }
+
+  return items;
+};
+
+export const classnamesEXP = (...args: Classifiable[]) => {
+  return classesExp(...args).join(' ');
+};
+
 export const classes = (...args: any): any[] => {
   const items = [];
 

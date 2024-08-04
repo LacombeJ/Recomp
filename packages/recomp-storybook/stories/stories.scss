@@ -12,6 +12,7 @@
 @use '@recomp/monaco';
 @use '@recomp/prism';
 @use '@recomp/seek';
+@use '@recomp/shiki';
 @use '@recomp/titlebar';
 
 @include core.init();
@@ -28,6 +29,7 @@
 @include monaco.init();
 @include prism.init();
 @include seek.init();
+@include shiki.init();
 @include titlebar.init();
 
 #storybook-root {
