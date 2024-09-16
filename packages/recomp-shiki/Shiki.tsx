@@ -77,29 +77,18 @@ const Shiki = (props: ShikiProps) => {
     };
 
     // Shiki line numbers handled with: https://github.com/shikijs/shiki/issues/3
+
+    if (!shiki.bundledLanguages[lang]) {
+      lang = 'text';
+    }
+
     shiki
       .codeToHtml(text, { lang, theme, transformers: transformers(lang) })
       .then((html) => {
         setContent({ text: html, isHTML: true });
       })
       .catch((err) => {
-        if (!shiki.bundledLanguages[lang]) {
-          // Text fallback
-          shiki
-            .codeToHtml(text, {
-              lang: 'text',
-              theme,
-              transformers: transformers('text'),
-            })
-            .then((html) => {
-              setContent({ text: html, isHTML: true });
-            })
-            .catch((err) => {
-              displayError(err, text);
-            });
-        } else {
-          displayError(err, text);
-        }
+        displayError(err, text);
       });
   }, [text, lang, theme, inline]);
 
@@ -173,7 +162,7 @@ const updateBackground = (html: string, theme: string): string | void => {
 const removeAdditionalLine = (html: string, lang: string): string | void => {
   // The scss solution to hide extra last line works except for plaintext
   // With the "text" language, peform an extra check here.
-  if (lang !== 'text') return;
+  if (lang !== 'text' && lang !== 'plain' && lang !== 'plaintext') return;
   let modified = false;
 
   const temp = document.createElement('div');

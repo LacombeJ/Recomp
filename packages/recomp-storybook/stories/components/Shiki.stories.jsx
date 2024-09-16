@@ -13,6 +13,7 @@ const Template = (args) => <Shiki {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
+  language: 'js',
   children: 'const component = "Shiki";\n\n// Shiki code component\n',
 };
 
