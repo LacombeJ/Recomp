@@ -59,12 +59,10 @@ const Shiki = (props: ShikiProps) => {
           }
         },
         postprocess(html, options) {
-          // Note: This "postprocess" hook is only called when calling `codeToHTML`
-          let result = updateBackground(html, theme);
-          if (result) html = result;
-
-          result = removeAdditionalLine(html, lang);
-          if (result) html = result;
+          // Note: This "postprocess" hook is only called when calling `codeToHTML` (shiki)
+          html = updateBackground(html, theme);
+          html = removeAdditionalLine(html, lang);
+          html = applyCodeStyle(html, style);
 
           return html;
         },
@@ -109,7 +107,8 @@ const Shiki = (props: ShikiProps) => {
     );
   }
 
-  const inner = <code style={style}>{content.text}</code>;
+  // Code class and style is controlled by shiki, no point in adding here
+  const inner = <code>{content.text}</code>;
 
   if (inline) {
     return <span className={className}>{inner}</span>;
@@ -137,7 +136,7 @@ const determineDisplay = (text: string, display?: Display): Display => {
   return /\r?\n/.test(text) ? 'block' : 'inline';
 };
 
-const updateBackground = (html: string, theme: string): string | void => {
+const updateBackground = (html: string, theme: string): string => {
   // Not sure best way to update background style. For vs-dark, I want the
   // background to be a bit darker.
 
@@ -157,38 +156,62 @@ const updateBackground = (html: string, theme: string): string | void => {
       }
     }
   }
+
+  return html;
 };
 
-const removeAdditionalLine = (html: string, lang: string): string | void => {
-  // The scss solution to hide extra last line works except for plaintext
-  // With the "text" language, peform an extra check here.
-  if (lang !== 'text' && lang !== 'plain' && lang !== 'plaintext') return;
-  let modified = false;
+const removeAdditionalLine = (html: string, lang: string): string => {
+  return modifyHTML(html, (div) => {
+    // The scss solution to hide extra last line works except for plaintext
+    // With the "text" language, peform an extra check here.
+    if (lang !== 'text' && lang !== 'plain' && lang !== 'plaintext') return false;
 
-  const temp = document.createElement('div');
-  temp.innerHTML = html;
-
-  const code = temp.getElementsByTagName('code').item(0);
-  if (code) {
-    const last = code.children.item(code.children.length - 1);
-    if (last?.tagName === 'SPAN' && last?.classList.contains('line')) {
-      if (last.children.length === 1) {
-        const inner = last.children.item(0);
-        if (inner?.childNodes.length === 0) {
-          code.removeChild(last);
-          modified = true;
+    const code = div.getElementsByTagName('code').item(0);
+    if (code) {
+      const last = code.children.item(code.children.length - 1);
+      if (last?.tagName === 'SPAN' && last?.classList.contains('line')) {
+        if (last.children.length === 1) {
+          const inner = last.children.item(0);
+          if (inner?.childNodes.length === 0) {
+            code.removeChild(last);
+            return true;
+          }
         }
       }
     }
-  }
 
-  if (modified) {
+    return false;
+  });
+};
+
+const applyCodeStyle = (html: string, codeStyle: React.CSSProperties | undefined): string => {
+  return modifyHTML(html, (div) => {
+    if (!codeStyle) return false;
+
+    const code = div.getElementsByTagName('code').item(0);
+    if (code) {
+      console.log("assigning style:", codeStyle);
+      Object.assign(code.style, codeStyle);
+      return true;
+    }
+
+    return false;
+  });
+}
+
+const modifyHTML = (html: string, modifier: (div: HTMLDivElement) => boolean): string => {
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
+
+  if (modifier(temp)) {
     const content = temp.innerHTML || temp.textContent;
     if (content) {
       return content;
     }
   }
-};
+
+  return html;
+}
 
 // Additional translations
 const translations = {

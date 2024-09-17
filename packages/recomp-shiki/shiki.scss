@@ -11,6 +11,11 @@
       padding: 1em;
       margin: .5em 0;
 
+      code {
+        overflow: auto;
+        flex-grow: 1;
+      }
+
       &.line-numbers {
         code {
           counter-reset: step;
