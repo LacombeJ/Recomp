@@ -10,6 +10,10 @@ export const ZeroWidth = () => {
   return <React.Fragment>&#8203;</React.Fragment>;
 };
 
+/**
+ * Returns the react node if valid node or non empty string, or a ZeroWidth space fragment if the
+ * node is null, or an empty / whitespace string
+ */
 export const nonempty = (node: React.ReactNode) => {
   if (isNullOrWhitespace(node)) {
     return <ZeroWidth />;
