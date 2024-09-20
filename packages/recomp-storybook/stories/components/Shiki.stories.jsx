@@ -210,8 +210,124 @@ instance (priority := low) propDecidable (a : Prop) : Decidable a :=
 `;
 
 const TemplateScroll = (args) => <div>
-  <div style={{maxWidth: '500px'}}><Shiki language='c#' children={scrollWidthText} /></div>
-  <div style={{maxHeight: '500px'}}><Shiki style={{maxHeight: '500px'}} language='lean4' children={scrollHeightText} /></div>
+  <div style={{ maxWidth: '500px' }}><Shiki language='c#' children={scrollWidthText} /></div>
+  <div style={{ maxHeight: '500px' }}><Shiki style={{ maxHeight: '500px' }} language='lean4' children={scrollHeightText} /></div>
 </div>;
 export const Scroll = TemplateScroll.bind({});
 Scroll.args = {};
+
+
+const customLanguage = {
+  name: 'custom',
+  scopeName: 'source.custom',
+  patterns: [
+    {
+      include: '#comments',
+    },
+    {
+      match: '\\b(let|function|if|while|for|return)\\b',
+      name: 'keyword.custom',
+    },
+    {
+      match: '\\b(import|export)\\b',
+      name: 'entity.name.operator',
+    },
+    {
+      match: '\\b([A-Z][a-zA-Z0-9_.]*)\\b',
+      name: 'entity.name.type.class',
+    },
+    {
+      begin: '"',
+      end: '"',
+      name: 'string.quoted.double.custom',
+      patterns: [
+        {
+          match: '\\\\[\\\\"ntr\']',
+          name: 'constant.character.escape.custom',
+        },
+        {
+          match: '\\\\x[0-9A-Fa-f][0-9A-Fa-f]',
+          name: 'constant.character.escape.custom',
+        },
+        {
+          match: '\\\\u[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]',
+          name: 'constant.character.escape.custom',
+        },
+      ],
+    },
+    {
+      name: 'string.quoted.single.custom',
+      match: "'[^\\\\']'",
+    },
+    {
+      name: 'string.quoted.single.custom',
+      match:
+        "'(\\\\(x[0-9A-Fa-f][0-9A-Fa-f]|u[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]|.))'",
+      captures: {
+        '1': {
+          name: 'constant.character.escape.custom',
+        },
+      },
+    },
+    {
+      match:
+        '\\b([0-9]+|0([xX][0-9a-fA-F]+)|[-]?(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][+-]?[0-9]+)?)\\b',
+      name: 'constant.numeric.custom',
+    },
+  ],
+  repository: {
+    dashComment: {
+      begin: '--',
+      end: '$',
+      name: 'comment.line.double-dash.custom',
+    },
+    blockComment: {
+      begin: '/-',
+      end: '-/',
+      name: 'comment.block.custom',
+      patterns: [
+        {
+          include: '#blockComment',
+        },
+      ],
+    },
+    comments: {
+      patterns: [
+        {
+          include: '#dashComment',
+        },
+        {
+          include: '#blockComment',
+        },
+      ],
+    },
+  },
+};
+
+const customText = `
+import standard
+
+-- Line comment starting with (--)
+
+let str = "Hello world"
+print(str)
+
+function add(a, b):
+  return a + b
+
+let counter = 0
+while counter < 10:
+  counter += 1
+
+for (i=0; i<counter; i++):
+  if i % 2 == 0:
+    print(i)
+
+export add
+`;
+
+export const Custom = Template.bind({});
+Custom.args = {
+  language: customLanguage,
+  children: customText,
+};
