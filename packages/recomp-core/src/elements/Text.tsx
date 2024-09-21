@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { classnames } from '@recomp/classnames';
+import { classnamesEXP } from '@recomp/classnames';
 import {
   propUnion,
   selectAllFromKeys,
@@ -9,6 +9,9 @@ import {
 
 interface TextProps {
   className?: string;
+  classNames?: {
+    tag?: string;
+  };
   style?: React.CSSProperties;
   size?: number;
   weight?: string;
@@ -36,10 +39,10 @@ export const Text = (props: TextProps) => {
     ...props.style,
   };
 
-  const className = classnames({
-    [props.className]: true,
-    keyCode: props.keyCode,
-  });
+  const className = classnamesEXP(
+    [props.className, true],
+    ['keyCode', props.keyCode]
+  );
 
   if (props.size) {
     style.fontSize = props.size;
@@ -58,7 +61,7 @@ export const Text = (props: TextProps) => {
   const wrapAll = (node: React.ReactNode, fnList: JSX.Element[]) => {
     let res = node;
     fnList.forEach((Component: any) => {
-      res = <Component>{res}</Component>;
+      res = <Component className={props.classNames?.tag}>{res}</Component>;
     });
     return res;
   };
@@ -72,10 +75,13 @@ export const Text = (props: TextProps) => {
 
 const defaultProps: TextProps = {
   className: 'recomp-text',
+  classNames: {
+    tag: 'tag',
+  },
   style: {},
-  size: null,
-  weight: null,
-  color: null,
+  size: undefined,
+  weight: undefined,
+  color: undefined,
   b: false,
   bold: false,
   strong: false,

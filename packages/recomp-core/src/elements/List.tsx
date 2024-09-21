@@ -159,7 +159,7 @@ const Item = (props: ItemProps) => {
     [`${props.classNames.level}-${props.level + 1}`]: props.nesting,
   });
 
-  const style = {
+  const style: React.CSSProperties = {
     ...props.style,
     listStyleType: props.customBullet ? 'none' : undefined,
   };

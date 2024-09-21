@@ -1,6 +1,6 @@
 // https://github.com/JedWatson/classnames/blob/master/index.js
 
-type Classifiable = string | [string | null | undefined, boolean];
+type Classifiable = string | [string | null | undefined, boolean | null | undefined];
 
 export const classesExp = (...args: Classifiable[]): string[] => {
   const items: string[] = [];
